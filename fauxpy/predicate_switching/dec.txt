@@ -1,0 +1,17 @@
+- Predicate switching is done for a single failing test.
+
+- Implementing LEFS is possible. Implementing PRIOR might
+ not be possible.
+
+- Maybe we do not implement LEFS either and report a list of critical
+predicates, something similar to the base paper.
+
+- For crashing bugs, if switching prevents the program from crashing
+but the crash location is not executed, the predicate is not critical.
+
+- To avoid infinite loops: This problem is handled by maintaining
+an internal basic block counter and if this counter exceeds a
+certain very large preset value, the execution is aborted and
+search is continued using the next predicate.
+
+

@@ -1,0 +1,10 @@
+pathlib~=1.0.1
+coverage~=6.2
+pytest>=3.1.2
+py~=1.11.0
+setuptools~=59.4.0
+hunter~=3.4.3
+cosmic-ray==8.3.5
+astor~=0.8.1
+#pytest-xdist~=2.5.0
+pytest-timeout~-2.1.0
