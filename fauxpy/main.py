@@ -1,5 +1,4 @@
 """Pytest plugin."""
-import pytest
 
 from . import common, sbfl, stack_trace, mbfl, predicate_switching, collect_mode
 
