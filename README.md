@@ -1,5 +1,6 @@
 # 1. FauxPy
 
+[![PyPI version](https://badge.fury.io/py/fauxpy.svg)](https://badge.fury.io/py/fauxpy)
 ![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)
 
 The current repository contains the source code of FauxPy,
