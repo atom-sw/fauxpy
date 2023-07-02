@@ -268,7 +268,7 @@ by running passing tests.
 Thus, it is better to run PS and ST using only the targeted failing
 tests in the test suite. In this way, FauxPy performs more efficiently;
 however, the result is going to be the same even if the passing tests are also
-involved. Section [1.3.7 Test-suite Subset](#136-test-suite-subset) explains
+involved. Section [1.3.7 Test-suite Subset](#137-test-suite-subset) explains
 how the test suite size can be controlled.
 
 
