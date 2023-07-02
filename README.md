@@ -1,6 +1,6 @@
 # 1. FauxPy
 
-![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy.git)
+![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)
 
 The current repository contains the source code of FauxPy,
 an automated fault localization tool for Python programs.
