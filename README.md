@@ -28,6 +28,8 @@ FauxPy's fault localization techniques in action.
 
 [![FauxPy Demo](https://img.youtube.com/vi/6ooPPiwd79g/0.jpg)](https://www.youtube.com/watch?v=6ooPPiwd79g)
 
+If you liked FauxPy, give us a star please. It makes us happy. :blush:
+
 ## 1.1 Installation
 
 To install FauxPy, run the following command:
