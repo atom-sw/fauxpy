@@ -1,334 +1,274 @@
-# 1. FauxPy
+# FauxPy
 
 [![PyPI version](https://badge.fury.io/py/fauxpy.svg)](https://badge.fury.io/py/fauxpy)
 ![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)
 
-The current repository contains the source code of FauxPy,
-an automated fault localization tool for Python programs.
-FauxPy supports seven well-known fault-localization
-techniques in four families (spectrum-based, 
-mutation-based, predicate switching, and stack-trace based).
-The techniques FauxPy currently supports are as follows:
+FauxPy (pronounced: "foh pie")
+is an automated fault localization tool for Python programs.
+This repository includes FauxPy's source code, and instructions
+to install and use the tool.
 
-1. Tarantula
-2. Ochiai
-3. DStar
-4. Metallaxis
-5. Muse
-6. Predicate switching
-7. Stack trace
 
-FauxPy has been tested on 13 real-world Python
-programs (e.g., Keras, Pandas, ...), detailed in
-our paper ["An Empirical Study of Fault Localization in Python Programs"](#16-citations) 
-by Mohammad Rezaalipour and Carlo A. Furia.
+## Features
 
-In the following video, we demonstrate some of 
-FauxPy's fault localization techniques in action.
+FauxPy supports seven classic fault-localization techniques in four families:
 
-[![FauxPy Demo](https://img.youtube.com/vi/6ooPPiwd79g/0.jpg)](https://www.youtube.com/watch?v=6ooPPiwd79g)
+1. **SBFL** (spectrum-based) techniques Tarantula, Ochiai, and DStar.
 
-If you liked FauxPy, give us a star please. It makes us happy. :blush:
+2. **MBFL** (mutation-based) techniques Metallaxis and Muse.
 
-## 1.1 Installation
+3. **PS** (predicate switching) fault localization.
 
-To install FauxPy, run the following command:
+4. **ST** (stack-trace) fault localization.
 
-```
+It supports fault localization 
+at the level of **statements** (statement-level granularity)
+and at the level of **functions** (function-level granularity).
+
+FauxPy is based on dynamic analysis, 
+and can use tests written in the format of 
+[Pytest](https://pytest.org), 
+[Unittest](https://docs.python.org/3/library/unittest.html),
+and [Hypothesis](https://hypothesis.works/).
+
+
+## Installation
+
+FauxPy is [on PyPI](https://pypi.org/project/fauxpy/),
+so you can install it using `pip`:
+
+```bash
 pip install fauxpy
 ```
 
-We have tested FauxPy on Python 3.6, 3.7, and 3.8.
-But it should work on other versions of Python as well.
+We mainly tested FauxPy with Python 3.6, 3.7, and 3.8,
+but it should also work on later Python versions.
 
-## 1.2 Using FauxPy
 
-FauxPy is a Pytest plugin, installing which adds new 
-command line options to Pytest, allowing users to 
-control FauxPy's behaviour.
-Thus, using FauxPy is very similar to using Pytest.
-For instance, imagine we have a Python project `my_project`
-the has two packages: `code`, and `tests`.
-Package `code` contains all the source code of the project, and
-package `tests` includes the project's test suite.
-Executing the following commands run FauxPy
-on package `code`, using all the test cases
-inside package `tests`, resulting in a list of
-line numbers along with their suspiciousness scores.
-This list is shown in the command line, and also, saved as
-a csv file in a directory next to the project's directory.
+## Getting Started
 
-```
-cd my_project
-```
+Here is a short [demo video](https://www.youtube.com/watch?v=6ooPPiwd79g) of FauxPy in action.
 
-```
-python -m pytest --src code
+[![FauxPy Demo](https://img.youtube.com/vi/6ooPPiwd79g/0.jpg)](https://www.youtube.com/watch?v=6ooPPiwd79g)
+
+Directory [examples/triangle_area](examples/triangle_area) includes a tutorial example of using FauxPy. Follow the instructions in the [`README.md`](examples/triangle_area/README.md).
+
+
+## Using FauxPy
+
+FauxPy is implemented as a Pytest plugin, thus using FauxPy boils down
+to passing some custom options to Pytest.
+
+To run FauxPy, you must first `cd` to the project's directory `$PROJECT`:
+
+```bash
+cd $PROJECT
 ```
 
-The following repository provides step-by-step instructions
-on how to use FauxPy on some simple projects.
+Then, the basic command to run FauxPy is the following, where
+`$SOURCE` is the relative path to a Python package or module
+inside `$PROJECT`:
 
-[https://github.com/atom-sw/fauxpy-examples](https://github.com/atom-sw/fauxpy-examples)
-
-It is advised to first take a look at the repository mentioned above, 
-before going any further with the instructions in the current repository,
-especially, if you do not know much about fault localization in general.
-
-## 1.3 Command Line Options
-
-FauxPy adds 7 command line options to Pytest, 
-explained in the rest of this section.
-
-The following command shows an example of using all
-of FauxPy's options at the same time. However, many of
-these options are not mandatory and can be skipped
-based on the usage scenario users have in mind.
-
-```
-python -m pytest tests \
-  --src code \
-  --family sbfl \
-  --exclude "[code/package_x, code/module_x.py]" \
-  --granularity statement \
-  --top-n 3 \
-  --failing-list "[tests/test_module_y.py::test_function_z]"
+```bash
+python -m pytest --src $SOURCE
 ```
 
-### 1.3.1 Targeted Source Code
+This performs statement-level spectrum-based fault localization on the
+Python project in directory `$PROJECT`, using any Pytest tests in
+there. 
 
-- **Name:** `--src`
+The output is a list of program entities with their suspiciousness
+score, sorted from most to least suspicious. The output is printed on
+screen, and also saved in a directory `FauxPyReport_...` created in
+`$PROJECT`'s parent directory.
 
-- **Type:** Mandatory
+This is the complete list of command-line arguments to control FauxPy.
 
-Option `--src` is the only mandatory command line option of FauxPy.
-It takes a relative path to a Python package or module
-within the project at hand. FauxPy only considers
-program entities in the package or module passed 
-as `--src` while
-performing fault localization.
-If users want to involve the whole project in
-FauxPy's fault localization session, they can pass `.` 
-(current directory's path) as the argument.
-
-
-### 1.3.2 Fault Localization Family
-
-- **Name:** `--family`
-
-- **Choices:** {`sbfl`, `mbfl`, `ps`, `st`}
-
-- **Type:** Optional
-
-- **Default:** `sbfl`
-
-FauxPy supports four fault localization families: SBFL, MBFL, PS, and ST.
-Using option `--family`, users can decided which fault localization
-family should be used during their fault localization session.
-Option `--family` is an optional argument. If it is not provided,
-FauxPy picks `sbfl` by default.
-
-
-### 1.3.3 Fault Localization Granularity
-
-- **Name:** `--granularity`
-
-- **Choices:** {`statement`, `function`}
-
-- **Type:** Optional
-
-- **Default:** `statement`
-
-The current version of FauxPy supports two different 
-granularity levels: statement, and function.
-Using statement-level granularity, FauxPy's default choice,
-FauxPy outputs a list of line numbers and their suspiciousness scores.
-Using the function-level granularity, FauxPy returns suspicious functions
-instead of line numbers.
-
-
-### 1.3.4 Excluded Items
-
-- **Name:** `--exclude`
-
-- **Type:** Optional
-
-- **Default:** No packages and modules are excluded
-
-Sometimes, users need to exclude a package or module from
-a fault localization session. For instance, if `.` is passed to
-option `--src`, users might want to exclude package `tests`
-(project's test suite) or directory `env` 
-(virtual environment of the project) from their
-fault localization session. If such items are not excluded,
-FauxPy includes in its output the program entities in these
-directories, as well. In such cases, users can use option `--exclude`.
-This option takes a comma separated list of relative paths to
-directories that are supposed to be excluded.
-
-For instance, the following command runs FauxPy on
-the whole project but the two directories `env` and `tests`.
-
-```
-python -m pytest tests \
-  --src . \
-  --exclude "[env, tests]"
+```bash
+python -m pytest \
+	   $TESTS \
+	   --src $SRC \
+	   --family $FAMILY \
+	   --exclude "[$EXCLUDE1, $EXCLUDE2, ...]" \
+	   --granularity $GRANULARITY \
+	   --top-n $N \
+	   --failing-list "[$FAIL1, $FAIL2, ...]" \
+	   --failing-file $FAIL
 ```
 
-### 1.3.5 Targeted Failing Tests
+### `--src`: Program Source Code
 
-- **Name:** `--failing-list`
+Option `--src $SRC` runs FauxPy on the project considering only
+the program entities under *relative* path
+`$SRC`. Precisely, `$SRC` can point to a whole project, or an
+individual package (subdirectory) or modules (source-code file) within
+it.
 
-- **Type:** Optional
+In particular, option `--src .` runs FauxPy on the project in the
+current directory, considering the program entites in all
+the Python modules and packages existing within project.
 
-- **Default:** all the failing tests in the test suite.
-
-Technically, FauxPy can perform fault localization
-when the project at hand has multiple bugs, revealed 
-by different failing tests. How fault localization techniques
-behave in this situation requires further research.
-In any case, FauxPy can be configured to only consider
-certain failing tests during a fault localization session, providing
-option `--failing-list`. We call these tests *"targeted failing tests"*.
-If this option is used, FauxPy only considers the targeted failing tests
-while computing suspiciousness scores, avoiding the noise
-caused by other bugs and their corresponding failing tests.
-If this option is not used, FauxPy includes in
-the fault localization session all the failing tests
-in the given test suite.
-
-The argument passed to this option is a comma seperated list
-of test functions in the Pytest format. A test in Pytest is identified
-by its path, class name, and function name in the following format:
-
-`[FILE_PATH]::[CLASS_NAME]::[FUNCTION_NAME]`
-
-For example, Pytest identifies a test function named
-`test_read_file`, whose 
-relative path is `test/test_common/test_file.py`,
-and is inside class `Test_IO` as follows:
-
-`test/test_common/test_file.py::Test_IO::test_read_file`
-
-If the targeted failing test is parametrized, the
-parameter part of the name must be
-removed while it is passed to `--failing-list`.
-For instance, if test `test/test_tuils.py::test_addition[1-2-3]`
-is a targeted failing test,`test/test_tuils.py::test_addition` must be
-one of the elements in the list passed to `--failing-list`.
-
-FauxPy provides another option `--failing-file`.
-The functionality of this option is the same as
-that of `--failing-list`; but option `--failing-file`
-takes a path to a file that includes the targeted failing
-tests, each in a separate line.
+Option `--src` is the only mandatory argument to run FauxPy.
 
 
-### 1.3.6 Top n Results
+### `--family`: Fault Localization Family
 
-- **Name:** `--top-n`
+Option `--family $FAMILY` runs FauxPy using the `$FAMILY` fault
+localization family of techniques. 
+FauxPy currently supports families: `sbfl` (the default), `mbfl`, `ps`, and `st`.
 
-- **Choices:** {-1} &#8746; Integer[1, Inf]
 
-- **Type:** Optional
+### `--granularity`: Entity Granularity
 
-- **Default:** -1
+Option `--granularity $GRANULARITY` runs FauxPy using `$GRANULARITY`
+as program entities to localize. FauxPy currently supports
+granularities: `statement` (the default), and `function`.
 
-Sometimes the list of program entities FauxPy outputs has too many records.
-In this case, option `--top-n` can be used to shorten the list.
-This option takes an integer greater than 0, indicating the number of records
-that FauxPy is expected to include in its output.
-Passing -1, the default option, means FauxPy must return all the records.
+With *statement*-level granularity, FauxPy outputs a list of program locations (i.e., line numbers) that may be responsible for the fault.
+With *function*-level granularity, FauxPy outputs a list of functions that may be responsible for the fault.
 
-### 1.3.7 Test-suite Subset
 
-FauxPy allows users to run the whole test suite
-in a fault localization session, or just a subset of it such as
-a certain test package, test module, test function
-or even a combination of them.
-For instance, the following command runs FauxPy while using only tests
+### `--exclude`: Exclude Directories or Files
+
+Option `--exclude "[$EXCLUDE1, $EXCLUDE2, ...]"` ignores entities in `$EXCLUDE1`,
+`$EXCLUDE2`, and so on when performing fault localization. 
+
+Each element of the comma-separated list must be a path relative to
+the analyzed project's root directory of a directory (package) or
+Python source file (module).
+
+For instance, the following command runs fault localization on the
+project in the current directory, skipping directories `env` and
+`tests`, and module `utilities`:
+
+```bash
+python -m pytest --src . --exclude "[env, tests, utilities.py]"
+```
+
+### `--failing-list`: Select Failures
+
+Option `--failing-list "[$FAIL1, $FAIL2, ...]` *only* uses tests
+`$FAIL1`, `$FAIL2`, and so on as *failing* tests when performing fault
+localization. 
+
+Each element of the comma-separated list must be 
+the fully-qualified name of a test function in the analyzed project,
+using the Pytest format `<FILE_PATH>::<CLASS_NAME>::<FUNCTION_NAME>`, 
+where the `<CLASS_NAME>::` can be omitted if the test function is
+top-level. 
+
+For instance, the following command runs fault localization on the
+project in the current directory, using *only* test function
+`test_read_file` in class `Test_IO` as failing test:
+
+```bash
+python -m pytest --src . \
+	   --failing-list "[`test/test_common/test_file.py::Test_IO::test_read_file`]"
+```
+
+Selecting specific failing tests is especially useful when
+there are multiple, different faults, triggered by different
+tests. Fault localization techniques are usually designed to work
+under the assumption that they analyze each fault in isolation. If
+the analyzed project includes multiple faults, it is advisable to
+select a subset of the failing tests that trigger a single fault,
+so that fault localization can perform more accurately.
+
+### `--failing-file`: Select Failures
+
+Option `--failing-file $FAIL` 
+is the same as option `--failing-list`.
+But instead of taking a list of failing tests,
+it takes the path of a file relative to the analyzed project's root directory.
+In file `$FAIL`, every failing test must be in a separate line.
+
+
+### `--top-n`: Output List Size
+
+Option `--top-n $N` only reports up to `$N` suspicious program
+entities (statements or functions). `$N` must be a positive integer,
+or `-1` (the default: no limit).
+
+
+### Positional Argument: Tests
+
+Optional positional argument `$TESTS`, specified just after `pytest`,
+runs FauxPy using the tests found under path `$TESTS`. 
+If this argument is missing, FauxPy will use any tests found in the
+analyzed project.
+
+`$TESTS` must be a path relative to the analyzed project's root
+directory of a directory (package), a Python source file (module), or
+the fully-qualified name of a test function in the analyzed project,
+using the Pytest format `<FILE_PATH>::<CLASS_NAME>::<FUNCTION_NAME>`,
+where the `<CLASS_NAME>::` can be omitted if the test function is
+top-level.
+
+The positional argument can be repeated to select tests at different locations.
+For instance, the following command runs FauxPy using only tests
 in package `tests/package_x`, module `tests/test_y.py`, 
 and test function `tests/test_z.py::test_function_t`.
-In this case, FauxPy only considers these tests in the
-fault localization session.
 
-```
+```bash
 python -m pytest tests/package_x \
-                 tests/test_y.py \
-                 tests/test_z.py::test_function_t \
-                 --src code
+	   tests/test_y.py \
+	   tests/test_z.py::test_function_t \
+	   --src $SRC
 ```
 
-
-## 1.4 Guidelines
-
-As the first step of every fault localization session, FauxPy
-runs the whole test suite passed to it.
-Unlike SBFL and MBFL techniques, the two families ST and PS
-only use failing tests to perform fault localization.
-These two techniques simply ignore the information provided
-by running passing tests.
-Thus, it is better to run PS and ST using only the targeted failing
-tests in the test suite. In this way, FauxPy performs more efficiently;
-however, the result is going to be the same even if the passing tests are also
-involved. Section [1.3.7 Test-suite Subset](#137-test-suite-subset) explains
-how the test suite size can be controlled.
+Stack-trace and predicate switching fault localization only need to
+run failing tests. If a project has many tests, but only a few are
+failing, ST and PS fault localization will run more quickly if we
+pass the failing tests' location using this feature. If
+we don't, FauxPy will still have to run all tests, just to discover
+which ones are failing and can be used for ST or PS fault
+localization.
 
 
-## 1.5 Limitations
+## Limitations
 
-1. Both SBFL and MBFL families use [Coverage.py](https://coverage.readthedocs.io),
-through its API,
-to collect execution
-traces. So, any limitation of Coverage.py is a
-limitation of these two families.
+The current version of FauxPy has a couple of known limitations:
 
-2. The Stack Trace (ST) family does not work properly
-if Pytest's option `--tb=native` is used.
-Do not use `--tb=native` neither as a command line argument
-nor as included in a `pytest.ini` file.
+1. The implementation of SBFL and MBFL uses
+   [Coverage.py](https://coverage.readthedocs.io) through its API to
+   collect execution traces. Thus, FauxPy inherits any limitation of Coverage.py.
 
-3. FauxPy is not compatible with `pytest-sugar`.
-So, in order to use FauxPy, `pytest-sugar` must be uninstalled
-(run `pip uninstall pytest-sugar`) from your Python environment.
+2. The implementation of ST does not work properly if Pytest's option
+   `--tb=native` is enabled (as a command-line argument or in a
+   `pytest.ini` file).
 
-## 1.6 Citations
+3. FauxPy is incompatible with Pytest plugin
+   [`pytest-sugar`](https://pypi.org/project/pytest-sugar/). If you
+   want to use FauxPy, remove `pytest-sugar` from your Python
+   environment.
 
-In the following paper, we used FauxPy
-to conduct an empirical
-study of fault localization:
 
-[An Empirical Study of Fault Localization in Python Programs:](https://arxiv.org/abs/2305.19834)
+## Citing FauxPy and References
+
+The paper [An Empirical Study of Fault Localization in Python Programs](https://arxiv.org/abs/2305.19834) describes an empirical study where we applied FauxPy to 135 bugs in 13 real-world Python programs (from the [BugsInPy](https://github.com/soarsmu/BugsInPy) curated collection).
+
+You can cite this empirical work as follows:
+
+> Mohammad Rezaalipour, Carlo A. Furia: An Empirical Study of Fault Localization in Python Programs.  CoRR abs/2305.19834 (2023)
 
 ```
-@misc{Rezaalipour:2023,
-      title={An Empirical Study of Fault Localization in Python Programs}, 
+@misc{PythonFL-FauxPy,
+      title={An Empirical Study of Fault Localization in {P}ython Programs}, 
       author={Mohammad Rezaalipour and Carlo A. Furia},
       year={2023},
       eprint={2305.19834},
       archivePrefix={arXiv},
-      primaryClass={cs.SE}
+      primaryClass={cs.SE},
+	  url={https://arxiv.org/abs/2305.19834}
 }
 ```
 
-The following repository contains the replication package of
-this paper. This replication package contains 540 bash scripts,
-each running FauxPy on a real-world program.
-You can run some of them to see FauxPy's behaviour
-on real-world programs (see Section 
-[3. Running
-the experiments
-](https://github.com/atom-sw/fauxpy-experiments#3-running-the-experiments) in
-the following repository).
 
-https://github.com/atom-sw/fauxpy-experiments
+## Mirrors
 
-
-# 2. Mirrors
-
-The current repository is a public mirror of
-our internal private repository.
-We have two public mirrors, which are as follows:
+This repository is a public mirror of (part of)
+FauxPy's private development repository.
+There are two public mirrors, whose content is identical:
 
 - https://github.com/atom-sw/fauxpy
 - https://github.com/mohrez86/fauxpy
