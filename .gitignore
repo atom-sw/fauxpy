@@ -76,3 +76,5 @@ target/
 .idea/
 
 make_env.sh
+
+FauxPyReport*
