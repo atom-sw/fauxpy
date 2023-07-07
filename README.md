@@ -259,7 +259,7 @@ You can cite this empirical work as follows:
       eprint={2305.19834},
       archivePrefix={arXiv},
       primaryClass={cs.SE},
-	  url={https://arxiv.org/abs/2305.19834}
+      url={https://arxiv.org/abs/2305.19834}
 }
 ```
 
