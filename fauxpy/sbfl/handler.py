@@ -54,7 +54,9 @@ def handlerRuntestMakereport(item, call):
     if call.when == "call":
         testName = TestInformation(item.location, item.nodeid).getTestName()
         if testName != _CurrentTestName:
-            raise Exception(f"Starting coverage for {_CurrentTestName}. But closing coverage for {testName}.")
+            raise Exception(
+                f"Starting coverage for {_CurrentTestName}. But closing coverage for {testName}."
+            )
         _Cov.stop()
         covDat = _Cov.get_data()
         coveredStatements = []
@@ -69,10 +71,14 @@ def handlerRuntestMakereport(item, call):
             database.insertEmptyTest(testName)
         else:
             if _Granularity == "statement":
-                coveredStatementNames = [common.getStatementName(x[0], x[1]) for x in coveredStatements]
+                coveredStatementNames = [
+                    common.getStatementName(x[0], x[1]) for x in coveredStatements
+                ]
                 database.insertExecutionTrace(testName, coveredStatementNames)
             elif _Granularity == "function":
-                coveredFunctionNames = covered_function.getCoveredFunctionNames(coveredStatements)
+                coveredFunctionNames = covered_function.getCoveredFunctionNames(
+                    coveredStatements
+                )
                 database.insertExecutionTrace(testName, coveredFunctionNames)
             else:
                 raise Exception(f"Granularity {_Granularity} is not supported.")
@@ -90,7 +96,9 @@ def handlerTerminalSummary(terminalreporter):
     for key, value in terminalreporter.stats.items():
         if key in ["passed", "failed"]:
             for testReport in value:
-                testInformation = TestInformation(testReport.location, testReport.nodeid)
+                testInformation = TestInformation(
+                    testReport.location, testReport.nodeid
+                )
                 testPath = testInformation.getPath()
                 testMethodName = testInformation.getMethodName()
 

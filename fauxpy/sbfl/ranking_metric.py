@@ -33,9 +33,7 @@ def _rankingMetric(ef, ep, nf, np):
     ochiaiScore = _ochiai(ef, ep, nf, np)
     dstarScore = _dstar(ef, ep, nf, np)
 
-    scores = {"Tarantula": tarantulaScore,
-              "Ochiai": ochiaiScore,
-              "Dstar": dstarScore}
+    scores = {"Tarantula": tarantulaScore, "Ochiai": ochiaiScore, "Dstar": dstarScore}
 
     return scores
 
@@ -50,7 +48,9 @@ def computeSortedScores(topN: int) -> List[Tuple[str, int]]:
         assert numAllPassed >= numCovPassed
         assert numAllFailed >= numCovFailed
 
-        if numCovPassed + numCovFailed == 0:  # entities covered by xfail, xpass, and not targeted failing tests.
+        if (
+            numCovPassed + numCovFailed == 0
+        ):  # entities covered by xfail, xpass, and not targeted failing tests.
             continue
 
         ef = numCovFailed
