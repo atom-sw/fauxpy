@@ -7,9 +7,11 @@ from .. import common, constants
 
 
 class PSCollectModeRunResult:
-    def __init__(self,
-                 testCaseTable: List[Tuple[str, str, str]],
-                 seenExceptionList: List[Tuple[str, str]]):
+    def __init__(
+        self,
+        testCaseTable: List[Tuple[str, str, str]],
+        seenExceptionList: List[Tuple[str, str]],
+    ):
         self.testCaseTable = testCaseTable
         self.seenExceptionList = seenExceptionList
 
@@ -71,11 +73,15 @@ def _cleanProject(tempDir):
         if os.path.exists(filePath):
             os.remove(filePath)
 
-    fileNamePredSequence = pathlib.Path(constants.getCollectModeExecutedPredicateSequenceFileName())
+    fileNamePredSequence = pathlib.Path(
+        constants.getCollectModeExecutedPredicateSequenceFileName()
+    )
     if fileNamePredSequence.exists():
         fileNamePredSequence.unlink()
 
-    fileNameEvaluationCounter = pathlib.Path(constants.getCollectModeEvaluationCounterFileName())
+    fileNameEvaluationCounter = pathlib.Path(
+        constants.getCollectModeEvaluationCounterFileName()
+    )
     if fileNameEvaluationCounter.exists():
         fileNameEvaluationCounter.unlink()
 
@@ -84,55 +90,80 @@ def _cleanProject(tempDir):
         fileNameExceptionSeen.unlink()
 
 
-def _runProject(src: str,
-                exclude: List[str],
-                projectPath: str,
-                fileOrDir: List[str],
-                timeout: Optional[float],
-                processTimeout: float = None,
-                mode: str = ""):
+def _runProject(
+    src: str,
+    exclude: List[str],
+    projectPath: str,
+    fileOrDir: List[str],
+    timeout: Optional[float],
+    processTimeout: float = None,
+    mode: str = "",
+):
     _cleanProject(projectPath)
-    command = ["python", "-m", "pytest"] + fileOrDir + ["--src", src, "--family", "collect" + mode,
-                                                        "--exclude", common.convertListToString(exclude)
-                                                        ]
+    command = (
+        ["python", "-m", "pytest"]
+        + fileOrDir
+        + [
+            "--src",
+            src,
+            "--family",
+            "collect" + mode,
+            "--exclude",
+            common.convertListToString(exclude),
+        ]
+    )
     if timeout is not None:
         command += ["--timeout", str(timeout)]
         command += ["--timeout_method", "thread"]
     common.runCommand(command, projectPath, processTimeout)
 
 
-def runMbflCollectMode(src: str, exclude: List[str],
-                       projectPath: str, fileOrDir: List[str],
-                       timeout: float,
-                       processTimeout: float) -> Optional[List[Tuple[str, str, str]]]:
+def runMbflCollectMode(
+    src: str,
+    exclude: List[str],
+    projectPath: str,
+    fileOrDir: List[str],
+    timeout: float,
+    processTimeout: float,
+) -> Optional[List[Tuple[str, str, str]]]:
     _runProject(src, exclude, projectPath, fileOrDir, timeout, processTimeout, "mbfl")
     testCaseTable = common.loadAfterCollectModeTestCaseTable(projectPath)
     return testCaseTable
 
 
-def runPSCollectModeInfo(src: str, exclude: List[str],
-                         projectPath: str, fileOrDir: List[str],
-                         timeout: Optional[float] = None) -> List[Tuple[str, str, str]]:
+def runPSCollectModeInfo(
+    src: str,
+    exclude: List[str],
+    projectPath: str,
+    fileOrDir: List[str],
+    timeout: Optional[float] = None,
+) -> List[Tuple[str, str, str]]:
     _runProject(src, exclude, projectPath, fileOrDir, timeout, mode="psinfo")
 
-    predicateSequenceTable = common.loadAfterCollectModePredicateSequenceTable(projectPath)
+    predicateSequenceTable = common.loadAfterCollectModePredicateSequenceTable(
+        projectPath
+    )
     indexedPredicateSequences = getIndexPredicateSequences(predicateSequenceTable)
 
     return indexedPredicateSequences
 
 
-def runPSCollectModeRun(src: str,
-                        exclude: List[str],
-                        projectPath: str,
-                        fileOrDir: List[str],
-                        predicateName: str,
-                        instanceNumber: int,
-                        timeout: Optional[float] = None) -> PSCollectModeRunResult:
+def runPSCollectModeRun(
+    src: str,
+    exclude: List[str],
+    projectPath: str,
+    fileOrDir: List[str],
+    predicateName: str,
+    instanceNumber: int,
+    timeout: Optional[float] = None,
+) -> PSCollectModeRunResult:
     common.saveBeforeCollectModeConfigFile(projectPath, predicateName, instanceNumber)
     _runProject(src, exclude, projectPath, fileOrDir, timeout, mode="psrun")
 
     testCaseTable = common.loadAfterCollectModeTestCaseTable(projectPath)
-    seenExceptionList = common.loadAfterCollectModeSeenExceptionSequenceTable(projectPath)
+    seenExceptionList = common.loadAfterCollectModeSeenExceptionSequenceTable(
+        projectPath
+    )
     result = PSCollectModeRunResult(testCaseTable, seenExceptionList)
 
     return result
