@@ -2,7 +2,9 @@ from fauxpy.common import TargetFailingTests
 
 
 def test_single_3_part_faining_test_unittest_format():
-    failing_test_list = ["tornado/test/httpclient_test.py::SyncHTTPClientSubprocessTest::test_destructor_log"]
+    failing_test_list = [
+        "tornado/test/httpclient_test.py::SyncHTTPClientSubprocessTest::test_destructor_log"
+    ]
     tft_object = TargetFailingTests(failing_test_list)
 
     test_path = "tornado/test/httpclient_test.py"

@@ -34,7 +34,10 @@ def test__getAllMutants_a_cosmic_ray_mutation_operator_on_real_module():
     all_mutants = _main._getAllMutants(module_path, operator_names)
     assert len(all_mutants) == 84
     assert all_mutants[0].startPos == (130, 45) and all_mutants[0].endPos == (130, 46)
-    assert all_mutants[-1].startPos == (2765, 20) and all_mutants[-1].endPos == (2765, 21)
+    assert all_mutants[-1].startPos == (2765, 20) and all_mutants[-1].endPos == (
+        2765,
+        21,
+    )
 
 
 def test__getAllMutants_a_cosmic_ray_mutation_operator_on_minimal_module():

@@ -23,7 +23,7 @@ testdata = [
     ("sbfl", "function"),
     # ("mbfl", "function"),
     ("ps", "function"),
-    ("st", "function")
+    ("st", "function"),
 ]
 
 
@@ -32,14 +32,23 @@ def test_family(family, granularity):
     projectName = MINIMAL_PROJECT
     workingDirectoryPath = getDataPath("common", projectName)
     workingDirectory = str(workingDirectoryPath.absolute())
-    command = ["python", "-m", "pytest",
-               "tests",
-               "--src", "src",
-               "--family", family,
-               "--granularity", granularity]
+    command = [
+        "python",
+        "-m",
+        "pytest",
+        "tests",
+        "--src",
+        "src",
+        "--family",
+        family,
+        "--granularity",
+        granularity,
+    ]
     runCommand(command, workingDirectory)
 
-    reportDirs = list(workingDirectoryPath.parent.rglob(f"FauxPyReport_{MINIMAL_PROJECT}*"))
+    reportDirs = list(
+        workingDirectoryPath.parent.rglob(f"FauxPyReport_{MINIMAL_PROJECT}*")
+    )
     assert len(reportDirs) != 0
     scoreFiles = list(reportDirs[-1].rglob("Scores_*"))
     assert len(scoreFiles) != 0

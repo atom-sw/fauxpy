@@ -15,9 +15,11 @@ def getDataPath(directoryName: str, fileName: str) -> Path:
 
 
 def deleteNoise(projectPath: Path):
-    filesToRemove = ["instrumentationCollectModeExecutedPredicateSequence.txt",
-                     "instrumentationCollectModeConfig.txt",
-                     "instrumentationCollectModeEvaluationCounter.txt"]
+    filesToRemove = [
+        "instrumentationCollectModeExecutedPredicateSequence.txt",
+        "instrumentationCollectModeConfig.txt",
+        "instrumentationCollectModeEvaluationCounter.txt",
+    ]
 
     for item in filesToRemove:
         pathItem = projectPath / pathlib.Path(item)
@@ -55,11 +57,14 @@ def deleteNoise(projectPath: Path):
 
 def runCommand(command: List[str], workingDir: str):
     import subprocess
-    execOut = subprocess.run(command,
-                             stdout=subprocess.PIPE,
-                             stderr=subprocess.PIPE,
-                             universal_newlines=True,
-                             cwd=workingDir)
+
+    execOut = subprocess.run(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+        cwd=workingDir,
+    )
 
     print(execOut.stdout)
     print(execOut.stderr)
