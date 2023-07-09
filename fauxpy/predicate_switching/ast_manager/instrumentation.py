@@ -5,10 +5,7 @@ import astor
 
 
 class InstrumentationTransformer(ast.NodeTransformer):
-    def __init__(self,
-                 tree,
-                 candidatePredicates,
-                 seenExceptions):
+    def __init__(self, tree, candidatePredicates, seenExceptions):
         self.tree = tree
         self.candidatePredicates = candidatePredicates
         self.seenExceptions = seenExceptions
@@ -42,9 +39,13 @@ class InstrumentationTransformer(ast.NodeTransformer):
         seenExpName = self._getSeenExceptionName(node)
 
         if candidateName is not None and self.isTestNode(node):
-            return InstrumentationTransformer._instrumentTestPredicate(node, candidateName)
+            return InstrumentationTransformer._instrumentTestPredicate(
+                node, candidateName
+            )
         if seenExpName is not None:
-            return InstrumentationTransformer._instrumentSeenException(node, seenExpName)
+            return InstrumentationTransformer._instrumentSeenException(
+                node, seenExpName
+            )
 
         return self.generic_visit(node)
 
@@ -59,9 +60,15 @@ class InstrumentationTransformer(ast.NodeTransformer):
                 attInstance = node.__getattribute__(att)
                 if isinstance(attInstance, list):
                     for subAtt in attInstance:
-                        lineEndMax = max(InstrumentationTransformer._getEndingLine(subAtt), lineEndMax)
+                        lineEndMax = max(
+                            InstrumentationTransformer._getEndingLine(subAtt),
+                            lineEndMax,
+                        )
                 else:
-                    lineEndMax = max(InstrumentationTransformer._getEndingLine(attInstance), lineEndMax)
+                    lineEndMax = max(
+                        InstrumentationTransformer._getEndingLine(attInstance),
+                        lineEndMax,
+                    )
                 if hasattr(attInstance, "lineno"):
                     lineEndMax = max(attInstance.lineno, lineEndMax)
 
@@ -72,7 +79,9 @@ class InstrumentationTransformer(ast.NodeTransformer):
     @staticmethod
     def _instrumentTestPredicate(node, candidateName):
         nodeAsText = astor.to_source(node).strip()
-        newNodeAsText = f"fauxpy_inst.wrap_pred_to_switch({nodeAsText}, '{candidateName}')"
+        newNodeAsText = (
+            f"fauxpy_inst.wrap_pred_to_switch({nodeAsText}, '{candidateName}')"
+        )
         newAst = ast.parse(newNodeAsText)
         newNodeAst = newAst.body[0].value
         return newNodeAst
@@ -81,7 +90,9 @@ class InstrumentationTransformer(ast.NodeTransformer):
     def _instrumentSeenException(node, seenExpName):
         # TODO: the solution is ad hoc. Find a better way for it.
         nodeAsText = astor.to_source(node).strip()
-        visitExpStatementAsText = f"fauxpy_inst.exception_seen_at_next_line('{seenExpName}')"
+        visitExpStatementAsText = (
+            f"fauxpy_inst.exception_seen_at_next_line('{seenExpName}')"
+        )
         newNodeAsText = f"{visitExpStatementAsText}\n{nodeAsText}"
         newNodeAst = ast.parse(newNodeAsText)
         return newNodeAst
@@ -90,7 +101,10 @@ class InstrumentationTransformer(ast.NodeTransformer):
         if hasattr(node, "lineno"):
             for predicate in self.candidatePredicates:
                 lineStart, lineEnd, candidateName = predicate
-                if lineStart == node.lineno and lineEnd == InstrumentationTransformer._getEndingLine(node):
+                if (
+                    lineStart == node.lineno
+                    and lineEnd == InstrumentationTransformer._getEndingLine(node)
+                ):
                     return candidateName
         return None
 
@@ -112,9 +126,12 @@ def _addInstrumentationImport(astTree):
     # Probably it is OK for finding docstrings
     # at the beginning of a module.
     def isDocString(x) -> bool:
-        if (isinstance(x, ast.Expr) and
-                ((isinstance(x.value, ast.Str) and isinstance(x.value.s, str)) or  # for Python 3.6 and Python 3.7
-                 (isinstance(x.value, ast.Constant) and isinstance(x.value.value, str)))):  # for Python 3.8 and Python 3.9
+        if isinstance(x, ast.Expr) and (
+            (isinstance(x.value, ast.Str) and isinstance(x.value.s, str))
+            or (  # for Python 3.6 and Python 3.7
+                isinstance(x.value, ast.Constant) and isinstance(x.value.value, str)
+            )
+        ):  # for Python 3.8 and Python 3.9
             return True
         return False
 
@@ -123,17 +140,23 @@ def _addInstrumentationImport(astTree):
         if not isFromFuture(item) and not isDocString(item):
             break
 
-    newImport = ast.ImportFrom(module='fauxpy', names=[ast.alias(name='fauxpy_inst', asname=None)], level=0)
+    newImport = ast.ImportFrom(
+        module="fauxpy", names=[ast.alias(name="fauxpy_inst", asname=None)], level=0
+    )
     astTree.body.insert(index, newImport)
 
 
-def instrumentCurrentFilePath(filePath: str,
-                              candidatePredicates: List[Tuple[int, int, str]],
-                              seenExceptions: List[Tuple[int, str]]) -> Optional[str]:
+def instrumentCurrentFilePath(
+    filePath: str,
+    candidatePredicates: List[Tuple[int, int, str]],
+    seenExceptions: List[Tuple[int, str]],
+) -> Optional[str]:
     with open(filePath, "r") as source:
         tree = ast.parse(source.read())
 
-    astTransformer = InstrumentationTransformer(tree, candidatePredicates, seenExceptions)
+    astTransformer = InstrumentationTransformer(
+        tree, candidatePredicates, seenExceptions
+    )
     newAst = astTransformer.visit(tree)
     _addInstrumentationImport(newAst)
     ast.fix_missing_locations(newAst)

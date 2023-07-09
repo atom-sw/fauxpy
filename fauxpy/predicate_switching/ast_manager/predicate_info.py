@@ -7,8 +7,7 @@ from fauxpy import common
 
 # TODO: Consider adding assignment predicates such as x = 3 if p1 else 4.
 class Analyzer(ast.NodeVisitor):
-    def __init__(self,
-                 lineNumber: int):
+    def __init__(self, lineNumber: int):
         self._lineNumber = lineNumber
         self._lineStart = -1
         self._lineEnd = -1
@@ -59,7 +58,9 @@ class Analyzer(ast.NodeVisitor):
         return lineEndMax
 
 
-def getPredicateInstanceRangeForProgramLine(filePath: str, lineNumber: int) -> Tuple[int, int]:
+def getPredicateInstanceRangeForProgramLine(
+    filePath: str, lineNumber: int
+) -> Tuple[int, int]:
     with open(filePath, "r") as source:
         try:
             tree = ast.parse(source.read())
@@ -68,7 +69,8 @@ def getPredicateInstanceRangeForProgramLine(filePath: str, lineNumber: int) -> T
                 f"Due to the following error, the following module is removed form fault localization."
                 f"To include it, fix the error, and run the tool again.\r\n"
                 f"Error: {exp}.\r\n"
-                f"Module: {filePath}")
+                f"Module: {filePath}"
+            )
             return -1, -1
 
     analyzer = Analyzer(lineNumber)

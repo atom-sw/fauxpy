@@ -58,7 +58,9 @@ def handlerRuntestMakereport(item, call):
     if call.when == "call":
         testName = TestInformation(item.location, item.nodeid).getTestName()
         if testName != _CurrentTestName:
-            raise Exception(f"Starting coverage for {_CurrentTestName}. But closing coverage for {testName}.")
+            raise Exception(
+                f"Starting coverage for {_CurrentTestName}. But closing coverage for {testName}."
+            )
 
         # program_tracer.stop()
         # executionTrace = program_tracer.getExecutionTrace()
@@ -83,7 +85,9 @@ def handlerRuntestMakereport(item, call):
             database.insertEmptyTest(testName)
         else:
             for coveredStmt in coveredStatements:
-                database.insertCoveredLineForTest(testName, coveredStmt[0], coveredStmt[1])
+                database.insertCoveredLineForTest(
+                    testName, coveredStmt[0], coveredStmt[1]
+                )
 
         _Cov.erase()
 
@@ -102,7 +106,9 @@ def handlerTerminalSummary(terminalreporter):
     for key, value in terminalreporter.stats.items():
         if key in ["passed", "failed"]:
             for testReport in value:
-                testInformation = TestInformation(testReport.location, testReport.nodeid)
+                testInformation = TestInformation(
+                    testReport.location, testReport.nodeid
+                )
                 testPath = testInformation.getPath()
                 testMethodName = testInformation.getMethodName()
 
@@ -111,26 +117,35 @@ def handlerTerminalSummary(terminalreporter):
                 exceptionLineNumber = -1
                 target = False
                 if key == "failed":
-
                     if _TargetFailingTests is not None:
-                        target = _TargetFailingTests.isTargetTest(testPath, testMethodName)
+                        target = _TargetFailingTests.isTargetTest(
+                            testPath, testMethodName
+                        )
                     elif _TargetFailingTests is None:
                         target = True
 
                     # TODO: Try not to use testReport.longrepr.reprtraceback. Does not work with {pytest-xdist,
                     #  --forked}. Same problem in collect mode and mbfl.
                     reprTraceback = testReport.longrepr.reprtraceback
-                    exceptionFilePath, exceptionLineNumber = common.getExceptionLocation(reprTraceback, _Src, _Exclude)
-                database.insertTestCase(testName=testName, testType=key,
-                                        exceptionFilePath=common.relativePathToAbsPath(exceptionFilePath),
-                                        exceptionLineNumber=exceptionLineNumber,
-                                        target=target)
+                    (
+                        exceptionFilePath,
+                        exceptionLineNumber,
+                    ) = common.getExceptionLocation(reprTraceback, _Src, _Exclude)
+                database.insertTestCase(
+                    testName=testName,
+                    testType=key,
+                    exceptionFilePath=common.relativePathToAbsPath(exceptionFilePath),
+                    exceptionLineNumber=exceptionLineNumber,
+                    target=target,
+                )
 
     # TODO: Get time from passing tests and target failing tests.
     maxTestTime = database.selectMaxTestTime()
 
     timeoutLimit = common.getTimeout(maxTestTime)
-    resultsFL = algorithm.runPredicateSwitching(_Src, _Exclude, _Granularity, timeoutLimit, _TopN, _TargetFailingTests)
+    resultsFL = algorithm.runPredicateSwitching(
+        _Src, _Exclude, _Granularity, timeoutLimit, _TopN, _TargetFailingTests
+    )
 
     database.end()
 

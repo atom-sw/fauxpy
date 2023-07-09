@@ -8,10 +8,12 @@ def _getSeenExceptionsStoreDb(exceptions: List[Tuple[str, str, int]]):
         testName, filePath, lineNumber = exp
         exceptionName = f"Exception_{i}"
 
-        database.insertSeenExceptions(testName=testName,
-                                      filePath=filePath,
-                                      lineNumber=lineNumber,
-                                      exceptionName=exceptionName)
+        database.insertSeenExceptions(
+            testName=testName,
+            filePath=filePath,
+            lineNumber=lineNumber,
+            exceptionName=exceptionName,
+        )
 
 
 def getSeenExceptionsStoreDb():

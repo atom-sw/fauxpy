@@ -12,25 +12,33 @@ def _getInstrumentedModules() -> List[Tuple[str, str]]:
     predicate or a seen exception) and their instrumented content.
     """
     instFilePathsContent: List[Tuple[str, str]] = []
-    filePathsWithCandidatePredicate = database.selectDistinctCandidatePredicateFilePaths()
+    filePathsWithCandidatePredicate = (
+        database.selectDistinctCandidatePredicateFilePaths()
+    )
     filePathsWithSeenExceptions = database.selectDistinctSeenExceptionsFilePaths()
     instFilePaths = set(filePathsWithCandidatePredicate + filePathsWithSeenExceptions)
     for filePath in instFilePaths:
         candidatePredicates = database.selectCandidatePredicatesForFilePath(filePath)
         seenExceptions = database.selectSeenExceptionsForFilePath(filePath)
-        instFileContent = ast_manager.instrumentCurrentFilePath(filePath, candidatePredicates, seenExceptions)
+        instFileContent = ast_manager.instrumentCurrentFilePath(
+            filePath, candidatePredicates, seenExceptions
+        )
         if instFileContent is None:
             # For cases that astor cannot perform correctly
             for item in candidatePredicates:
                 lineStart, lineEnd, predicateName = item
-                database.insertAstorAssertErrorInfo(filePath, lineStart, lineEnd, predicateName)
+                database.insertAstorAssertErrorInfo(
+                    filePath, lineStart, lineEnd, predicateName
+                )
         else:
             instFilePathsContent.append((filePath, instFileContent))
 
     return instFilePathsContent
 
 
-def _injectInstrumentedContentInProject(tempProjectPath: str, instrumentedModules: List[Tuple[str, str]]):
+def _injectInstrumentedContentInProject(
+    tempProjectPath: str, instrumentedModules: List[Tuple[str, str]]
+):
     """
     Replaces modules to be instrumented with their instrumented versions.
     """
@@ -56,10 +64,9 @@ def _instrumentProject() -> str:
     return tmpProjectPath
 
 
-def _getPredicateSequences(projectPath: str,
-                           src: str,
-                           exclude: List[str],
-                           failedTestPaths):
+def _getPredicateSequences(
+    projectPath: str, src: str, exclude: List[str], failedTestPaths
+):
     """
     Runs the project in Collect mode and stores a list of tuples
     (testName, Predicate sequence).
@@ -69,10 +76,9 @@ def _getPredicateSequences(projectPath: str,
     # TODO: Optimize the failing tests to run. Maybe running it on arg_min(failedTestPaths, fileOrDir).
 
     predicateSequences = []
-    indexedPredicateSequences = collect_mode.runPSCollectModeInfo(src=src,
-                                                                  exclude=exclude,
-                                                                  projectPath=projectPath,
-                                                                  fileOrDir=failedTestPaths)
+    indexedPredicateSequences = collect_mode.runPSCollectModeInfo(
+        src=src, exclude=exclude, projectPath=projectPath, fileOrDir=failedTestPaths
+    )
     # exeResultData = collect_mode.getRunResult(projectPath)
     for r in indexedPredicateSequences:
         testName, predicateSequence, indPredSeq = r
@@ -120,8 +126,15 @@ def _getGeneralizedFailedTestFunctionPaths():
     return generalizedTestNames
 
 
-def _runSwitchedPredicateInstance(projectPath: str, testName: str, predicateName: str, instanceNumber: int, src: str,
-                                  exclude: List[str], timeoutLimit: float) -> Tuple[Optional[str], Optional[List[str]], Optional[float], bool]:
+def _runSwitchedPredicateInstance(
+    projectPath: str,
+    testName: str,
+    predicateName: str,
+    instanceNumber: int,
+    src: str,
+    exclude: List[str],
+    timeoutLimit: float,
+) -> Tuple[Optional[str], Optional[List[str]], Optional[float], bool]:
     """
     Runs the instrumented project in temp directory on the given test name.
     In the execution, the given predicate instance is switched.
@@ -131,13 +144,15 @@ def _runSwitchedPredicateInstance(projectPath: str, testName: str, predicateName
     # generalizedTestPath = _getGeneralizedTestName(testName)
     filePath, _, functionName = common.convertTestNameToComponents(testName)
     generalizedTestPath = common.getGeneralizedTestName(filePath, functionName)
-    exeResultData = collect_mode.runPSCollectModeRun(src=src,
-                                                     exclude=exclude,
-                                                     projectPath=projectPath,
-                                                     fileOrDir=[generalizedTestPath],
-                                                     predicateName=predicateName,
-                                                     instanceNumber=instanceNumber,
-                                                     timeout=timeoutLimit)
+    exeResultData = collect_mode.runPSCollectModeRun(
+        src=src,
+        exclude=exclude,
+        projectPath=projectPath,
+        fileOrDir=[generalizedTestPath],
+        predicateName=predicateName,
+        instanceNumber=instanceNumber,
+        timeout=timeoutLimit,
+    )
 
     execStatError = exeResultData.isTestCaseTableEmptyOrNone()
     if execStatError:
@@ -158,13 +173,15 @@ def _runSwitchedPredicateInstance(projectPath: str, testName: str, predicateName
     return testResult, seenExceptionList, timeoutStat, execStatError
 
 
-def _runPredicateSequence(projectPath: str,
-                          testName: str,
-                          indexedPredSeqStr: str,
-                          src: str,
-                          exclude: List[str],
-                          expectedExceptionSeenName: str,
-                          timeoutLimit: float):
+def _runPredicateSequence(
+    projectPath: str,
+    testName: str,
+    indexedPredSeqStr: str,
+    src: str,
+    exclude: List[str],
+    expectedExceptionSeenName: str,
+    timeoutLimit: float,
+):
     """
     Runs the given ordered predicate instances for the given predicate test name.
     Returns an ordered sequence of predicate instances that can pass the given test if switched.
@@ -179,18 +196,26 @@ def _runPredicateSequence(projectPath: str,
     for ind, predInst in enumerate(indPredSeq):
         predName, instNum = predInst.split("::")
 
-        print(f"-----RUNNING Predicate Instance "
-              f"{predName}::{instNum} - {ind} / {numberOfPredicateInstancesForTest} "
-              f"----- on test {testName}-----")
+        print(
+            f"-----RUNNING Predicate Instance "
+            f"{predName}::{instNum} - {ind} / {numberOfPredicateInstancesForTest} "
+            f"----- on test {testName}-----"
+        )
 
-        testResult, seenExceptionList, timeoutStat, execStatError = _runSwitchedPredicateInstance(
+        (
+            testResult,
+            seenExceptionList,
+            timeoutStat,
+            execStatError,
+        ) = _runSwitchedPredicateInstance(
             projectPath=projectPath,
             testName=testName,
             predicateName=predName,
             instanceNumber=int(instNum),
             src=src,
             exclude=exclude,
-            timeoutLimit=timeoutLimit)
+            timeoutLimit=timeoutLimit,
+        )
 
         if execStatError:
             database.insertBadExecutionPredicateInstance(testName, predName, instNum)
@@ -206,15 +231,17 @@ def _runPredicateSequence(projectPath: str,
         if testResult == "passed":
             # For crashing bugs, if switching prevents the program from crashing
             # but the crash location is not executed, the predicate is not critical.
-            if (expectedExceptionSeenName is None) or (expectedExceptionSeenName in seenExceptionList):
+            if (expectedExceptionSeenName is None) or (
+                expectedExceptionSeenName in seenExceptionList
+            ):
                 passingPredicateInstances.append(predInst)
 
     return passingPredicateInstances
 
 
-def _getTestScoredEntityStoreDb(testName: str,
-                                passingPredicateInstanceSequence: List[str],
-                                granularity: str):
+def _getTestScoredEntityStoreDb(
+    testName: str, passingPredicateInstanceSequence: List[str], granularity: str
+):
     score = 1
     for predicateInstance in passingPredicateInstanceSequence:
         predicateName, instanceNumber = predicateInstance.split("::")
@@ -228,8 +255,9 @@ def _getTestScoredEntityStoreDb(testName: str,
                 entity = f"{filePath}::GLOBAL"
             else:
                 functionFilePath, functionName, functionLineStart, functionLineEnd = cfi
-                entity = common.getCoveredFunctionName(functionFilePath, functionName, functionLineStart,
-                                                       functionLineEnd)
+                entity = common.getCoveredFunctionName(
+                    functionFilePath, functionName, functionLineStart, functionLineEnd
+                )
         else:
             raise Exception(f"The granularity {granularity} is not supported.")
 
@@ -257,7 +285,9 @@ def _getAllTestsTopNScoredEntities(topN):
         if topN == -1:
             testTopNScoredEntities = database.selectTestAllScoredEntities(testName)
         elif topN >= 0:
-            testTopNScoredEntities = database.selectTestTopNScoredEntities(testName, topN)
+            testTopNScoredEntities = database.selectTestTopNScoredEntities(
+                testName, topN
+            )
         else:
             raise Exception(f"TopN {topN} is not supported.")
 
@@ -269,10 +299,14 @@ def _getAllTestsTopNScoredEntities(topN):
     return allTestsTopNScoredEntities
 
 
-def runPredicateSwitching(src: str, exclude: List[str], granularity: str,
-                          timeoutLimit: float,
-                          topN: int,
-                          targetFailingTests: common.TargetFailingTests):
+def runPredicateSwitching(
+    src: str,
+    exclude: List[str],
+    granularity: str,
+    timeoutLimit: float,
+    topN: int,
+    targetFailingTests: common.TargetFailingTests,
+):
     """
     Runs the whole predicate switching algorithm.
     """
@@ -290,7 +324,9 @@ def runPredicateSwitching(src: str, exclude: List[str], granularity: str,
     else:
         failingTests = targetFailingTests.getFailingTests()
 
-    predicateSequences = _getPredicateSequences(tempProjectPath, src, exclude, failingTests)
+    predicateSequences = _getPredicateSequences(
+        tempProjectPath, src, exclude, failingTests
+    )
 
     for predSeqItem in predicateSequences:
         testName, indexedPredSeqStr = predSeqItem
@@ -299,15 +335,19 @@ def runPredicateSwitching(src: str, exclude: List[str], granularity: str,
             continue
 
         seenExceptionName = database.selectSeenExceptionForTestName(testName)
-        passingPredicateInstanceSequence = _runPredicateSequence(tempProjectPath,
-                                                                 testName,
-                                                                 indexedPredSeqStr,
-                                                                 src,
-                                                                 exclude,
-                                                                 seenExceptionName,
-                                                                 timeoutLimit)
+        passingPredicateInstanceSequence = _runPredicateSequence(
+            tempProjectPath,
+            testName,
+            indexedPredSeqStr,
+            src,
+            exclude,
+            seenExceptionName,
+            timeoutLimit,
+        )
 
-        _getTestScoredEntityStoreDb(testName, passingPredicateInstanceSequence, granularity)
+        _getTestScoredEntityStoreDb(
+            testName, passingPredicateInstanceSequence, granularity
+        )
 
     _removeTempProject(tempProjectPath)
 

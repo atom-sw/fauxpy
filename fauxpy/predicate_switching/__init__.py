@@ -1,1 +1,6 @@
-from .handler import handlerConfigure, handlerRuntestCall, handlerRuntestMakereport, handlerTerminalSummary
+from .handler import (
+    handlerConfigure,
+    handlerRuntestCall,
+    handlerRuntestMakereport,
+    handlerTerminalSummary,
+)
