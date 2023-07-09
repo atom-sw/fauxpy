@@ -3,6 +3,7 @@
 [![PyPI version](https://badge.fury.io/py/fauxpy.svg)](https://badge.fury.io/py/fauxpy)
 ![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)
 [![Downloads](https://static.pepy.tech/badge/fauxpy)](https://pepy.tech/project/fauxpy)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 FauxPy (pronounced: "foh pie")
 is an automated fault localization tool for Python programs.
