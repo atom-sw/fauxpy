@@ -2,9 +2,11 @@ from typing import List, Tuple, Set
 
 
 class ExecutionTrace(object):
-    def __init__(self,
-                 executedLinesList: List[Tuple[str, int]],
-                 executedLinesSet: Set[Tuple[str, int]]):
+    def __init__(
+        self,
+        executedLinesList: List[Tuple[str, int]],
+        executedLinesSet: Set[Tuple[str, int]],
+    ):
         self.executedLinesList = executedLinesList
         self.executedLinesSet = executedLinesSet
 
