@@ -13,14 +13,16 @@ import difflib
 
 
 class Mutant(object):
-    def __init__(self,
-                 modulePath: str,
-                 operatorName: str,
-                 startPos: Tuple[int],
-                 endPos: Tuple[int],
-                 occurrence: int,
-                 moduleContent: str,
-                 moduleDiff: List[str]):
+    def __init__(
+        self,
+        modulePath: str,
+        operatorName: str,
+        startPos: Tuple[int],
+        endPos: Tuple[int],
+        occurrence: int,
+        moduleContent: str,
+        moduleDiff: List[str],
+    ):
         self.modulePath: str = modulePath
         self.operatorName: str = operatorName
         self.startPos: Tuple[int] = startPos
@@ -50,9 +52,11 @@ class Mutant(object):
         return diffText
 
     def operatorMutationTargetEqualTo(self, mutant):
-        result = self.operatorName == mutant.operatorName and \
-                 self.startPos == mutant.startPos and \
-                 self.endPos == mutant.endPos
+        result = (
+            self.operatorName == mutant.operatorName
+            and self.startPos == mutant.startPos
+            and self.endPos == mutant.endPos
+        )
         return result
 
     # TODO: Multiline predicates might cause problem.
@@ -91,11 +95,11 @@ class Mutant(object):
 def _makeDiff(original_source, mutated_source, module_path):
     module_diff = ["--- mutation diff ---"]
     for line in difflib.unified_diff(
-            original_source.split("\n"),
-            mutated_source.split("\n"),
-            fromfile="a" + str(module_path),
-            tofile="b" + str(module_path),
-            lineterm="",
+        original_source.split("\n"),
+        mutated_source.split("\n"),
+        fromfile="a" + str(module_path),
+        tofile="b" + str(module_path),
+        lineterm="",
     ):
         module_diff.append(line)
     return module_diff
@@ -105,9 +109,9 @@ def _makeDiff(original_source, mutated_source, module_path):
 # https://github.com/sixty-north/cosmic-ray/blob/release/v8.3.5/src/cosmic_ray/mutating.py#L113
 # Module: cosmic_ray/mutating.py
 # Function: apply_mutation
-def produceMutation(module_path: str,
-                    operator,
-                    occurrence: int) -> Tuple[str, Optional[str]]:
+def produceMutation(
+    module_path: str, operator, occurrence: int
+) -> Tuple[str, Optional[str]]:
     module_ast = get_ast(pathlib.Path(module_path))
     original_code = module_ast.get_code()
     visitor = MutationVisitor(occurrence, operator)
@@ -130,8 +134,7 @@ def produceMutation(module_path: str,
 # https://github.com/sixty-north/cosmic-ray/blob/release/v8.3.5/src/cosmic_ray/commands/init.py#L15
 # Module: cosmic_ray/commands/init.py
 # Function: _all_work_items
-def _getAllMutants(module_path: str,
-                   operator_names: List[str]) -> List[Mutant]:
+def _getAllMutants(module_path: str, operator_names: List[str]) -> List[Mutant]:
     mutantList: List[Mutant] = []
 
     module_ast = get_ast(pathlib.Path(module_path))
@@ -154,9 +157,13 @@ def _getAllMutants(module_path: str,
                 continue
 
         for occurrence, (start_pos, end_pos) in enumerate(positions):
-            original_code, mutated_code = produceMutation(module_path, operator, occurrence)
+            original_code, mutated_code = produceMutation(
+                module_path, operator, occurrence
+            )
             if mutated_code is not None:
-                moduleDiff = _makeDiff(original_code, mutated_code, pathlib.Path(module_path))
+                moduleDiff = _makeDiff(
+                    original_code, mutated_code, pathlib.Path(module_path)
+                )
                 mutant = Mutant(
                     modulePath=str(module_path),
                     operatorName=op_name,
@@ -164,7 +171,7 @@ def _getAllMutants(module_path: str,
                     startPos=start_pos,
                     endPos=end_pos,
                     moduleContent=mutated_code,
-                    moduleDiff=moduleDiff
+                    moduleDiff=moduleDiff,
                 )
 
                 mutantList.append(mutant)
@@ -173,9 +180,11 @@ def _getAllMutants(module_path: str,
 
 
 # The API written by me.
-def getMutantsForModuleAndLines(modulePath: str,
-                                lineNumbers: Optional[List[int]] = None,
-                                operatorMutationTargetUnique: bool = True) -> List[Mutant]:
+def getMutantsForModuleAndLines(
+    modulePath: str,
+    lineNumbers: Optional[List[int]] = None,
+    operatorMutationTargetUnique: bool = True,
+) -> List[Mutant]:
     """
     Given a module, it returns a list of mutants for every single
     mutable target that is in the lineNumbers list.
@@ -196,7 +205,11 @@ def getMutantsForModuleAndLines(modulePath: str,
     mutantList = _getAllMutants(modulePath, operator_names)
 
     if lineNumbers is not None:
-        mutantList = [x for x in mutantList if x.startPos[0] in lineNumbers or x.endPos[0] in lineNumbers]
+        mutantList = [
+            x
+            for x in mutantList
+            if x.startPos[0] in lineNumbers or x.endPos[0] in lineNumbers
+        ]
 
     if operatorMutationTargetUnique:
         newMutantList = []

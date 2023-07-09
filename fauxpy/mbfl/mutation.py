@@ -17,9 +17,11 @@ def getAllMutantsForFailingLineNumbers(failingLineNumbers):
     failingModulePaths = database.selectDistinctFailingModulePaths()
     for modulePath in failingModulePaths:
         lineNumbers = database.selectFailingLineNumbersForModulePath(modulePath)
-        currentModuleMutants = mutgen.getMutantsForModuleAndLines(modulePath=modulePath,
-                                                                  lineNumbers=lineNumbers,
-                                                                  operatorMutationTargetUnique=True)
+        currentModuleMutants = mutgen.getMutantsForModuleAndLines(
+            modulePath=modulePath,
+            lineNumbers=lineNumbers,
+            operatorMutationTargetUnique=True,
+        )
         mutants += currentModuleMutants
 
     _setMutantIds(mutants)

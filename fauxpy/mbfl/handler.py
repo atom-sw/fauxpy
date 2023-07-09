@@ -1,6 +1,7 @@
 from typing import List
 
 import coverage
+
 # from fauxpy import program_tracer
 
 from . import database, mutation, runner, mutant_score, entity_score
@@ -64,7 +65,9 @@ def handlerRuntestMakereport(item, call):
     if call.when == "call":
         testName = TestInformation(item.location, item.nodeid).getTestName()
         if testName != _CurrentTestName:
-            raise Exception(f"Starting coverage for {_CurrentTestName}. But closing coverage for {testName}.")
+            raise Exception(
+                f"Starting coverage for {_CurrentTestName}. But closing coverage for {testName}."
+            )
 
         # program_tracer.stop()
         # executionTrace = program_tracer.getExecutionTrace()
@@ -87,7 +90,9 @@ def handlerRuntestMakereport(item, call):
         if len(coveredStatements) == 0:
             database.insertEmptyTest(testName)
         else:
-            coveredStatementNames = [common.getStatementName(x[0], x[1]) for x in coveredStatements]
+            coveredStatementNames = [
+                common.getStatementName(x[0], x[1]) for x in coveredStatements
+            ]
             database.insertExecutionTrace(testName, coveredStatementNames)
         _Cov.erase()
 
@@ -104,7 +109,9 @@ def handlerTerminalSummary(terminalreporter):
     for key, value in terminalreporter.stats.items():
         if key in ["passed", "failed"]:
             for testReport in value:
-                testInformation = TestInformation(testReport.location, testReport.nodeid)
+                testInformation = TestInformation(
+                    testReport.location, testReport.nodeid
+                )
                 testPath = testInformation.getPath()
                 testMethodName = testInformation.getMethodName()
 
@@ -114,7 +121,9 @@ def handlerTerminalSummary(terminalreporter):
                 target = False
                 if key == "failed":
                     if _TargetFailingTests is not None:
-                        target = _TargetFailingTests.isTargetTest(testPath, testMethodName)
+                        target = _TargetFailingTests.isTargetTest(
+                            testPath, testMethodName
+                        )
                     elif _TargetFailingTests is None:
                         target = True
                     reprTraceback = testReport.longrepr.reprtraceback
@@ -122,20 +131,24 @@ def handlerTerminalSummary(terminalreporter):
                     if common.hasTimeoutHappened(testReport.longreprtext):
                         timeoutStat = 1
 
-                database.insertTestCaseRun(testName, key, testTraceBack, timeoutStat, target)
+                database.insertTestCaseRun(
+                    testName, key, testTraceBack, timeoutStat, target
+                )
 
     failingLineNumbers = database.selectDistinctLineNumbersCoveredByFailingTests()
     mutants = mutation.getAllMutantsForFailingLineNumbers(failingLineNumbers)
 
     # Storing mutants for possible further analysis (can be removed)
     for mutant in mutants:
-        database.insertMutant(mutant.getId(),
-                              mutant.getModulePath(),
-                              mutant.getLineNumber(),
-                              mutant.getModuleOperator(),
-                              mutant.getModuleDiffAsText(),
-                              mutant.getStartPos(),
-                              mutant.getEndPos())
+        database.insertMutant(
+            mutant.getId(),
+            mutant.getModulePath(),
+            mutant.getLineNumber(),
+            mutant.getModuleOperator(),
+            mutant.getModuleDiffAsText(),
+            mutant.getStartPos(),
+            mutant.getEndPos(),
+        )
 
     # TODO: Get time from passing tests and target failing tests.
     maxTestTime = database.selectMaxTestTime()
@@ -143,7 +156,17 @@ def handlerTerminalSummary(terminalreporter):
     numPassed, numFailed = database.selectNumberOfTests()
     numAllTests = numPassed + numFailed
     processTimeout = common.getProcessTimeout(numAllTests, timeoutLimit)
-    runner.runAllMutantsStoreDb(mutants, _FileOrDir, _Granularity, _Src, _Exclude, timeoutLimit, _TargetFailingTests, numAllTests, processTimeout)
+    runner.runAllMutantsStoreDb(
+        mutants,
+        _FileOrDir,
+        _Granularity,
+        _Src,
+        _Exclude,
+        timeoutLimit,
+        _TargetFailingTests,
+        numAllTests,
+        processTimeout,
+    )
     mutant_score.computeMutantScoresStoreDb()
     entityScores = entity_score.computeEntityScoresStoreDb(_TopN)
 

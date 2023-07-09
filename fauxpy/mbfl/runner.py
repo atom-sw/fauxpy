@@ -32,33 +32,38 @@ def _unbackupFile(filePath: pathlib.Path):
     assert not backupPath.exists()
 
 
-def _insertMutationModule(modulePath: str,
-                          moduleContent: str):
+def _insertMutationModule(modulePath: str, moduleContent: str):
     with open(modulePath, "w") as file:
         file.write(moduleContent)
 
 
-def _mutateTempProject(tempProjectPath: str,
-                       mutatingModulePath: str,
-                       mutatingModuleContent: str):
+def _mutateTempProject(
+    tempProjectPath: str, mutatingModulePath: str, mutatingModuleContent: str
+):
     relativePathOfMutatingModule = common.absolutePathToRelativePath(mutatingModulePath)
-    absoluteTempPathOfMutatingModule = pathlib.Path(tempProjectPath) / relativePathOfMutatingModule
+    absoluteTempPathOfMutatingModule = (
+        pathlib.Path(tempProjectPath) / relativePathOfMutatingModule
+    )
     _backupFile(absoluteTempPathOfMutatingModule)
-    _insertMutationModule(str(absoluteTempPathOfMutatingModule.resolve()),
-                          mutatingModuleContent)
+    _insertMutationModule(
+        str(absoluteTempPathOfMutatingModule.resolve()), mutatingModuleContent
+    )
 
 
-def _unmutateTempProject(tempProjectPath: str,
-                         mutatingModulePath: str):
+def _unmutateTempProject(tempProjectPath: str, mutatingModulePath: str):
     relativePathOfMutatingModule = common.absolutePathToRelativePath(mutatingModulePath)
-    absoluteTempPathOfMutatingModule = pathlib.Path(tempProjectPath) / relativePathOfMutatingModule
+    absoluteTempPathOfMutatingModule = (
+        pathlib.Path(tempProjectPath) / relativePathOfMutatingModule
+    )
     _unbackupFile(absoluteTempPathOfMutatingModule)
 
 
 # TODO: probably, the timeout computation is not need. If timeout happens,
 #  the test cases jason file does not get generated, which is
 #  something that needs to be checked to see if timeout happened or not.
-def _compareTwoTestCaseResults(normalTestCase, mutantTestCase) -> Tuple[int, int, int, TestComparisonState]:
+def _compareTwoTestCaseResults(
+    normalTestCase, mutantTestCase
+) -> Tuple[int, int, int, TestComparisonState]:
     failedToPassed = 0
     passedToFailed = 0
     failedChanged = 0
@@ -68,7 +73,9 @@ def _compareTwoTestCaseResults(normalTestCase, mutantTestCase) -> Tuple[int, int
     normalTestType = normalTestCase[1]
     normalTestTimeoutStat = normalTestCase[3]
     normalTestTargetStat = normalTestCase[4]
-    normalTestIncluded = (normalTestType == "passed") or (normalTestType == "failed" and normalTestTargetStat == 1)
+    normalTestIncluded = (normalTestType == "passed") or (
+        normalTestType == "failed" and normalTestTargetStat == 1
+    )
 
     # ToDo: use the condition inside the if. Not as a boolean variable.
     if not normalTestIncluded:
@@ -127,12 +134,17 @@ def _getMutantScoreTerms(mutantTestCaseRunResultTable):
             # and continue the score terms computation using the remaining tests.
             continue
 
-        f2p, p2f, fc, testCompState = _compareTwoTestCaseResults(normalTestCaseResult, mutantTestCaseResult)
+        f2p, p2f, fc, testCompState = _compareTwoTestCaseResults(
+            normalTestCaseResult, mutantTestCaseResult
+        )
         if testCompState == TestComparisonState.Normal:
             failedToPassed += f2p
             passedToFailed += p2f
             failedChanged += fc
-        elif testCompState == TestComparisonState.BadTest or TestComparisonState.NotTarget:
+        elif (
+            testCompState == TestComparisonState.BadTest
+            or TestComparisonState.NotTarget
+        ):
             continue
         elif testCompState == TestComparisonState.BadMutant:
             timeoutHappened = True
@@ -141,33 +153,43 @@ def _getMutantScoreTerms(mutantTestCaseRunResultTable):
     return failedToPassed, passedToFailed, failedChanged, timeoutHappened
 
 
-def runAllMutantsStoreDb(mutants: List[mutgen.Mutant],
-                         fileOrDir: List[str],
-                         granularity: str,
-                         src: str,
-                         exclude: List[str],
-                         timeoutLimit: float,
-                         targetFailingTests: common.TargetFailingTests,
-                         numberAllTests,
-                         processTimeout):
+def runAllMutantsStoreDb(
+    mutants: List[mutgen.Mutant],
+    fileOrDir: List[str],
+    granularity: str,
+    src: str,
+    exclude: List[str],
+    timeoutLimit: float,
+    targetFailingTests: common.TargetFailingTests,
+    numberAllTests,
+    processTimeout,
+):
     tempProjectPath = common.makeProjectCopyInTemp()
 
     numberOfAllMutants = len(mutants)
 
     print(f"-------------- Running {numberOfAllMutants} Mutants --------------")
     for mutant in mutants:
-        print(f"------------ Running Mutant ID ----->>>>> {mutant.getId()} / {numberOfAllMutants} ------------")
+        print(
+            f"------------ Running Mutant ID ----->>>>> {mutant.getId()} / {numberOfAllMutants} ------------"
+        )
 
-        _mutateTempProject(tempProjectPath, mutant.getModulePath(), mutant.getModuleContent())
-        mutantTestCaseRunResultTable = collect_mode.runMbflCollectMode(src,
-                                                                       exclude,
-                                                                       tempProjectPath,
-                                                                       fileOrDir,
-                                                                       timeout=timeoutLimit,
-                                                                       processTimeout=processTimeout)
+        _mutateTempProject(
+            tempProjectPath, mutant.getModulePath(), mutant.getModuleContent()
+        )
+        mutantTestCaseRunResultTable = collect_mode.runMbflCollectMode(
+            src,
+            exclude,
+            tempProjectPath,
+            fileOrDir,
+            timeout=timeoutLimit,
+            processTimeout=processTimeout,
+        )
 
-        if (mutantTestCaseRunResultTable is None or
-                len(mutantTestCaseRunResultTable) == 0):
+        if (
+            mutantTestCaseRunResultTable is None
+            or len(mutantTestCaseRunResultTable) == 0
+        ):
             # Timeout happened
             print("Timeout or bad mutant")
             database.updateMutantAsTimeout(mutant.getId())
@@ -183,8 +205,12 @@ def runAllMutantsStoreDb(mutants: List[mutgen.Mutant],
             _unmutateTempProject(tempProjectPath, mutant.getModulePath())
             continue
 
-        failedToPassed, passedToFailed, failedChanged, timeoutHappened = _getMutantScoreTerms(
-            mutantTestCaseRunResultTable)
+        (
+            failedToPassed,
+            passedToFailed,
+            failedChanged,
+            timeoutHappened,
+        ) = _getMutantScoreTerms(mutantTestCaseRunResultTable)
 
         # In case of timeout, the mutant is thrown away and
         # its status is updated in the database
@@ -193,21 +219,29 @@ def runAllMutantsStoreDb(mutants: List[mutgen.Mutant],
             database.updateMutantAsTimeout(mutant.getId())
         else:
             if granularity == "statement":
-                entityName = common.getStatementName(mutant.getModulePath(), mutant.getLineNumber())
+                entityName = common.getStatementName(
+                    mutant.getModulePath(), mutant.getLineNumber()
+                )
             elif granularity == "function":
-                coveredFunction = common.getCoveredFunction(mutant.getModulePath(), mutant.getLineNumber())
-                entityName = common.getCoveredFunctionName(coveredFunction[0],
-                                                           coveredFunction[1],
-                                                           coveredFunction[2],
-                                                           coveredFunction[3])
+                coveredFunction = common.getCoveredFunction(
+                    mutant.getModulePath(), mutant.getLineNumber()
+                )
+                entityName = common.getCoveredFunctionName(
+                    coveredFunction[0],
+                    coveredFunction[1],
+                    coveredFunction[2],
+                    coveredFunction[3],
+                )
             else:
                 raise Exception(f"Granularity {granularity} is not supported.")
 
-            database.insertMutantScoreTerms(mutant.getId(),
-                                            entityName,
-                                            failedToPassed,
-                                            passedToFailed,
-                                            failedChanged)
+            database.insertMutantScoreTerms(
+                mutant.getId(),
+                entityName,
+                failedToPassed,
+                passedToFailed,
+                failedChanged,
+            )
 
         _unmutateTempProject(tempProjectPath, mutant.getModulePath())
     _removeTempProject(tempProjectPath)
