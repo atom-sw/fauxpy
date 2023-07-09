@@ -21,10 +21,12 @@ def getOrderedTracebackFunctionNames(src, exclude, reprTraceback) -> List[str]:
 
         if common.pathShouldBeLocalized(src, exclude, absolutePath):
             coveredFunction = common.getCoveredFunction(absolutePath, lineNumber)
-            coveredFunctionName = common.getCoveredFunctionName(coveredFunction[0],
-                                                                coveredFunction[1],
-                                                                coveredFunction[2],
-                                                                coveredFunction[3])
+            coveredFunctionName = common.getCoveredFunctionName(
+                coveredFunction[0],
+                coveredFunction[1],
+                coveredFunction[2],
+                coveredFunction[3],
+            )
             tracebackNames.append(coveredFunctionName)
     tracebackNames.reverse()
 

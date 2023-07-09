@@ -40,7 +40,9 @@ def handlerRuntestMakereport(item, call):
     if call.when == "call":
         testName = TestInformation(item.location, item.nodeid).getTestName()
         if testName != _CurrentTestName:
-            raise Exception(f"Starting coverage for {_CurrentTestName}. But closing coverage for {testName}.")
+            raise Exception(
+                f"Starting coverage for {_CurrentTestName}. But closing coverage for {testName}."
+            )
 
 
 def handlerTerminalSummary(terminalreporter):
@@ -52,15 +54,21 @@ def handlerTerminalSummary(terminalreporter):
     for key, value in terminalreporter.stats.items():
         if key in ["failed"]:
             for testReport in value:
-                testInformation = TestInformation(testReport.location, testReport.nodeid)
+                testInformation = TestInformation(
+                    testReport.location, testReport.nodeid
+                )
                 testPath = testInformation.getPath()
                 testMethodName = testInformation.getMethodName()
 
-                if ((_TargetFailingTests is not None and _TargetFailingTests.isTargetTest(testPath, testMethodName))
-                        or _TargetFailingTests is None):
+                if (
+                    _TargetFailingTests is not None
+                    and _TargetFailingTests.isTargetTest(testPath, testMethodName)
+                ) or _TargetFailingTests is None:
                     currentTest = testInformation.getTestName()
                     reprTraceback = testReport.longrepr.reprtraceback
-                    tracebackFunctionNames = parse.getOrderedTracebackFunctionNames(_Src, _Exclude, reprTraceback)
+                    tracebackFunctionNames = parse.getOrderedTracebackFunctionNames(
+                        _Src, _Exclude, reprTraceback
+                    )
                     currentTestScores = ranking.computeScores(tracebackFunctionNames)
                     database.insertTracebackScores(currentTest, currentTestScores)
 

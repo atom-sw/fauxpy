@@ -4,7 +4,7 @@ from . import database
 def computeScores(tracebackFunctionNames):
     scores = []
     for j in range(len(tracebackFunctionNames)):
-        item = (tracebackFunctionNames[j], float(1)/(j+1))
+        item = (tracebackFunctionNames[j], float(1) / (j + 1))
         scores.append(item)
 
     return scores
