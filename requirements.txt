@@ -8,4 +8,5 @@ cosmic-ray==8.3.5
 astor~=0.8.1
 #pytest-xdist~=2.5.0
 pytest-timeout~=2.1.0
+black
 fauxpy
