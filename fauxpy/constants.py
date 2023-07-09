@@ -9,11 +9,16 @@ class FileNames(object):
     collectModeCoveredLinesForTest = "collectModeCoveredLinesForTest.json"
     collectModePredicateSequences = "collectModePredicateSequences.json"
     collectModeSeenExceptions = "collectModeSeenExceptions.json"
-    instrumentationCollectModeExecutedPredicateSequenceFileName = \
+    instrumentationCollectModeExecutedPredicateSequenceFileName = (
         "instrumentationCollectModeExecutedPredicateSequence.txt"
+    )
     instrumentationCollectModeConfigFileName = "instrumentationCollectModeConfig.txt"
-    instrumentationCollectModeEvaluationCounterFileName = "instrumentationCollectModeEvaluationCounter.txt"
-    instrumentationCollectModeExceptionSeenFileName = "instrumentationCollectModeExceptionSeen.txt"
+    instrumentationCollectModeEvaluationCounterFileName = (
+        "instrumentationCollectModeEvaluationCounter.txt"
+    )
+    instrumentationCollectModeExceptionSeenFileName = (
+        "instrumentationCollectModeExceptionSeen.txt"
+    )
 
 
 def getCollectModeExecutedPredicateSequenceFileName():
