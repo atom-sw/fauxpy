@@ -17,7 +17,7 @@ class TestInformation:
             testPath = self.getCallerPath()
         else:
             testPath = self.location[0]
-        
+
         return testPath
 
     def getLineNumber(self):
@@ -39,7 +39,13 @@ class TestInformation:
         return self.nodeId.split("::")[0]
 
     def getTestName(self):
-        testName = self.getPath() + "::" + str(self.getLineNumber()) + "::" + _quoteFreeTestMethodName(self.getMethodName())
+        testName = (
+            self.getPath()
+            + "::"
+            + str(self.getLineNumber())
+            + "::"
+            + _quoteFreeTestMethodName(self.getMethodName())
+        )
         return testName
 
 

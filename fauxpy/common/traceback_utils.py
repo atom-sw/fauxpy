@@ -61,7 +61,9 @@ def getExceptionLocation(traceback, src: str, exclude: List[str]) -> Tuple[str, 
             cPath = traceback.reprentries[tbLen - i - 1].reprfileloc.path
             cLineNumber = traceback.reprentries[tbLen - i - 1].reprfileloc.lineno
             cPathAbs = utils.relativePathToAbsPath(cPath)
-            if common.pathShouldBeLocalized(src, exclude, cPathAbs) and _is_python_module(cPathAbs):
+            if common.pathShouldBeLocalized(
+                src, exclude, cPathAbs
+            ) and _is_python_module(cPathAbs):
                 exceptionFilePath = cPath
                 exceptionLineNumber = cLineNumber
                 break

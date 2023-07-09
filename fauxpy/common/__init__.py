@@ -1,19 +1,49 @@
-from .naming import convertTestNameToComponents, getStatementName, getCoveredFunctionName, \
-    convertStatementNameToComponents, testNameToFileName, getGeneralizedTestName
-from .file import saveScoresToFile, saveConfigToFile, saveDeltaTimeToFile, \
-    getDatabasePath, saveInCollectModeTestCaseTable, loadInCollectModeExecutedPredicateSequenceAndRemoveFile,\
-    loadInCollectModeSeenExceptionSequenceAndRemoveFile, loadAfterCollectModeTestCaseTable,\
-    saveInCollectModePredicateSequenceTable, saveInCollectModeSeenExceptionSequenceTable, loadAfterCollectModeSeenExceptionSequenceTable,\
-    loadAfterCollectModePredicateSequenceTable,\
-    saveBeforeCollectModeConfigFile, inCollectModeRemoveEvaluationCounterFile, getFileContentAsString
+from .naming import (
+    convertTestNameToComponents,
+    getStatementName,
+    getCoveredFunctionName,
+    convertStatementNameToComponents,
+    testNameToFileName,
+    getGeneralizedTestName,
+)
+from .file import (
+    saveScoresToFile,
+    saveConfigToFile,
+    saveDeltaTimeToFile,
+    getDatabasePath,
+    saveInCollectModeTestCaseTable,
+    loadInCollectModeExecutedPredicateSequenceAndRemoveFile,
+    loadInCollectModeSeenExceptionSequenceAndRemoveFile,
+    loadAfterCollectModeTestCaseTable,
+    saveInCollectModePredicateSequenceTable,
+    saveInCollectModeSeenExceptionSequenceTable,
+    loadAfterCollectModeSeenExceptionSequenceTable,
+    loadAfterCollectModePredicateSequenceTable,
+    saveBeforeCollectModeConfigFile,
+    inCollectModeRemoveEvaluationCounterFile,
+    getFileContentAsString,
+)
+
 # from .timer import startTimer, endTimer
 from .timer import Timer, getTimeout, getProcessTimeout
 from .ast_manager import getCoveredFunction, FunctionInformation
-from .utils import pathShouldBeLocalized, relativePathToAbsPath, \
-    convertArgumentListStringToList, convertListToString, absolutePathToRelativePath, \
-    runCommand, makeProjectCopyInTemp, csvRowToList, listToCsvRow
+from .utils import (
+    pathShouldBeLocalized,
+    relativePathToAbsPath,
+    convertArgumentListStringToList,
+    convertListToString,
+    absolutePathToRelativePath,
+    runCommand,
+    makeProjectCopyInTemp,
+    csvRowToList,
+    listToCsvRow,
+)
 from .log import Logger
-from .traceback_utils import getShortTraceBackInfo, getExceptionLocation, hasTimeoutHappened
+from .traceback_utils import (
+    getShortTraceBackInfo,
+    getExceptionLocation,
+    hasTimeoutHappened,
+)
 from . import database
 from .failing_tests import TargetFailingTests
 
@@ -31,5 +61,3 @@ def init(family: str, granularity: str):
 
 def end():
     database.end()
-
-

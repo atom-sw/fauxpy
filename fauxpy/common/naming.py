@@ -17,7 +17,9 @@ def convertStatementNameToComponents(statementName: str) -> Tuple[str, int]:
 
 
 def getCoveredFunctionName(path: str, functionName: str, lineStart: int, lineEnd: int):
-    covFuncName = path + "::" + functionName + "::" + str(lineStart) + "::" + str(lineEnd)
+    covFuncName = (
+        path + "::" + functionName + "::" + str(lineStart) + "::" + str(lineEnd)
+    )
     return covFuncName
 
 
@@ -26,8 +28,7 @@ def testNameToFileName(testName: str):
     return qftm
 
 
-def getGeneralizedTestName(filePath: str,
-                           functionName: str) -> str:
+def getGeneralizedTestName(filePath: str, functionName: str) -> str:
     """
     Returns the general test name if the test is a parametrized test.
     i.e., it removes the parameters and keeps only the function name.

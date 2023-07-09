@@ -22,8 +22,7 @@ from .naming import getGeneralizedTestName
 
 
 class TargetFailingTests(object):
-    def __init__(self,
-                 targetFailingTestsList: List[str]):
+    def __init__(self, targetFailingTestsList: List[str]):
         self._targetFailingTestsList = targetFailingTestsList
 
     def getFailingTests(self):
@@ -36,8 +35,12 @@ class TargetFailingTests(object):
                 content = file.read()
             listContent = content.strip().split("\n")
             listContentStriped = [x.strip() for x in listContent]
-            listContentStripedNoComments = list(filter(lambda x: not x.startswith("#"), listContentStriped))
-            if len(listContentStripedNoComments) == 0 or all([x == "" for x in listContentStripedNoComments]):
+            listContentStripedNoComments = list(
+                filter(lambda x: not x.startswith("#"), listContentStriped)
+            )
+            if len(listContentStripedNoComments) == 0 or all(
+                [x == "" for x in listContentStripedNoComments]
+            ):
                 return None
             else:
                 return TargetFailingTests(listContentStripedNoComments)
@@ -54,11 +57,11 @@ class TargetFailingTests(object):
 
     def isTargetTest(self, currentTestPath, currentTestMethodName):
         # currentTestFullPath = "::".join([currentTestPath, currentTestMethodName])
-        currentTestFullPathGeneralized = getGeneralizedTestName(currentTestPath, currentTestMethodName)
+        currentTestFullPathGeneralized = getGeneralizedTestName(
+            currentTestPath, currentTestMethodName
+        )
         for targetTest in self._targetFailingTestsList:
             # reformattedTargetFilePath = _reformatPytestTest(targetTest)
             if currentTestFullPathGeneralized == targetTest:
                 return True
         return False
-
-

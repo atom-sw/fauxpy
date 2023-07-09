@@ -56,12 +56,14 @@ def saveScoresToFile(technique: str, scores: List[Tuple[str, int]]):
             writer.writerow([score[0], score[1]])
 
 
-def saveConfigToFile(src: str,
-                     exclude: List[str],
-                     family: str,
-                     granularity: str,
-                     topN: str,
-                     targetFailingTests: List[str]):
+def saveConfigToFile(
+    src: str,
+    exclude: List[str],
+    family: str,
+    granularity: str,
+    topN: str,
+    targetFailingTests: List[str],
+):
     filePath = _getReportDirectory() / FileNames.ConfigFileName
     with open(filePath, "w") as file:
         file.write(f"Src = {src}\r\n")
@@ -90,8 +92,14 @@ def saveInCollectModeTestCaseTable(jsonTable: str):
         file.write(jsonTable)
 
 
-def loadAfterCollectModeTestCaseTable(projectPath: str) -> Optional[List[Tuple[str, str, str]]]:
-    filePath = pathlib.Path(projectPath) / FileNames.CollectModeDirectoryName / FileNames.collectModeTestCases
+def loadAfterCollectModeTestCaseTable(
+    projectPath: str,
+) -> Optional[List[Tuple[str, str, str]]]:
+    filePath = (
+        pathlib.Path(projectPath)
+        / FileNames.CollectModeDirectoryName
+        / FileNames.collectModeTestCases
+    )
     if not filePath.exists():
         return None
 
@@ -113,7 +121,8 @@ def loadInCollectModeExecutedPredicateSequenceAndRemoveFile() -> Optional[str]:
     """
 
     filePath = pathlib.Path(utils.ProjectWorkingDirectory) / pathlib.Path(
-        FileNames.instrumentationCollectModeExecutedPredicateSequenceFileName)
+        FileNames.instrumentationCollectModeExecutedPredicateSequenceFileName
+    )
     try:
         with open(filePath, "r") as file:
             predSequence = file.read()
@@ -139,7 +148,8 @@ def loadInCollectModeSeenExceptionSequenceAndRemoveFile() -> Optional[str]:
     """
 
     filePath = pathlib.Path(utils.ProjectWorkingDirectory) / pathlib.Path(
-        FileNames.instrumentationCollectModeExceptionSeenFileName)
+        FileNames.instrumentationCollectModeExceptionSeenFileName
+    )
     try:
         with open(filePath, "r") as file:
             seenExpSequence = file.read()
@@ -155,7 +165,8 @@ def loadInCollectModeSeenExceptionSequenceAndRemoveFile() -> Optional[str]:
 
 def inCollectModeRemoveEvaluationCounterFile():
     filePath = pathlib.Path(utils.ProjectWorkingDirectory) / pathlib.Path(
-        FileNames.instrumentationCollectModeEvaluationCounterFileName)
+        FileNames.instrumentationCollectModeEvaluationCounterFileName
+    )
     if filePath.exists():
         filePath.unlink()
 
@@ -173,15 +184,25 @@ def saveInCollectModeSeenExceptionSequenceTable(jsonTable: str):
 
 
 def loadAfterCollectModePredicateSequenceTable(projectPath):
-    filePath = pathlib.Path(projectPath) / FileNames.CollectModeDirectoryName / FileNames.collectModePredicateSequences
+    filePath = (
+        pathlib.Path(projectPath)
+        / FileNames.CollectModeDirectoryName
+        / FileNames.collectModePredicateSequences
+    )
     with open(filePath, "r") as file:
         jsonTable = file.read()
         table = json.loads(jsonTable)
     return table
 
 
-def loadAfterCollectModeSeenExceptionSequenceTable(projectPath) -> Optional[List[Tuple[str, str]]]:
-    filePath = pathlib.Path(projectPath) / FileNames.CollectModeDirectoryName / FileNames.collectModeSeenExceptions
+def loadAfterCollectModeSeenExceptionSequenceTable(
+    projectPath,
+) -> Optional[List[Tuple[str, str]]]:
+    filePath = (
+        pathlib.Path(projectPath)
+        / FileNames.CollectModeDirectoryName
+        / FileNames.collectModeSeenExceptions
+    )
     if not filePath.exists():
         return None
 
@@ -191,10 +212,15 @@ def loadAfterCollectModeSeenExceptionSequenceTable(projectPath) -> Optional[List
     return table
 
 
-def saveBeforeCollectModeConfigFile(projectPath: str, predicateName: str, instanceNumber: int):
+def saveBeforeCollectModeConfigFile(
+    projectPath: str, predicateName: str, instanceNumber: int
+):
     configFileName = constants.getCollectModeConfigFileName()
     configFilePath = pathlib.Path(projectPath) / pathlib.Path(configFileName)
-    contentDictionary = {"PredicateName": predicateName, "InstanceNumber": instanceNumber}
+    contentDictionary = {
+        "PredicateName": predicateName,
+        "InstanceNumber": instanceNumber,
+    }
     jsonContent = json.dumps(contentDictionary)
     with open(configFilePath, "w") as file:
         file.write(jsonContent)

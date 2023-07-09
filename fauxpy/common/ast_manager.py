@@ -7,11 +7,7 @@ from .. import common
 
 
 class FunctionInformation(object):
-    def __init__(self,
-                 filePath: str,
-                 functionName: str,
-                 lineStart: int,
-                 lineEnd: int):
+    def __init__(self, filePath: str, functionName: str, lineStart: int, lineEnd: int):
         self.filePath = filePath
         self.functionName = functionName
         self.lineStart = lineStart
@@ -71,7 +67,8 @@ def _findAllFunctionRanges(filePath: str) -> List[Tuple[str, int, int]]:
                 f"Due to the following error, the following module is removed form fault localization."
                 f"To include it, fix the error, and run the tool again.\r\n"
                 f"Error: {exp}.\r\n"
-                f"Module: {filePath}")
+                f"Module: {filePath}"
+            )
             return []
 
     analyzer = Analyzer()
@@ -80,7 +77,9 @@ def _findAllFunctionRanges(filePath: str) -> List[Tuple[str, int, int]]:
     return analyzer.functionRangeList
 
 
-def getCoveredFunction(filePath: str, lineNumber: int) -> Optional[Tuple[str, str, int, int]]:
+def getCoveredFunction(
+    filePath: str, lineNumber: int
+) -> Optional[Tuple[str, str, int, int]]:
     functionRangeList = database.selectFunctionRanges(filePath, lineNumber)
 
     if len(functionRangeList) == 0:
@@ -89,7 +88,9 @@ def getCoveredFunction(filePath: str, lineNumber: int) -> Optional[Tuple[str, st
         else:
             functionRangeList = _findAllFunctionRanges(filePath)
             for functionRange in functionRangeList:
-                database.insertFunctionInformation(filePath, functionRange[0], functionRange[1], functionRange[2])
+                database.insertFunctionInformation(
+                    filePath, functionRange[0], functionRange[1], functionRange[2]
+                )
 
             if len(functionRangeList) == 0:
                 return None
@@ -99,8 +100,17 @@ def getCoveredFunction(filePath: str, lineNumber: int) -> Optional[Tuple[str, st
                     return None
 
                 functionRangeList.sort(key=lambda x: x[2] - x[1])
-                return filePath, functionRangeList[0][0], functionRangeList[0][1], functionRangeList[0][2]
+                return (
+                    filePath,
+                    functionRangeList[0][0],
+                    functionRangeList[0][1],
+                    functionRangeList[0][2],
+                )
     else:
         functionRangeList.sort(key=lambda x: x[2] - x[1])
-        return filePath, functionRangeList[0][0], functionRangeList[0][1], functionRangeList[0][2]
-
+        return (
+            filePath,
+            functionRangeList[0][0],
+            functionRangeList[0][1],
+            functionRangeList[0][2],
+        )

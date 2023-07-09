@@ -15,17 +15,18 @@ def init():
     global _Con
 
     def getDatabaseSchema():
-        functionInfoTableCreateCommand = f"CREATE TABLE {_Names.functionInfoTable} " \
-                                         f"(Rowid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, " \
-                                         f"FilePath	TEXT NOT NULL, " \
-                                         f"FunctionName	TEXT NOT NULL, " \
-                                         f"LineStart INTEGER NOT NULL, " \
-                                         f"LineEnd INTEGER NOT NULL);"
+        functionInfoTableCreateCommand = (
+            f"CREATE TABLE {_Names.functionInfoTable} "
+            f"(Rowid INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, "
+            f"FilePath	TEXT NOT NULL, "
+            f"FunctionName	TEXT NOT NULL, "
+            f"LineStart INTEGER NOT NULL, "
+            f"LineEnd INTEGER NOT NULL);"
+        )
 
         functionInfoTableIndexCommand = f"CREATE INDEX Index_OnThree ON {_Names.functionInfoTable} (FilePath, LineStart, LineEnd);"
 
-        commands = [functionInfoTableCreateCommand,
-                    functionInfoTableIndexCommand]
+        commands = [functionInfoTableCreateCommand, functionInfoTableIndexCommand]
 
         return commands
 
@@ -45,24 +46,28 @@ def selectFunctionRanges(filePath: str, lineNumber: int) -> List[Tuple[str, int,
 
     cur = _Con.cursor()
 
-    cur.execute(f"SELECT FunctionName, LineStart, LineEnd FROM {_Names.functionInfoTable} "
-                f"WHERE FilePath = ? and LineStart <= ? and LineEnd >= ?", (filePath, lineNumber, lineNumber))
+    cur.execute(
+        f"SELECT FunctionName, LineStart, LineEnd FROM {_Names.functionInfoTable} "
+        f"WHERE FilePath = ? and LineStart <= ? and LineEnd >= ?",
+        (filePath, lineNumber, lineNumber),
+    )
 
     var = cur.fetchall()
 
     return var
 
 
-def insertFunctionInformation(filePath: str,
-                              functionName: str,
-                              lineStart: int,
-                              lineEnd: int):
+def insertFunctionInformation(
+    filePath: str, functionName: str, lineStart: int, lineEnd: int
+):
     global _Con
 
     cur = _Con.cursor()
 
-    cur.execute(f"INSERT INTO {_Names.functionInfoTable} VALUES (NULL, ?, ?, ?, ?)",
-                (filePath, functionName, lineStart, lineEnd))
+    cur.execute(
+        f"INSERT INTO {_Names.functionInfoTable} VALUES (NULL, ?, ?, ?, ?)",
+        (filePath, functionName, lineStart, lineEnd),
+    )
     _Con.commit()
 
 
@@ -71,7 +76,10 @@ def isFilePathCovered(filePath: str) -> bool:
 
     cur = _Con.cursor()
 
-    cur.execute(f"SELECT COUNT(*) FROM {_Names.functionInfoTable} WHERE FilePath = ?", (filePath,))
+    cur.execute(
+        f"SELECT COUNT(*) FROM {_Names.functionInfoTable} WHERE FilePath = ?",
+        (filePath,),
+    )
 
     cnt = cur.fetchone()
 

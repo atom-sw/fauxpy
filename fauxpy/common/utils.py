@@ -93,23 +93,28 @@ def makeProjectCopyInTemp() -> str:
 
 def runCommand(command: List[str], workingDir: str, processTimeout: Optional[float]):
     import subprocess
+
     print("--------------------Subprocess Begin---------------------")
     print("Command to run: ", " ".join(command))
     execOut = None
     if processTimeout is None:
-        execOut = subprocess.run(command,
-                                 stdout=subprocess.PIPE,
-                                 stderr=subprocess.PIPE,
-                                 universal_newlines=True,
-                                 cwd=workingDir)
+        execOut = subprocess.run(
+            command,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            cwd=workingDir,
+        )
     else:
         try:
-            execOut = subprocess.run(command,
-                                     stdout=subprocess.PIPE,
-                                     stderr=subprocess.PIPE,
-                                     universal_newlines=True,
-                                     cwd=workingDir,
-                                     timeout=processTimeout)
+            execOut = subprocess.run(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                universal_newlines=True,
+                cwd=workingDir,
+                timeout=processTimeout,
+            )
         except TimeoutExpired:
             print("Subprocess timeout")
             pass
