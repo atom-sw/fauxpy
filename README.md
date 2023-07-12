@@ -53,6 +53,8 @@ Here is a short [demo video](https://www.youtube.com/watch?v=6ooPPiwd79g) of Fau
 
 [![FauxPy Demo](https://img.youtube.com/vi/6ooPPiwd79g/0.jpg)](https://www.youtube.com/watch?v=6ooPPiwd79g)
 
+![YouTube Video Views](https://img.shields.io/youtube/views/6ooPPiwd79g)
+
 Directory [examples/triangle_area](examples/triangle_area) includes a tutorial example of using FauxPy. Follow the instructions in the [`README.md`](examples/triangle_area/README.md).
 
 
