@@ -2,6 +2,7 @@
 
 ## Not released
 
+- Fix a bug in ST.
 - Adopt the black code style.
 - Add Triangle area example.
 - Update readme.
