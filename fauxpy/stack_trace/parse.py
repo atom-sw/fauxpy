@@ -21,6 +21,11 @@ def getOrderedTracebackFunctionNames(src, exclude, reprTraceback) -> List[str]:
 
         if common.pathShouldBeLocalized(src, exclude, absolutePath):
             coveredFunction = common.getCoveredFunction(absolutePath, lineNumber)
+
+            # Bug fix - found by cnn_text_classification_tf_b1
+            if coveredFunction is None:
+                continue
+
             coveredFunctionName = common.getCoveredFunctionName(
                 coveredFunction[0],
                 coveredFunction[1],
