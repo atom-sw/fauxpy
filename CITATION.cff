@@ -1,7 +1,7 @@
 @misc{PythonFL-FauxPy,
       title={An Empirical Study of Fault Localization in {P}ython Programs}, 
       author={Mohammad Rezaalipour and Carlo A. Furia},
-      year={2023},
+      year={2024},
       eprint={2305.19834},
       archivePrefix={arXiv},
       primaryClass={cs.SE},

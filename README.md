@@ -62,6 +62,11 @@ Here is a short [demo video](https://www.youtube.com/watch?v=6ooPPiwd79g) of Fau
 ![YouTube Video Views](https://img.shields.io/youtube/views/6ooPPiwd79g)
 
 Directory [examples/triangle_area](examples/triangle_area) includes a tutorial example of using FauxPy. Follow the instructions in the [`README.md`](examples/triangle_area/README.md).
+Here is a [video demonstration](https://youtu.be/O4T7w-U8rZE) of this example.
+
+[![Triangle Area Example](https://img.youtube.com/vi/O4T7w-U8rZE/0.jpg)](https://youtu.be/O4T7w-U8rZE)
+
+![YouTube Video Views](https://img.shields.io/youtube/views/O4T7w-U8rZE)
 
 
 ## Using FauxPy
@@ -255,17 +260,39 @@ The current version of FauxPy has a couple of known limitations:
 
 ## Citing FauxPy and References
 
-The paper [An Empirical Study of Fault Localization in Python Programs](https://arxiv.org/abs/2305.19834) describes an empirical study where we applied FauxPy to 135 bugs in 13 real-world Python programs (from the [BugsInPy](https://github.com/soarsmu/BugsInPy) curated collection).
+The paper [FauxPy: A Fault Localization Tool 
+for Python](https://arxiv.org/abs/2404.18596)
+presents FauxPy in detail, including 
+its implementation, architecture, and
+instructions on how to use it.
+
+You can cite this tool demo paper as follows:
+
+```bibtex
+@misc{PythonFL-FauxPy-Tool,
+  title={FauxPy: A Fault Localization Tool for Python},
+  author={Mohammad Rezaalipour and Carlo A. Furia},
+  year={2024},
+  eprint={2404.18596},
+  archivePrefix={arXiv},
+  primaryClass={cs.SE},
+  url={https://arxiv.org/abs/2404.18596}
+}
+```
+
+Another paper [An Empirical Study of Fault Localization in Python Programs](https://arxiv.org/abs/2305.19834) describes an empirical study where we applied FauxPy to 135 bugs in 13 real-world Python programs (from the [BugsInPy](https://github.com/soarsmu/BugsInPy) curated collection).
+
+This paper has been accepted for publication in the Empirical Software Engineering (EMSE) journal in March 2024.
 
 You can cite this empirical work as follows:
 
-> Mohammad Rezaalipour, Carlo A. Furia: An Empirical Study of Fault Localization in Python Programs.  CoRR abs/2305.19834 (2023)
+> Mohammad Rezaalipour, Carlo A. Furia: An Empirical Study of Fault Localization in Python Programs.  CoRR abs/2305.19834 (2024)
 
-```
+```bibtex
 @misc{PythonFL-FauxPy,
       title={An Empirical Study of Fault Localization in {P}ython Programs}, 
       author={Mohammad Rezaalipour and Carlo A. Furia},
-      year={2023},
+      year={2024},
       eprint={2305.19834},
       archivePrefix={arXiv},
       primaryClass={cs.SE},
