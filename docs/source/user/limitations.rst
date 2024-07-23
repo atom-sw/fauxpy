@@ -1,5 +1,6 @@
+===========
 Limitations
------------
+===========
 
 The current version of FauxPy has a couple of known limitations:
 

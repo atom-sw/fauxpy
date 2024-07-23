@@ -1,5 +1,6 @@
+============
 Using FauxPy
-------------
+============
 
 FauxPy is implemented as a Pytest plugin, thus using FauxPy boils down
 to passing some custom options to Pytest.
@@ -42,7 +43,7 @@ This is the complete list of command-line arguments to control FauxPy.
           --failing-file $FAIL
 
 Option `src`: Program Source Code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+=================================
 
 Option ``--src $SRC`` runs FauxPy on the project considering only
 the program entities under *relative* path
@@ -57,14 +58,14 @@ the Python modules and packages existing within the project.
 Option ``--src`` is the only mandatory argument to run FauxPy.
 
 Option `family`: Fault Localization Family
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================================
 
 Option ``--family $FAMILY`` runs FauxPy using the ``$FAMILY`` fault
 localization family of techniques.
 FauxPy currently supports families: ``sbfl`` (the default), ``mbfl``, ``ps``, and ``st``.
 
 Option `granularity`: Entity Granularity
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+========================================
 
 Option ``--granularity $GRANULARITY`` runs FauxPy using ``$GRANULARITY``
 as program entities to localize. FauxPy currently supports
@@ -74,7 +75,7 @@ With *statement*-level granularity, FauxPy outputs a list of program locations (
 With *function*-level granularity, FauxPy outputs a list of functions that may be responsible for the fault.
 
 Option `exclude`: Exclude Directories or Files
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==============================================
 
 Option ``--exclude "[$EXCLUDE1, $EXCLUDE2, ...]"`` ignores entities in ``$EXCLUDE1``,
 ``$EXCLUDE2``, and so on when performing fault localization.
@@ -92,7 +93,7 @@ project in the current directory, skipping directories ``env`` and
    python -m pytest --src . --exclude "[env, tests, utilities.py]"
 
 Option `failing-list`: Select Failures
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+======================================
 
 Option ``--failing-list "[$FAIL1, $FAIL2, ...]"`` *only* uses tests
 ``$FAIL1``, ``$FAIL2``, and so on as *failing* tests when performing fault
@@ -122,7 +123,7 @@ select a subset of the failing tests that trigger a single fault,
 so that fault localization can perform more accurately.
 
 Option `failing-file`: Select Failures
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+======================================
 
 Option ``--failing-file $FAIL``
 is the same as option ``--failing-list``.
@@ -131,14 +132,14 @@ it takes the path of a file relative to the analyzed project's root directory.
 In file ``$FAIL``, every failing test must be in a separate line.
 
 Option `top-n`: Output List Size
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+================================
 
 Option ``--top-n $N`` only reports up to ``$N`` suspicious program
 entities (statements or functions). ``$N`` must be a positive integer,
 or ``-1`` (the default: no limit).
 
 Positional Argument: Tests
-~~~~~~~~~~~~~~~~~~~~~~~~~
+==========================
 
 Optional positional argument ``$TESTS``, specified just after ``pytest``,
 runs FauxPy using the tests found under path ``$TESTS``.

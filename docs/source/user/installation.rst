@@ -1,5 +1,6 @@
+============
 Installation
-------------
+============
 
 FauxPy is `on PyPI <https://pypi.org/project/fauxpy/>`_,
 so you can install it using ``pip``:

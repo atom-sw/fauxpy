@@ -1,5 +1,6 @@
+============================
 Citing FauxPy and References
-----------------------------
+============================
 
 The paper `FauxPy: A Fault Localization Tool for Python <https://arxiv.org/abs/2404.18596>`_ presents FauxPy in detail, including
 its implementation, architecture, and
@@ -25,7 +26,7 @@ This paper has been accepted for publication in the Empirical Software Engineeri
 
 You can cite this empirical work as follows:
 
-> Mohammad Rezaalipour, Carlo A. Furia: An Empirical Study of Fault Localization in Python Programs.  CoRR abs/2305.19834 (2024)
+    Mohammad Rezaalipour, Carlo A. Furia: An Empirical Study of Fault Localization in Python Programs.  CoRR abs/2305.19834 (2024)
 
 .. code-block:: bibtex
 

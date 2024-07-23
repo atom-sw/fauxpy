@@ -1,5 +1,6 @@
-FauxPy's documentation!
-=======================
+======================
+FauxPy's documentation
+======================
 
 
 .. image:: https://badge.fury.io/py/fauxpy.svg
@@ -21,7 +22,7 @@ FauxPy (pronounced: "foh pie") is an automated fault localization tool for Pytho
 This documentation includes instructions to install and use FauxPy.
 
 Features
---------
+========
 
 FauxPy supports seven classic fault-localization techniques in four families:
 
@@ -41,7 +42,7 @@ and can use tests written in the format of
 and `Hypothesis <https://hypothesis.works/>`_.
 
 FauxPy in Action
-----------------
+================
 
 Here is a short `demo video <https://www.youtube.com/watch?v=6ooPPiwd79g>`_
 of FauxPy in action, presented by the developer of FauxPy at
@@ -52,7 +53,7 @@ of FauxPy in action, presented by the developer of FauxPy at
 
 
 Contents
---------
+========
 
 .. toctree::
    :maxdepth: 1
