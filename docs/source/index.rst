@@ -17,9 +17,33 @@ FauxPy's documentation
     :target: https://fauxpy.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation Status
 
+.. image:: https://img.shields.io/github/stars/atom-sw/fauxpy?style=social
+   :target: https://github.com/atom-sw/fauxpy
+
 FauxPy (pronounced: "foh pie") is an automated fault localization tool for Python programs,
 `available as open-source software on GitHub <https://github.com/atom-sw/fauxpy>`_.
 This documentation includes instructions to install and use FauxPy.
+
+.. note::
+   We plan to improve FauxPy as we continue our
+   research. We value your feedback and suggestions.
+
+   Whether it's regarding the user interface, new features,
+   or any other aspect of FauxPy,
+   your input can be incredibly helpful.
+   please send your suggestions or feedback to us at:
+
+   **rezaalipour [dot] mohammad [at] gmail [dot] com**
+
+   If you enjoy using FauxPy and find it useful, giving us
+   a `star on GitHub <https://github.com/atom-sw/fauxpy>`_ would greatly encourage us
+   and make us happy. Your support means a lot to us!
+
+   Thank you for helping us improve FauxPy!
+
+   .. image:: https://img.shields.io/github/stars/atom-sw/fauxpy?style=social
+      :target: https://github.com/atom-sw/fauxpy
+
 
 Features
 ========
