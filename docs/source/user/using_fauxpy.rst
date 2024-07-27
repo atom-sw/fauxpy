@@ -1,6 +1,6 @@
-============
-Using FauxPy
-============
+====================
+Command Line Options
+====================
 
 FauxPy is implemented as a Pytest plugin, thus using FauxPy boils down
 to passing some custom options to Pytest.

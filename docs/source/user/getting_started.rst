@@ -1,6 +1,6 @@
-===============
-Getting Started
-===============
+=============
+Usage Example
+=============
 
 Directory `examples/triangle_area <https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area>`_
 in FauxPy's repository includes a tutorial

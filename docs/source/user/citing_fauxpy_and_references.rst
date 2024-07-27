@@ -1,6 +1,6 @@
-============================
-Citing FauxPy and References
-============================
+===========
+How to Cite
+===========
 
 The paper `FauxPy: A Fault Localization Tool for Python <https://arxiv.org/abs/2404.18596>`_ presents FauxPy in detail, including
 its implementation, architecture, and

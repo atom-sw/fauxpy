@@ -2,6 +2,8 @@
 FauxPy's documentation
 ======================
 
+.. meta::
+   :google-site-verification: EYJEnxDgQe_QOGhufWaLSL_DjZPlnox075UyuGTVA0E
 
 .. image:: https://badge.fury.io/py/fauxpy.svg
    :target: https://badge.fury.io/py/fauxpy
@@ -12,10 +14,6 @@ FauxPy's documentation
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
-
-.. image:: https://readthedocs.org/projects/fauxpy/badge/?version=latest
-    :target: https://fauxpy.readthedocs.io/en/latest/?badge=latest
-    :alt: Documentation Status
 
 .. image:: https://img.shields.io/github/stars/atom-sw/fauxpy?style=social
    :target: https://github.com/atom-sw/fauxpy
