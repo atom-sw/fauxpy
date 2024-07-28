@@ -28,7 +28,7 @@ Empirical Study
 ===============
 
 Our other paper
-`An Empirical Study of Fault Localization in Python Programs <https://arxiv.org/abs/2305.19834>`_
+`An Empirical Study of Fault Localization in Python Programs <https://doi.org/10.1007/s10664-024-10475-3>`_
 presents an empirical study where we
 applied FauxPy to 135 bugs across 13 real-world Python
 programs from the curated collection
