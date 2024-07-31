@@ -2,38 +2,131 @@
 Usage Example
 =============
 
-Directory `examples/triangle_area <https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area>`_
-in FauxPy's repository includes a tutorial
-example of using FauxPy.
-Follow the instructions below to run FauxPy on this example.
+The
+`examples <https://github.com/atom-sw/fauxpy/tree/main/examples>`_
+directory in FauxPy's repository includes the ``triangle_area`` example,
+a tutorial demonstrating how to use FauxPy.
+Follow the instructions below to run FauxPy
+with this example.
 
 Triangle Area
 =============
 
-After installing FauxPy, follow this walkthrough
-to see how it can be used on the two simple examples in directory
-`examples/triangle_area <https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area>`_.
+The following walkthrough begins by discussing
+the project structure of the
+`Triangle Area <https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area>`_
+example.
+It then provides instructions on how to clone
+the repository and set up an environment on your
+machine to follow along.
+Finally, it demonstrates how to use FauxPy
+with this example.
 
 Project Structure
 -----------------
 
 The current example has two packages: `code`_ and `tests`_.
 The code package contains the project's source code, which are two Python
-modules: `code/equilateral.py`_ and `code/isosceles.py`_.
+modules: `code/equilateral.py`_ and `code/isosceles.py`_,
+demonstrated in Figures 1 and 2, respectively.
 The function in module ``equilateral.py``
 computes the area of an equilateral triangle
 and the function in module ``isosceles.py`` computes
 the area of an isosceles triangle.
 
+.. code-block:: python
+   :linenos:
+   :emphasize-lines: 11
+   :caption: Figure 1: equilateral.py
+
+    import math
+
+
+    def equilateral_area(a):
+        const = math.sqrt(3) / 4
+
+        if a == 1:
+            return const
+
+        term = math.pow(a, 2)
+        area = const + term  # bug
+        # area = const * term  # patch
+        return area
+
+.. code-block:: python
+   :linenos:
+   :emphasize-lines: 6
+   :caption: Figure 2: isosceles.py
+
+    import math
+
+
+    def isosceles_area(leg, base):
+        def height():
+            t1, t2 = math.pow(base, 2), math.pow(leg, 2) / 4  # bug
+            # t1, t2 = math.pow(leg, 2), math.pow(base, 2) / 4  # patch
+            return math.sqrt(t1 - t2)
+
+        area = 0.5 * base * height()
+        return area
+
 Both functions have a bug. The bug locations are marked with comment
-``bug`` within source code, and the patch for each bug is in the line
+``bug`` within source code and highlighted in Figures 1 and 2.
+The patch for each bug is in the line
 following the bug location, in the form of a comment.
 
 The ``tests`` package contains the project's test suite, including two test modules
-`tests/test_equilateral.py`_ and `tests/test_isosceles.py`_
+`tests/test_equilateral.py`_ (Figure 3) and
+`tests/test_isosceles.py`_ (Figure 4)
 for modules ``equilateral.py`` and ``isosceles.py``,
 respectively. Each of these two test modules has two tests, one failing (i.e., revealing the bug) and
 one passing on their corresponding modules in package ``code``.
+
+.. code-block:: python
+   :linenos:
+   :caption: Figure 3: test_equilateral.py
+
+    import math
+
+    import pytest
+
+    from code.equilateral import equilateral_area
+
+
+    def test_ea_fail():
+        a = 3
+        area = equilateral_area(a)
+        assert area == pytest.approx(9 * math.sqrt(3) / 4)
+
+
+    def test_ea_pass():
+        a = 1
+        area = equilateral_area(a)
+        assert area == pytest.approx(math.sqrt(3) / 4)
+
+.. code-block:: python
+   :linenos:
+   :caption: Figure 4: test_isosceles.py
+
+    import math
+
+    import pytest
+
+    from code.isosceles import isosceles_area
+
+
+    def test_ia_crash():
+        leg, base = 9, 4
+
+        area = isosceles_area(leg, base)
+        assert area == pytest.approx(2 * math.sqrt(77))
+
+
+    def test_ia_pass():
+        leg = base = 4
+
+        area = isosceles_area(leg, base)
+        assert area == pytest.approx(2 * math.sqrt(12))
 
 .. _code: https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area/code
 .. _tests: https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area/tests
@@ -45,8 +138,20 @@ one passing on their corresponding modules in package ``code``.
 Preparing the Python Environment
 --------------------------------
 
-We first need to create a Python environment for this project, following
-the instructions below.
+To follow this walkthrough on your machine,
+first clone
+`FauxPy's repository <https://github.com/atom-sw/fauxpy>`_
+FauxPy's repository and navigate to
+the ``triangle_area`` directory:
+
+.. code-block:: bash
+
+   git clone git@github.com:atom-sw/fauxpy.git
+   cd fauxpy/examples/triangle_area
+
+Then, create a Python environment for this
+project, following the
+instructions below.
 
 1. Create a Python 3.8 virtual environment ``env``. (More recent Python
    versions should also work.)
@@ -347,4 +452,3 @@ Tarantula's output list is as follows:
    ('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::isosceles_area::4::11', 0.75625)
    ('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::height::5::8', 0.75625)
    ('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::equilateral_area::4::13', 0.1)
-

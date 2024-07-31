@@ -2,10 +2,16 @@
 How to Cite
 ===========
 
+If you have used FauxPy in your research and
+would like to cite it, please refer to
+the following works.
+As we conduct more studies, we will
+update this page with additional citations.
+
 Technical Report
 ================
 
-Our technical report
+The technical report
 `FauxPy: A Fault Localization Tool for Python <https://arxiv.org/abs/2404.18596>`_
 presents FauxPy in detail, including
 its implementation, architecture, and
@@ -27,7 +33,7 @@ You can cite this technical report as follows:
 Empirical Study
 ===============
 
-Our other paper
+The paper
 `An Empirical Study of Fault Localization in Python Programs <https://doi.org/10.1007/s10664-024-10475-3>`_
 presents an empirical study where we
 applied FauxPy to 135 bugs across 13 real-world Python
@@ -37,13 +43,13 @@ This paper is published in the
 Empirical Software Engineering (EMSE) journal.
 You can cite this empirical work as follows:
 
-    Rezaalipour, M., Furia, C.A. An empirical study of fault localization in Python programs. Empir Software Eng 29, 92 (2024). https://doi.org/10.1007/s10664-024-10475-3
+    Rezaalipour, M., Furia, C. A. An empirical study of fault localization in Python programs. Empir Software Eng 29, 92 (2024). https://doi.org/10.1007/s10664-024-10475-3
 
 .. code-block:: bibtex
 
    @article{Rezaalipour:2024,
      title={An empirical study of fault localization in Python programs},
-     author={Rezaalipour, Mohammad and Furia, Carlo A},
+     author={Rezaalipour, Mohammad and Furia, Carlo A.},
      journal={Empirical Software Engineering},
      volume={29},
      number={4},

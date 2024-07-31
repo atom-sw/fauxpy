@@ -64,7 +64,9 @@ FauxPy in Action
 ================
 
 Here is a short `demo video <https://www.youtube.com/watch?v=6ooPPiwd79g>`_
-of FauxPy in action, presented by the developer of FauxPy at
+of FauxPy in action, presented by
+`the developer of FauxPy <https://mohrez86.github.io>`_
+at
 `USI Università della Svizzera italiana <https://www.usi.ch/en>`_.
 
 .. image:: https://img.youtube.com/vi/6ooPPiwd79g/0.jpg
@@ -81,4 +83,5 @@ Contents
    user/getting_started
    user/using_fauxpy
    user/limitations
+   user/test_repo
    user/citing_fauxpy_and_references
