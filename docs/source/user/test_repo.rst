@@ -1,21 +1,26 @@
-==============
-Extensive Test
-==============
+=================
+Extensive Testing
+=================
+
+.. https://michaelcurrin.github.io/badge-generator
+.. image:: https://img.shields.io/badge/FauxPy--Test-Repository-2ea44f
+   :target: https://github.com/mohrez86/fauxpy-test
+   :alt: FauxPy-Test - Repository
 
 *Our top priority* is that FauxPy
-works on real-world Python projects.
-To ensure that, we verify that FauxPy
-maintains its functionality across a range
+works with real-world Python projects.
+To ensure that, we rigorously test
+FauxPy's functionality across a range
 of real-world projects before
-every release on PyPI.
-We have a
-`separate repository <https://github.com/mohrez86/fauxpy-test>`_,
-dedicated to this goal.
+each release on PyPI.
+For this purpose, we maintain a
+dedicated repository,
+`FauxPy-Test <https://github.com/mohrez86/fauxpy-test>`_.
 
 About the Test Repository
 =========================
 
-This repository contains code and data
+The *FauxPy-Test* repository contains code and data
 for testing new versions of FauxPy on
 a selection of real-world Python projects.
 Currently, our tests cover the
@@ -38,21 +43,21 @@ projects and bugs:
 - `tqdm <https://github.com/tqdm/tqdm>`_
 - `youtube-dl <https://github.com/ytdl-org/youtube-dl>`_
 
-The repository provides detailed instructions
-on running FauxPy on these projects,
-ensuring each new version undergoes thorough testing
-against real-world code. This process verifies that
+The FauxPy-Test repository
+provides detailed instructions
+on running FauxPy with these projects,
+ensuring each new version is thoroughly
+tested against real-world Python projects.
+This process verifies that
 the results produced by the new version of FauxPy
-align with those of previous versions,
-confirming that no regressions have been introduced
-during the development of the new version.
+is consistent with those of previous versions.
 
 Extending the Test Repository
 =============================
 
-We plan to extend this test repository
+We plan to extend The FauxPy-Test repository
 by including more real-world Python projects
-in the future, further enhancing our
+in the future to further enhance our
 confidence in FauxPy's reliability.
 Additionally, the newly added
 projects can be used for further research

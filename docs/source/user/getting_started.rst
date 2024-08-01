@@ -12,15 +12,11 @@ with this example.
 Triangle Area
 =============
 
-The following walkthrough begins by discussing
-the project structure of the
-`Triangle Area <https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area>`_
-example.
-It then provides instructions on how to clone
-the repository and set up an environment on your
-machine to follow along.
-Finally, it demonstrates how to use FauxPy
-with this example.
+The following walkthrough starts by discussing
+`Triangle Area <https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area>`_'s
+project structure
+and  provides instructions
+on setting up an environment and running FauxPy.
 
 Project Structure
 -----------------
@@ -141,7 +137,7 @@ Preparing the Python Environment
 To follow this walkthrough on your machine,
 first clone
 `FauxPy's repository <https://github.com/atom-sw/fauxpy>`_
-FauxPy's repository and navigate to
+and navigate to
 the ``triangle_area`` directory:
 
 .. code-block:: bash
@@ -153,8 +149,9 @@ Then, create a Python environment for this
 project, following the
 instructions below.
 
-1. Create a Python 3.8 virtual environment ``env``. (More recent Python
-   versions should also work.)
+1. Create a Python 3.8 virtual
+   environment ``env``. More recent
+   Python versions should also work.
 
 .. code-block:: bash
 
