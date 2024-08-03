@@ -5,11 +5,16 @@
 [![Downloads](https://static.pepy.tech/badge/fauxpy)](https://pepy.tech/project/fauxpy)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Documentation Status](https://readthedocs.org/projects/fauxpy/badge/?version=latest)](https://fauxpy.readthedocs.io/en/latest/?badge=latest)
+[![FauxPy-Test - Repository](https://img.shields.io/badge/FauxPy--Test-Repository-2ea44f)](https://github.com/mohrez86/fauxpy-test)
+
 
 FauxPy (pronounced: "foh pie")
 is an automated fault localization tool for Python programs.
 This repository includes FauxPy's source code, and instructions
 to install and use the tool.
+
+*For comprehensive documentation, visit
+[FauxPy's documentation](https://fauxpy.readthedocs.io).*
 
 
 ## Features
@@ -56,14 +61,16 @@ but it should also work on later Python versions.
 
 ## Getting Started
 
-Here is a short [demo video](https://www.youtube.com/watch?v=6ooPPiwd79g) of FauxPy in action.
+Here is a short [demo video](https://www.youtube.com/watch?v=6ooPPiwd79g) of FauxPy
+in action (~16 minutes).
 
 [![FauxPy Demo](https://img.youtube.com/vi/6ooPPiwd79g/0.jpg)](https://www.youtube.com/watch?v=6ooPPiwd79g)
 
 ![YouTube Video Views](https://img.shields.io/youtube/views/6ooPPiwd79g)
 
 Directory [examples/triangle_area](examples/triangle_area) includes a tutorial example of using FauxPy. Follow the instructions in the [`README.md`](examples/triangle_area/README.md).
-Here is a [video demonstration](https://youtu.be/O4T7w-U8rZE) of this example.
+Here is a [demo video](https://youtu.be/O4T7w-U8rZE) of part of 
+this example (~ 5 minutes).
 
 [![Triangle Area Example](https://img.youtube.com/vi/O4T7w-U8rZE/0.jpg)](https://youtu.be/O4T7w-U8rZE)
 
@@ -261,17 +268,18 @@ The current version of FauxPy has a couple of known limitations:
 
 ## Citing FauxPy and References
 
-The paper [FauxPy: A Fault Localization Tool 
-for Python](https://arxiv.org/abs/2404.18596)
-presents FauxPy in detail, including 
-its implementation, architecture, and
-instructions on how to use it.
+### Technical Report
 
-You can cite this tool demo paper as follows:
+The technical report 
+[FauxPy: A Fault Localization Tool for Python](https://arxiv.org/abs/2404.18596) 
+presents FauxPy in detail, including 
+its implementation, architecture, and 
+instructions on how to use it. 
+You can cite this technical report as follows:
 
 ```bibtex
 @misc{PythonFL-FauxPy-Tool,
-  title={FauxPy: A Fault Localization Tool for Python},
+  title={{FauxPy}: A Fault Localization Tool for {P}ython},
   author={Mohammad Rezaalipour and Carlo A. Furia},
   year={2024},
   eprint={2404.18596},
@@ -281,26 +289,32 @@ You can cite this tool demo paper as follows:
 }
 ```
 
-Another paper [An Empirical Study of Fault Localization in Python Programs](https://arxiv.org/abs/2305.19834) describes an empirical study where we applied FauxPy to 135 bugs in 13 real-world Python programs (from the [BugsInPy](https://github.com/soarsmu/BugsInPy) curated collection).
+### Empirical Study
 
-This paper has been accepted for publication in the Empirical Software Engineering (EMSE) journal in March 2024.
-
+The paper 
+[An Empirical Study of Fault Localization in Python Programs](https://doi.org/10.1007/s10664-024-10475-3) 
+presents an empirical study where we 
+applied FauxPy to 135 bugs across 13 real-world Python 
+programs from the curated collection 
+[BugsInPy](https://github.com/soarsmu/BugsInPy). 
+This paper is published in the 
+*Empirical Software Engineering* (EMSE) journal. 
 You can cite this empirical work as follows:
 
-> Mohammad Rezaalipour, Carlo A. Furia: An Empirical Study of Fault Localization in Python Programs.  CoRR abs/2305.19834 (2024)
+Rezaalipour, M., Furia, C. A. An empirical study of fault localization in Python programs. *Empirical Software Engineering*, 29, 92 (2024). https://doi.org/10.1007/s10664-024-10475-3
 
 ```bibtex
-@misc{PythonFL-FauxPy,
-      title={An Empirical Study of Fault Localization in {P}ython Programs}, 
-      author={Mohammad Rezaalipour and Carlo A. Furia},
-      year={2024},
-      eprint={2305.19834},
-      archivePrefix={arXiv},
-      primaryClass={cs.SE},
-      url={https://arxiv.org/abs/2305.19834}
+@article{Rezaalipour:2024,
+  title={An empirical study of fault localization in {P}ython programs},
+  author={Rezaalipour, Mohammad and Furia, Carlo A.},
+  journal={Empirical Software Engineering},
+  volume={29},
+  number={4},
+  pages={92},
+  year={2024},
+  publisher={Springer}
 }
 ```
-
 
 ## Mirrors
 
