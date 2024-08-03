@@ -1,9 +1,10 @@
-@misc{PythonFL-FauxPy,
-      title={An Empirical Study of Fault Localization in {P}ython Programs}, 
-      author={Mohammad Rezaalipour and Carlo A. Furia},
-      year={2024},
-      eprint={2305.19834},
-      archivePrefix={arXiv},
-      primaryClass={cs.SE},
-      url={https://arxiv.org/abs/2305.19834}
+@article{Rezaalipour:2024,
+ title={An empirical study of fault localization in {P}ython programs},
+ author={Rezaalipour, Mohammad and Furia, Carlo A.},
+ journal={Empirical Software Engineering},
+ volume={29},
+ number={4},
+ pages={92},
+ year={2024},
+ publisher={Springer}
 }
