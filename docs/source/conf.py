@@ -7,8 +7,8 @@ project = "FauxPy"
 author = "Mohammad Rezaalipour"
 copyright = f"2023-{datetime.date.today().year}, {author}"
 
-release = "0.1"
-version = "0.1"
+release = "0.1.1"
+version = "0.1.1"
 
 # -- General configuration
 

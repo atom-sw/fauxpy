@@ -1,7 +1,8 @@
 # FauxPy Changelog
 
-## Not released
+## FauxPy 0.1.1
 
+- Remove tests depending on FauxPy.
 - Add Read the Docs documentation.
 - Fix a bug in ST.
 - Adopt the black code style.
