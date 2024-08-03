@@ -21,7 +21,7 @@ You can cite this technical report as follows:
 .. code-block:: bibtex
 
    @misc{PythonFL-FauxPy-Tool,
-     title={{FauxPy}: A Fault Localization Tool for Python},
+     title={{FauxPy}: A Fault Localization Tool for {P}ython},
      author={Mohammad Rezaalipour and Carlo A. Furia},
      year={2024},
      eprint={2404.18596},
@@ -48,7 +48,7 @@ You can cite this empirical work as follows:
 .. code-block:: bibtex
 
    @article{Rezaalipour:2024,
-     title={An empirical study of fault localization in Python programs},
+     title={An empirical study of fault localization in {P}ython programs},
      author={Rezaalipour, Mohammad and Furia, Carlo A.},
      journal={Empirical Software Engineering},
      volume={29},
