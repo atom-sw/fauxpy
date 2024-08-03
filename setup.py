@@ -24,5 +24,9 @@ setup(
         "pytest-timeout==2.1.0",
         "wheel",
     ],
-    entry_points={"pytest11": ["fauxpy = fauxpy.main",],},
+    entry_points={
+        "pytest11": [
+            "fauxpy = fauxpy.main",
+        ],
+    },
 )
