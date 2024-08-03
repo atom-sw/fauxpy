@@ -43,19 +43,24 @@ projects and bugs:
 - `tqdm <https://github.com/tqdm/tqdm>`_
 - `youtube-dl <https://github.com/ytdl-org/youtube-dl>`_
 
-The FauxPy-Test repository
-provides detailed instructions
-on running FauxPy with these projects,
-ensuring each new version is thoroughly
-tested against real-world Python projects.
-This process verifies that
-the results produced by the new version of FauxPy
-is consistent with those of previous versions.
+The FauxPy-Test repository provides detailed
+instructions on running FauxPy with these
+projects to verify two key aspects:
+
+1. Ensure the new version runs
+   on real-world programs without crashing.
+
+2. Confirm that the results produced by the
+   new version are consistent with those
+   from the previous version. This helps
+   us ensure no regressions occurred
+   during development.
 
 Extending the Test Repository
 =============================
 
-We plan to extend The FauxPy-Test repository
+We plan to extend the
+FauxPy-Test repository
 by including more real-world Python projects
 in the future to further enhance our
 confidence in FauxPy's reliability.
