@@ -153,22 +153,22 @@ instructions below.
    environment ``env``. More recent
    Python versions should also work.
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   python3.8 -m venv env
+      python3.8 -m venv env
 
 2. Activate environment ``env``. Henceforth, all commands assume
    environment ``env`` is activated.
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   source env/bin/activate
+      source env/bin/activate
 
 3. Install FauxPy in environment ``env``.
 
-.. code-block:: bash
+   .. code-block:: bash
 
-   pip install fauxpy
+      pip install fauxpy
 
 Locating the Bug in ``equilateral.py``
 --------------------------------------
