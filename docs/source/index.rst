@@ -15,6 +15,10 @@ FauxPy's documentation
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
 
+.. image:: https://img.shields.io/badge/FauxPy--Test-Repository-2ea44f
+   :target: https://github.com/mohrez86/fauxpy-test
+   :alt: FauxPy-Test - Repository
+
 .. image:: https://img.shields.io/github/stars/atom-sw/fauxpy?style=social
    :target: https://github.com/atom-sw/fauxpy
 
