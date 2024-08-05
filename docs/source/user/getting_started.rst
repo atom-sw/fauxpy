@@ -134,37 +134,64 @@ one passing on their corresponding modules in package ``code``.
 Preparing the Python Environment
 --------------------------------
 
-To follow this walkthrough on your machine,
-first clone
-`FauxPy's repository <https://github.com/atom-sw/fauxpy>`_
-and navigate to
-the ``triangle_area`` directory:
+To get started with FauxPy, you'll
+first need to set up your environment.
+Follow these steps to prepare your
+machine for the walkthrough:
 
-.. code-block:: bash
+1. **Clone the FauxPy Repository:**
 
-   git clone git@github.com:atom-sw/fauxpy.git
-   cd fauxpy/examples/triangle_area
+   Begin by cloning the
+   `FauxPy repository <https://github.com/atom-sw/fauxpy>`_
+   from GitHub:
 
-Then, create a Python environment for this
-project, following the
-instructions below.
+   .. code-block:: bash
 
-1. Create a Python 3.8 virtual
-   environment ``env``. More recent
-   Python versions should also work.
+      git clone git@github.com:atom-sw/fauxpy.git
+
+2. **Copy the Example Project:**
+
+   The ``triangle_area`` example is located in the ``fauxpy/examples/triangle_area`` directory. Copy this directory to a location of your choice (e.g., your home directory):
+
+   .. code-block:: bash
+
+      cp -r fauxpy/examples/triangle_area ~/triangle_area
+
+3. **Navigate to the Example Directory:**
+
+   Change your directory to the
+   location where you copied the
+   ``triangle_area`` example:
+
+   .. code-block:: bash
+
+      cd ~/triangle_area
+
+4. **Set Up a Python Virtual Environment:**
+
+   Create a Python 3.8 virtual environment
+   named ``env``. Later Python versions
+   should also be compatible:
 
    .. code-block:: bash
 
       python3.8 -m venv env
 
-2. Activate environment ``env``. Henceforth, all commands assume
-   environment ``env`` is activated.
+5. **Activate the Virtual Environment:**
+
+   Activate the ``env`` environment.
+   Ensure that this environment
+   remains active for the
+   following commands:
 
    .. code-block:: bash
 
       source env/bin/activate
 
-3. Install FauxPy in environment ``env``.
+6. **Install FauxPy:**
+
+   With the virtual environment
+   active, install FauxPy using pip:
 
    .. code-block:: bash
 
