@@ -1,13 +1,22 @@
+from pathlib import Path
+
 import setuptools
 from setuptools import setup
 
+
+# Load version
+root_path = Path(__file__).parent
+version_file_path = root_path / "fauxpy" / 'version.py'
+__version__ = ""
+exec(version_file_path.read_text())
+assert __version__ != ""
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
     name="fauxpy",
-    version="0.1.1",
+    version=__version__,
     author="Mohammad Rezaalipour",
     author_email="rezaalipour.mohammad@gmail.com",
     description="A fault localization tool for Python",

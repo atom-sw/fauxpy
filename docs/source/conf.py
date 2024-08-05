@@ -1,5 +1,14 @@
 # Configuration file for the Sphinx documentation builder.
 import datetime
+from pathlib import Path
+
+# Load version
+root_path = Path(__file__).parents[2]
+version_file_path = root_path / "fauxpy" / 'version.py'
+__version__ = ""
+exec(version_file_path.read_text())
+assert __version__ != ""
+print(__version__)
 
 # -- Project information
 
@@ -7,8 +16,8 @@ project = "FauxPy"
 author = "Mohammad Rezaalipour"
 copyright = f"2023-{datetime.date.today().year}, {author}"
 
-release = "0.1.1"
-version = "0.1.1"
+release = __version__
+version = __version__
 
 # -- General configuration
 
