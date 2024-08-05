@@ -1,5 +1,5 @@
 ======================
-FauxPy's documentation
+FauxPy documentation
 ======================
 
 .. meta::
