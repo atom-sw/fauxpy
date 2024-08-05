@@ -1,5 +1,13 @@
 # FauxPy Changelog
 
+## Unreleased
+- Improve the Read the Docs
+documentation.
+- Update the README files in the
+root and triangle example 
+directory.
+- Add `version.py` file to manage FauxPy's versioning.
+
 ## FauxPy 0.1.1
 
 - Remove tests depending on FauxPy.
