@@ -1,10 +1,14 @@
 # Configuration file for the Sphinx documentation builder.
 import datetime
+import os
+import sys
 from pathlib import Path
+
+sys.path.insert(0, os.path.abspath("../../."))
 
 # Load version
 root_path = Path(__file__).parents[2]
-version_file_path = root_path / "fauxpy" / 'version.py'
+version_file_path = root_path / "fauxpy" / "version.py"
 __version__ = ""
 exec(version_file_path.read_text())
 assert __version__ != ""
@@ -27,6 +31,7 @@ extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
+    "sphinx.ext.viewcode",
 ]
 
 intersphinx_mapping = {

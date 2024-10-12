@@ -78,3 +78,5 @@ target/
 make_env.sh
 
 FauxPyReport*
+
+.DS_Store

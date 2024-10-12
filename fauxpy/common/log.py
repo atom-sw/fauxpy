@@ -1,14 +1,13 @@
 import logging
-from . import file
+from pathlib import Path
 
 Logger = logging.getLogger()
 
 
-def init():
+def init(log_file_path: Path):
     global logging
-    logFilePath = file.getLogFilePath()
     logging.basicConfig(
-        filename=logFilePath, format="%(asctime)s %(message)s", filemode="w"
+        filename=log_file_path, format="%(asctime)s %(message)s", filemode="w"
     )
 
 

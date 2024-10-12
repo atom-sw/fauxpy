@@ -15,9 +15,14 @@ FauxPy's source code and
 instructions to install 
 and use the tool.
 
-*For comprehensive documentation, visit
-[FauxPy 
-documentation](https://fauxpy.readthedocs.io/).*
+- For comprehensive documentation, visit
+[FauxPy documentation](https://fauxpy.readthedocs.io/).
+- You can also participate in our 
+[Discussions section](https://github.com/mohrez86/fauxpy/discussions) 
+for questions, feedback, and more. 
+- If you encounter any issues, feel free
+to open an issue on our 
+[GitHub repository](https://github.com/mohrez86/fauxpy/issues).
 
 ## Features
 

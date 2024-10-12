@@ -1,4 +1,4 @@
-from fauxpy.common import TargetFailingTests
+from fauxpy.session_lib.target_tsts import TargetFailingTests
 
 
 def test_single_3_part_faining_test_unittest_format():
@@ -10,7 +10,7 @@ def test_single_3_part_faining_test_unittest_format():
     test_path = "tornado/test/httpclient_test.py"
     test_method_name = "SyncHTTPClientSubprocessTest.test_destructor_log"
 
-    assert tft_object.isTargetTest(test_path, test_method_name)
+    assert tft_object.is_target_test(test_path, test_method_name)
 
 
 def test_single_3_part_faining_test_pytest_format():
@@ -22,7 +22,7 @@ def test_single_3_part_faining_test_pytest_format():
     test_path = "tests/test_redirects.py"
     test_method_name = "TestRedirects.test_max_redirects"
 
-    assert tft_object.isTargetTest(test_path, test_method_name)
+    assert tft_object.is_target_test(test_path, test_method_name)
 
 
 def test_single_2_part_faining_test_pytest_format():
@@ -32,4 +32,4 @@ def test_single_2_part_faining_test_pytest_format():
     test_path = "tests/test_url_for.py"
     test_method_name = "test_routes_with_host"
 
-    assert tft_object.isTargetTest(test_path, test_method_name)
+    assert tft_object.is_target_test(test_path, test_method_name)

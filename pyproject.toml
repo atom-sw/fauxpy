@@ -4,3 +4,24 @@ requires = [
     "wheel"
 ]
 build-backend = "setuptools.build_meta"
+
+[tool.pylint]
+disable = [
+    "C",
+    "R"
+]
+output-format="colorized"
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    tests/data/
+  | .git/
+  | .pytest_cache/
+  | venv/
+  | fauxpy.egg-info/
+  | build/
+)
+'''

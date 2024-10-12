@@ -6,7 +6,7 @@ from setuptools import setup
 
 # Load version
 root_path = Path(__file__).parent
-version_file_path = root_path / "fauxpy" / 'version.py'
+version_file_path = root_path / "fauxpy" / "version.py"
 __version__ = ""
 exec(version_file_path.read_text())
 assert __version__ != ""
@@ -37,5 +37,6 @@ setup(
         "pytest11": [
             "fauxpy = fauxpy.main",
         ],
+        "console_scripts": ["fauxpy = fauxpy.main:fauxpy_analysis_mode"],
     },
 )

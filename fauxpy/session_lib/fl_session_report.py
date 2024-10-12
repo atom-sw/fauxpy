@@ -1,0 +1,2 @@
+class FlSessionReport:
+    pass

@@ -22,26 +22,18 @@ FauxPy documentation
 .. image:: https://img.shields.io/github/stars/atom-sw/fauxpy?style=social
    :target: https://github.com/atom-sw/fauxpy
 
+.. image:: https://img.shields.io/github/stars/mohrez86/fauxpy?style=social
+   :target: https://github.com/mohrez86/fauxpy
+
 FauxPy (pronounced: "foh pie") is an automated fault localization tool for Python programs,
 `available as open-source software on GitHub <https://github.com/atom-sw/fauxpy>`_.
 This documentation includes instructions to install and use FauxPy.
 
-.. note::
-   We are improving FauxPy as we continue our
-   research, and we value your **feedback and suggestions**.
-   Whether it's regarding the user interface, new features,
-   or any other aspect of FauxPy,
-   your input can be incredibly helpful.
-   Please send your suggestions or feedback to us at:
-
-   **rezaalipour [dot] mohammad [at] gmail [dot] com**
-
-   If you enjoy using FauxPy and find it useful, giving us
-   a `star on GitHub <https://github.com/atom-sw/fauxpy>`_ would greatly encourage us
-   and make us happy. Your support means a lot to us!
-
-   .. image:: https://img.shields.io/github/stars/atom-sw/fauxpy?style=social
-      :target: https://github.com/atom-sw/fauxpy
+.. tip::
+   We are constantly improving FauxPy and
+   welcome your **feedback and suggestions**.
+   Share your ideas in our
+   `Discussions section <https://github.com/mohrez86/fauxpy/discussions>`_.
 
 
 Features
@@ -77,11 +69,9 @@ at
    :target: https://www.youtube.com/watch?v=6ooPPiwd79g
 
 
-Contents
-========
-
 .. toctree::
    :maxdepth: 1
+   :caption: User Guide
 
    user/installation
    user/getting_started
@@ -89,3 +79,17 @@ Contents
    user/limitations
    user/test_repo
    user/citing_fauxpy_and_references
+
+.. toctree::
+   :maxdepth: 1
+   :caption: API Documentation
+
+   developer/entry_points
+..   developer/sbfl
+
+.. API Indices and tables
+.. ======================
+
+.. * :ref:`genindex`
+.. * :ref:`modindex`
+.. * :ref:`search`

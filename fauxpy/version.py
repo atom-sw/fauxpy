@@ -2,12 +2,8 @@
 Current version of FauxPy.
 """
 
-__Major = 0
-__Minor = 1
-__Revision = 1
+__Major = "0"
+__Minor = "2"
+__Revision = "0"
 
-__version__ = ".".join([
-    str(__Major),
-    str(__Minor),
-    str(__Revision)
-])
+__version__ = ".".join([__Major, __Minor, __Revision])

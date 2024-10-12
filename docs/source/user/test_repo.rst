@@ -69,12 +69,11 @@ projects can be used for further research
 in the software analysis domain.
 
 If you discover any case where FauxPy
-does not work
-with a project, whether it's one
+does not work with a project, whether it's one
 of the included ones or a different
-real-world project,
-please let us know so that
+real-world project, please let us know
+via our
+`Discussions section <https://github.com/mohrez86/fauxpy/discussions>`_
+so that
 we can fix bugs, improve FauxPy, and add
 new projects to our test repository.
-
-Email: **rezaalipour [dot] mohammad [at] gmail [dot] com**
