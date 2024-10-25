@@ -13,26 +13,30 @@ FauxPy can work in two different modes: **Pytest Mode** and **Analysis Mode**.
   ``fauxpy -v``. In this mode, FauxPy runs as a standalone application,
   independently of Pytest.
 
-Module ``main.py`` is the main entry point for FauxPy, determining
-FauxPy's mode based on how FauxPy is executed.
+Module ``main.py`` is the main entry point for FauxPy. It redirects
+FauxPy's execution to the appropriate handler class depending on how
+FauxPy has been executed.
 
 Module ``main.py``
 ==================
 
 This module is the main entry point for FauxPy, containing six functions.
 The function ``fauxpy_analysis_mode`` is called when FauxPy starts in Analysis Mode.
-It creates an instance of the ``FauxpyAnalysisModeHandler`` class, which manages
-the whole Analysis Mode.
+It creates an instance of the :ref:`FauxpyAnalysisModeHandler<FauxpyAnalysisModeHandler>`
+class, which manages the whole Analysis Mode.
 
 The other five functions in ``main.py`` are Pytest hooks executed in Pytest Mode.
-Module ``main.py`` instantiates a ``FauxpyPytestModeHandler`` object as a global variable.
-These hooks call corresponding methods in the object, delegating control
-of Pytest Mode to class ``FauxpyPytestModeHandler``.
+Module ``main.py`` instantiates a :ref:`FauxpyPytestModeHandler<FauxpyPytestModeHandler>` object
+as a global variable. These hooks call corresponding methods in the object,
+delegating control of Pytest Mode to
+class ``FauxpyPytestModeHandler``.
 
 Below are the details of these six functions in ``main.py``.
 
 .. automodule:: fauxpy.main
     :members:
+
+.. _FauxpyPytestModeHandler:
 
 Pytest Mode Handler
 ===================
@@ -42,6 +46,8 @@ Details of this class are provided below.
 
 .. automodule:: fauxpy.command_line.pytest_mode.handler
     :members:
+
+.. _FauxpyAnalysisModeHandler:
 
 Analysis Mode Handler
 =====================

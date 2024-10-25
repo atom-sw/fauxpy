@@ -85,7 +85,6 @@ at
    :caption: API Documentation
 
    developer/entry_points
-..   developer/sbfl
 
 .. API Indices and tables
 .. ======================
