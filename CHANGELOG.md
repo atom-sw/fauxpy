@@ -1,5 +1,9 @@
 # FauxPy Changelog
 
+## Unreleased
+- Migrate documentation from Sphinx to MkDocs.
+- Revise and improve documentation content.
+
 ## FauxPy 0.2.0
 - Add entry for Analysis Mode.
 - Refactor code structure.
