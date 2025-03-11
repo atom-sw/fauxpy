@@ -1,11 +1,12 @@
 # FauxPy
 
 [![PyPI version](https://badge.fury.io/py/fauxpy.svg)](https://badge.fury.io/py/fauxpy)
-[![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)](LICENSE)
 [![Downloads](https://static.pepy.tech/badge/fauxpy)](https://pepy.tech/project/fauxpy)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Documentation Status](https://readthedocs.org/projects/fauxpy/badge/?version=latest)](https://fauxpy.readthedocs.io/en/latest/?badge=latest)
 [![FauxPy-Test - Repository](https://img.shields.io/badge/FauxPy--Test-Repository-2ea44f)](https://github.com/mohrez86/fauxpy-test)
+![Research](https://img.shields.io/badge/Research-Driven-lightgrey)
+![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
+[![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)](LICENSE)
 
 FauxPy (pronounced: "foh pie") is an 
 automated fault localization tool 
