@@ -1,0 +1,52 @@
+site_name: FauxPy Documentation
+
+nav:
+  - Home: index.md
+  - User Guide:
+      - Installation: user/install.md
+      - Usage Example: user/start.md
+      - Command Line Options: user/using.md
+      - Limitations: user/limit.md
+      - Testing FauxPy: user/testing.md
+      - How to Cite: user/citation.md
+  - API Reference:
+      - API Overview: api/intro.md
+      - Main Entry Point: api/main.md
+      - Pytest Mode Handler: api/pytest.md
+      - Analysis Mode Handler: api/analysis.md
+
+repo_url: https://github.com/atom-sw/fauxpy
+repo_name: atom-sw/fauxpy
+
+theme:
+  name: material
+  features:
+    - navigation.footer
+    - navigation.tabs
+    - navigation.instant
+    - navigation.sections  # Adds collapsible sub-sections in the sidebar
+    - content.code.copy
+    - navigation.top
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: google  # Format docstrings using Google style
+
+markdown_extensions:
+  # For syntax highlighting for code blocks
+  - pymdownx.highlight
+
+  # For inline code highlighting with backticks
+  - pymdownx.inlinehilite
+
+  # For enhancing fenced code blocks with support for additional features like line numbers and captions
+  - pymdownx.superfences
+
+  # admonition: Allows you to create special admonition blocks (like notes, warnings, etc.) with custom styles
+  - admonition
