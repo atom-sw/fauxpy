@@ -6,7 +6,7 @@ the use of FauxPy.
 
 To get started with this example,
 please refer to the 
-[Usage Example](https://fauxpy.readthedocs.io/en/latest/user/getting_started.html) 
+[Usage Example](https://fauxpy.readthedocs.io/en/latest/user/start) 
 page on FauxPy documentation.
 
 The documentation provides step-by-step
