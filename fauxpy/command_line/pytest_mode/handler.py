@@ -5,9 +5,6 @@ from fauxpy.command_line.pytest_mode.pytest_option_manager import PytestOptionMa
 from fauxpy.session_lib.fauxpy_session_type import FauxpySessionType
 from fauxpy.session_lib.timer import Timer
 
-Logger = logging.getLogger()
-
-
 class FauxpyPytestModeHandler:
     """
     Handles Pytest Mode by interacting with Pytest through various hooks.
@@ -57,6 +54,7 @@ class FauxpyPytestModeHandler:
 
             logging.basicConfig(
                 filename=self._session_file_manager.get_log_file_path(),
+                level=logging.DEBUG,
                 format="%(asctime)s %(message)s",
                 filemode="w",
             )

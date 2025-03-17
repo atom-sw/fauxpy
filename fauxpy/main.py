@@ -12,8 +12,6 @@ def pytest_addoption(parser):
     Args:
         parser: The Pytest parser object.
     """
-    global _Fauxpy_pytest_mode_handler
-
     _Fauxpy_pytest_mode_handler.add_option(parser)
 
 
@@ -26,8 +24,6 @@ def pytest_configure(config):
         config: The Pytest configuration object, which holds configuration options
         and settings for the current test session.
     """
-    global _Fauxpy_pytest_mode_handler
-
     _Fauxpy_pytest_mode_handler.configure(config)
 
 
@@ -38,8 +34,6 @@ def pytest_runtest_call(item):
     Args:
         item: The test item (or node) being executed.
     """
-    global _Fauxpy_pytest_mode_handler
-
     _Fauxpy_pytest_mode_handler.runtest_call(item)
 
 
@@ -51,8 +45,6 @@ def pytest_runtest_makereport(item, call):
         item: The test item that was executed.
         call: The test phase object representing the test's setup, call, or teardown phase.
     """
-    global _Fauxpy_pytest_mode_handler
-
     _Fauxpy_pytest_mode_handler.runtest_make_report(item, call)
 
 
@@ -64,8 +56,6 @@ def pytest_terminal_summary(terminalreporter, exitstatus):
         terminalreporter: The Pytest terminal reporter object, used to output results.
         exitstatus: The final exit status of the Pytest session, indicating success or failure.
     """
-    global _Fauxpy_pytest_mode_handler
-
     _Fauxpy_pytest_mode_handler.terminal_summary(terminalreporter, exitstatus)
 
 

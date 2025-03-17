@@ -3,7 +3,7 @@ from typing import List
 
 import coverage
 
-from fauxpy import program_tracer
+from fauxpy import program_tracer, constants
 from fauxpy.command_line.pytest_mode import legacy_input
 from fauxpy.fault_localization.granularity.db_manager import FunctionLevelDbManager
 from fauxpy.fault_localization.mbfl.db_manager import MbflDbManager
@@ -16,7 +16,7 @@ from fauxpy.fault_localization.util.path_util import PathUtil
 from fauxpy.fault_localization.util.traceback_lib import TracebackParser
 from fauxpy.session_lib import naming_lib
 from fauxpy.session_lib.fl_session import FlSession
-from fauxpy.session_lib.fl_type import FlGranularity
+from fauxpy.session_lib.fl_type import FlGranularity, MutationStrategy
 from fauxpy.session_lib.path_lib import PythonPath
 from fauxpy.session_lib.timer import Timer
 from fauxpy.session_lib.ts_lib import TargetedFailingTst
@@ -32,6 +32,7 @@ class MbflSession(FlSession):
         self,
         target_src: PythonPath,
         exclude_list: List[PythonPath],
+        mutation_strategy: MutationStrategy,
         fl_granularity: FlGranularity,
         top_n: int,
         targeted_failing_test_list: List[TargetedFailingTst],
@@ -41,6 +42,7 @@ class MbflSession(FlSession):
     ):
         self._target_src = target_src
         self._exclude_list = exclude_list
+        self._mutation_strategy = mutation_strategy
         self._fl_granularity = fl_granularity
         self._top_n = top_n
         self._targeted_failing_test_list = targeted_failing_test_list
@@ -56,19 +58,12 @@ class MbflSession(FlSession):
         )
         self._mutant_score_manager = MutantScoreManager(self._db_manager)
         self._entity_score_manager = EntityScoreManager(self._db_manager)
-        self._mutation_manager = MutationManager(self._db_manager)
+        self._mutation_manager = MutationManager(self._db_manager, self._mutation_strategy)
         self._traceback_parser = TracebackParser(project_working_directory)
         self._path_util = PathUtil(project_working_directory)
 
-    @staticmethod
-    def __pretty_representation():
-        return "MBFL family"
-
     def __str__(self):
-        return self.__pretty_representation()
-
-    def __repr__(self):
-        return self.__pretty_representation()
+        return "MBFL session object"
 
     def run_test_call(self, item):
         self._current_test_timer.start_timer()
@@ -86,16 +81,16 @@ class MbflSession(FlSession):
             )
 
     def run_test_make_report(self, item, call):
-        # TODO: Replace custom tracer with coverage library (commented code). Coverage tool does not
+        # TODO: Coverage tool does not
         #  work on cookiecutter project. Not found the reason. Probably timeout is the problem
         #  and the project having only one mutant. Increasing the
         #  timeout solved the problem for now.
 
-        if call.when == "call":
+        if call.when == constants.PYTEST_CALL:
             test_name = PytestTstItem(item).get_test_name()
             if test_name != self._current_test_name:
                 raise Exception(
-                    f"Starting coverage for {self._current_test_name}. But closing coverage for {test_name}."
+                    f"Expected to stop coverage for {self._current_test_name}, but found '{test_name}' instead."
                 )
 
             if self._Use_coverage_lib:
@@ -135,7 +130,7 @@ class MbflSession(FlSession):
 
     def terminal_summary(self, terminal_reporter, exit_status):
         for key, value in terminal_reporter.stats.items():
-            if key in ["passed", "failed"]:
+            if key in [constants.PYTEST_PASSED, constants.PYTEST_FAILED]:
                 for test_report in value:
                     test_information = PytestTstItem(test_report)
                     test_path = test_information.get_path()
@@ -145,7 +140,7 @@ class MbflSession(FlSession):
                     test_trace_back = ""
                     timeout_stat = -1
                     target = False
-                    if key == "failed":
+                    if key == constants.PYTEST_FAILED:
                         if (
                             legacy_input.get_targeted_failing_test_list_legacy(
                                 self._targeted_failing_test_list

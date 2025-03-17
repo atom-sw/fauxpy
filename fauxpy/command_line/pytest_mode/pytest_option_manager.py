@@ -25,24 +25,57 @@ class PytestOptionManager:
             pytest_option_parser: The pytest parser object.
         """
         group = pytest_option_parser.getgroup(
-            f"fauxpy", description=f"FauxPy {__version__}"
+            "fauxpy",
+            description="FauxPy " + __version__ + " - A tool for automated fault localization in Python programs"
         )
-        group.addoption("--src", help="Directory to perform fault localization on.")
-        group.addoption("--exclude", default="[]", help="List of paths to be excluded.")
-        group.addoption("--family", default="sbfl", help="Options: sbfl/mbfl/ps/st")
         group.addoption(
-            "--granularity", default="statement", help="Options: statement/function"
+            "--src",
+            help="Specify the source directory for fault localization. If not provided, FauxPy will be disabled, and pytest will run normally."
         )
-        group.addoption("--top-n", default="-1", help="Options: int[1,]]/-1(all).")
+        group.addoption(
+            "--exclude",
+            default="[]",
+            help="Provide a list of paths to be excluded from analysis. Default is an empty list."
+        )
+        group.addoption(
+            "--family",
+            default="sbfl",
+            help="Select the fault localization technique to use. Options are: "
+                 "sbfl (Spectrum-Based Fault Localization), "
+                 "mbfl (Mutation-Based Fault Localization), "
+                 "ps (Predicate Switching), "
+                 "st (Stack-Trace). Default is sbfl."
+        )
+        group.addoption(
+            "--mutation",
+            default="t",
+            help="Specify the mutation generation strategy for Mutation-Based Fault Localization (MBFL). Options: "
+                 "t - Use Cosmic Ray with traditional mutation operators (default), "
+                 "tgpt4ominiapi - Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o-mini via its API, "
+                 "gpt4ominiapi - Use only GPT-4o-mini via its API for mutant generation, without Cosmic Ray."
+        )
+        group.addoption(
+            "--granularity",
+            default="statement",
+            help="Set the granularity level for fault localization. Options are: "
+                 "statement (or s) for statement-level analysis, "
+                 "function (or f) for function-level analysis. Default is statement."
+        )
+        group.addoption(
+            "--top-n",
+            default="-1",
+            help="Specify the number of top suspicious code elements to report. "
+                 "Provide a positive integer to limit the results, or -1 to include all elements. Default is -1."
+        )
         group.addoption(
             "--failing-file",
             default=None,
-            help="Path to the file containing the targeted failing tests.",
+            help="Path to a file containing the list of targeted failing tests. Each line should represent a test identifier. Default is None."
         )
         group.addoption(
             "--failing-list",
             default=None,
-            help="A list containing the targeted failing tests.",
+            help="Provide a list of targeted failing tests. Default is None."
         )
 
     def get_fl_option_manager(self, pytest_config) -> FlOptionManager:
@@ -58,6 +91,7 @@ class PytestOptionManager:
         target_src_opt = pytest_config.getoption("--src")
         exclude_list_opt = pytest_config.getoption("--exclude")
         fl_family_opt = pytest_config.getoption("--family")
+        mutation_strategy_opt = pytest_config.getoption("--mutation")
         fl_granularity_opt = pytest_config.getoption("--granularity")
         top_n_opt = pytest_config.getoption("--top-n")
         failing_file_opt = pytest_config.getoption("--failing-file")
@@ -69,6 +103,7 @@ class PytestOptionManager:
             target_src_opt,
             exclude_list_opt,
             fl_family_opt,
+            mutation_strategy_opt,
             fl_granularity_opt,
             top_n_opt,
             failing_file_opt,

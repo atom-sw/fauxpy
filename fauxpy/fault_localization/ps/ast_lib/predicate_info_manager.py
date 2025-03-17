@@ -1,7 +1,7 @@
 import ast
+import logging
 from typing import Tuple
 
-from fauxpy import common
 from fauxpy.fault_localization.ps.ast_lib.analyzer import Analyzer
 
 
@@ -14,7 +14,7 @@ class PredicateInfoManager:
             try:
                 tree = ast.parse(source.read())
             except Exception as exp:
-                common.Logger.warning(
+                logging.warning(
                     f"Due to the following error, the following module is removed form fault localization."
                     f"To include it, fix the error, and run the tool again.\r\n"
                     f"Error: {exp}.\r\n"

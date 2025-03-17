@@ -10,10 +10,10 @@ from cosmic_ray.mutating import MutationVisitor
 from cosmic_ray.plugins import get_operator
 import difflib
 
-from fauxpy.fault_localization.mbfl.cosmicray_mutant_generator.mutant import Mutant
+from fauxpy.fault_localization.mbfl.mutation_lib.mutant import Mutant
 
 
-class MutantGenerator:
+class CosmicRayMutantGenerator:
     @staticmethod
     def _make_diff(original_source, mutated_source, module_path):
         # Comment it.

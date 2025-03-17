@@ -71,6 +71,8 @@ def save_config_info_legacy(pytest_config, session_file_manager: FlFileManager):
     failing_file_opt = pytest_config.getoption("--failing-file")
     failing_list_opt = pytest_config.getoption("--failing-list")
 
+    mutation_strategy_opt = pytest_config.getoption("--mutation")
+
     target_failing_tests = None
     if failing_file_opt is not None:
         target_failing_tests = TargetFailingTests.from_file(failing_file_opt)
@@ -90,7 +92,8 @@ def save_config_info_legacy(pytest_config, session_file_manager: FlFileManager):
         family=family_name_opt,
         granularity=granularity_name_opt,
         top_n=top_n_opt,
-        target_failing_tests=target_failing_tests_list,
+        targeted_failing_tests=target_failing_tests_list,
+        mutation_strategy=mutation_strategy_opt
     )
 
 

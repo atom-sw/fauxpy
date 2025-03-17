@@ -13,7 +13,7 @@ from fauxpy.fault_localization.st.session_lib import StSession
 from fauxpy.session_lib.fl_file_manager import FlFileManager
 from fauxpy.session_lib.fl_path_manager import FlPathManager
 from fauxpy.session_lib.fl_session import FlSession
-from fauxpy.session_lib.fl_type import FlFamily, FlGranularity
+from fauxpy.session_lib.fl_type import FlFamily, FlGranularity, MutationStrategy
 from fauxpy.session_lib.path_lib import PythonPath
 from fauxpy.session_lib.ts_lib import TargetedFailingTst
 
@@ -33,6 +33,7 @@ class FlOptionManager:
         target_src_opt,
         exclude_list_opt,
         fl_family_opt,
+        mutation_strategy_opt,
         fl_granularity_opt,
         top_n_opt,
         failing_file_opt,
@@ -47,6 +48,7 @@ class FlOptionManager:
             target_src_opt (str): The source directory for fault localization.
             exclude_list_opt (str): Comma-separated list of paths to exclude.
             fl_family_opt (str): Fault localization family option (e.g., sbfl, mbfl).
+            mutation_strategy_opt (str): Mutation strategy for Mutation-Based Fault Localization (MBFL).
             fl_granularity_opt (str): Fault localization granularity option (e.g., statement).
             top_n_opt (str): Top N results to consider, or -1 for all results.
             failing_file_opt (str): Path to the file containing targeted failing tests.
@@ -57,6 +59,7 @@ class FlOptionManager:
         self._target_src = self._get_validate_target_src(target_src_opt)
         self._exclude_list = self._get_validate_exclude_list(exclude_list_opt)
         self._fl_family = self._get_validate_fl_family(fl_family_opt)
+        self._mutation_strategy = self._get_validate_mutation_strategy(mutation_strategy_opt)
         self._fl_granularity = self._get_validate_fl_granularity(fl_granularity_opt)
         self._top_n = self._get_validate_top_n(top_n_opt)
         self._targeted_failing_test_list = (
@@ -66,7 +69,10 @@ class FlOptionManager:
         )
         self._file_or_dir_opt = file_or_dir
         self._path_manager = FlPathManager(
-            self._project_working_directory, self._fl_family, self._fl_granularity
+            self._project_working_directory,
+            self._fl_family,
+            self._fl_granularity,
+            self._mutation_strategy
         )
         self._fl_file_manager = None
 
@@ -78,6 +84,15 @@ class FlOptionManager:
             FlFamily: The fault localization family option.
         """
         return self._fl_family
+
+    def get_mutation_strategy(self) -> MutationStrategy:
+        """
+        Returns the mutation strategy.
+
+        Returns:
+            MutationStrategy: The mutation strategy option.
+        """
+        return self._mutation_strategy
 
     def get_fl_granularity(self) -> FlGranularity:
         """
@@ -144,6 +159,7 @@ class FlOptionManager:
             fauxpy_session = MbflSession(
                 self._target_src,
                 self._exclude_list,
+                self._mutation_strategy,
                 self._fl_granularity,
                 self._top_n,
                 self._targeted_failing_test_list,
@@ -282,12 +298,43 @@ class FlOptionManager:
         return fl_family
 
     @staticmethod
+    def _get_validate_mutation_strategy(mutation_strategy_opt: str) -> MutationStrategy:
+        """
+        Validates the mutation strategy option.
+
+        Args:
+            mutation_strategy_opt (str): The mutation strategy option.
+
+        Returns:
+            MutationStrategy: The validated mutation strategy.
+
+        Raises:
+            pytest.UsageError: If the option is not valid.
+        """
+        error_message = (
+            f"{mutation_strategy_opt} is not a valid option. "
+            f"Valid options: t, tgpt4ominiapi, gpt4ominiapi."
+        )
+
+        if mutation_strategy_opt not in ["t", "tgpt4ominiapi", "gpt4ominiapi"]:
+            raise pytest.UsageError(error_message)
+
+        mutation_strategy = MutationStrategy.Traditional
+        if mutation_strategy_opt == "tgpt4ominiapi":
+            mutation_strategy = MutationStrategy.TraditionalWithGPT4oMini
+        elif mutation_strategy_opt == "gpt4ominiapi":
+            mutation_strategy = MutationStrategy.GPT4oMini
+
+        return mutation_strategy
+
+    @staticmethod
     def _get_validate_fl_granularity(fl_granularity_opt: str) -> FlGranularity:
         """
         Validates the fault localization granularity option.
 
         Args:
-            fl_granularity_opt (str): The fault localization granularity option (e.g., statement).
+            fl_granularity_opt (str): The fault localization granularity option
+                                      (e.g., statement, function, s, f).
 
         Returns:
             FlGranularity: The validated fault localization granularity.
@@ -297,17 +344,20 @@ class FlOptionManager:
         """
         error_message = (
             f"{fl_granularity_opt} is not a valid option. "
-            f"Correct options: statement and function."
+            f"Valid options: statement (or s), function (or f)."
         )
 
-        if fl_granularity_opt not in ["statement", "function"]:
+        granularity_map = {
+            "statement": FlGranularity.Statement,
+            "s": FlGranularity.Statement,
+            "function": FlGranularity.Function,
+            "f": FlGranularity.Function,
+        }
+
+        if fl_granularity_opt not in granularity_map:
             raise pytest.UsageError(error_message)
 
-        fl_granularity = FlGranularity.Statement
-        if fl_granularity_opt == "function":
-            fl_granularity = FlGranularity.Function
-
-        return fl_granularity
+        return granularity_map[fl_granularity_opt]
 
     @staticmethod
     def _get_validate_top_n(top_n_opt: str) -> int:

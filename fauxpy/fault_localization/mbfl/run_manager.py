@@ -8,7 +8,7 @@ from fauxpy.fault_localization.granularity.db_manager import FunctionLevelDbMana
 from fauxpy.fault_localization.granularity.function_level import (
     FunctionLevelGranularity,
 )
-from fauxpy.fault_localization.mbfl.cosmicray_mutant_generator.mutant import Mutant
+from fauxpy.fault_localization.mbfl.mutation_lib.mutant import Mutant
 from fauxpy.fault_localization.mbfl.db_manager import MbflDbManager
 from fauxpy.fault_localization.util.path_util import PathUtil
 from fauxpy.fault_localization.util.temp_lib import TempManager

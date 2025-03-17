@@ -14,3 +14,9 @@ class FlFamily(Enum):
 class FlGranularity(Enum):
     Statement = 1
     Function = 2
+
+
+class MutationStrategy(Enum):
+    Traditional = 1
+    TraditionalWithGPT4oMini = 2
+    GPT4oMini = 3
