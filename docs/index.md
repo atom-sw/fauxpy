@@ -50,7 +50,9 @@ It covers:
 - Interpreting fault localization results  
 - Best practices for debugging with FauxPy
 
-[![Watch the Demo](https://img.youtube.com/vi/6ooPPiwd79g/0.jpg)](https://www.youtube.com/watch?v=6ooPPiwd79g)  
+[![Watch the Demo](https://img.youtube.com/vi/6ooPPiwd79g/0.jpg)](https://www.youtube.com/watch?v=6ooPPiwd79g)
+
+![YouTube Video Views](https://img.shields.io/youtube/views/6ooPPiwd79g)
 
 ---
 
