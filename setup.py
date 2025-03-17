@@ -32,6 +32,7 @@ setup(
         "astor~=0.8.1",
         "pytest-timeout==2.1.0",
         "wheel",
+        "pyllmut"
     ],
     entry_points={
         "pytest11": [
