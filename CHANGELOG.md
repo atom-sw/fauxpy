@@ -1,17 +1,27 @@
 # FauxPy Changelog
 
-## Unreleased
+## FauxPy 0.3.0
 
-- Extended the schema of the MBFL database to store PyLLMut results.
+- Add documentation to the Makefile, explaining the purpose of each target for better contributor understanding.
+- Add explanations about the new `--mutation` command line option 
+  in the "Command Line Options" page of the FauxPy documentation.
+- Add new example in the "Getting Started" page of the 
+  FauxPy documentation demonstrating how to use
+  LLM-driven MBFL techniques with the new `--mutation` 
+  command line option.
+- Add instructions to the installation guide for setting up an LLM API key.
+- Extend the schema of the MBFL database to store PyLLMut results.
 - Include mutation strategy in the report directory name.
 - Change the format of the config and time files from plain text to JSON.
 - Add support for LLM-driven mutation-based fault localization
   by integrating PyLLMut into FauxPy. This includes 
-  the `--mutation` argument to specify the mutation 
+  the added `--mutation` command-line option to specify the mutation 
   strategy for MBFL techniques.
 - Refactor some modules and add docstrings.
-- Improve help messages for command-line arguments.
-- Add shorthand options `s` and `f` for `--granularity statement` and `--granularity function`.
+- Improve help messages for command-line options.
+- Add shorthand options `--granularity s` and 
+  `--granularity f` for `--granularity statement` 
+  and `--granularity function`.
 - Revise and improve documentation content.
 - Migrate documentation from Sphinx to MkDocs.
 
@@ -37,6 +47,7 @@ directory.
 - Adopt the black code style.
 - Add Triangle area example.
 - Update readme.
+
 
 ## FauxPy 0.1
 
