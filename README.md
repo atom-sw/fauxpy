@@ -3,7 +3,6 @@
 [![PyPI version](https://badge.fury.io/py/fauxpy.svg)](https://badge.fury.io/py/fauxpy)
 [![Downloads](https://static.pepy.tech/badge/fauxpy)](https://pepy.tech/project/fauxpy)
 [![Documentation Status](https://readthedocs.org/projects/fauxpy/badge/?version=latest)](https://fauxpy.readthedocs.io/en/latest/?badge=latest)
-[![FauxPy-Test - Repository](https://img.shields.io/badge/FauxPy--Test-Repository-2ea44f)](https://github.com/mohrez86/fauxpy-test)
 ![Research](https://img.shields.io/badge/Research-Driven-lightgrey)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
 [![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)](LICENSE)
@@ -12,6 +11,13 @@
 
 FauxPy (pronounced: *foh pie*) is an **automated fault localization tool** for Python programs.  
 It helps developers **locate the root cause of software bugs** using advanced **dynamic analysis techniques**.  
+
+> 🚀 **New in FauxPy: LLM-Driven MBFL**  
+FauxPy now supports **LLM-Driven Mutation-Based Fault 
+Localization** using *GPT-4o mini*!  
+This functionality is the result of 
+integrating [PyLLMut](https://pyllmut.readthedocs.io)
+into FauxPy.
 
 💡 *Help improve FauxPy! Share your feedback in our [Discussions](https://github.com/mohrez86/fauxpy/discussions).*
 
@@ -36,6 +42,10 @@ FauxPy is based on **dynamic analysis**, and works seamlessly with tests written
 - [Unittest](https://docs.python.org/3/library/unittest.html)  
 - [Hypothesis](https://hypothesis.works/)
 
+FauxPy can also leverage large language models (LLMs) to 
+enhance the effectiveness of fault localization by 
+improving mutation-based techniques.
+
 ## Documentation  
 
 Full documentation is available at
@@ -48,8 +58,13 @@ To install FauxPy, follow the instructions in the
 
 ## Usage
 
-For a quick example of how to use FauxPy, refer to the 
-[Usage Example](https://fauxpy.readthedocs.io/en/latest/user/start).  
+For quick examples of how to use FauxPy, refer to the 
+[Quick Start Guide](https://fauxpy.readthedocs.io/en/latest/user/start).  
+
+## Command-Line Options
+
+For a detailed list of command-line options, refer to the
+[Command-Line Options Guide](https://fauxpy.readthedocs.io/en/latest/user/using).
 
 ## How to Cite
 
