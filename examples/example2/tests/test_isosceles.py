@@ -5,7 +5,7 @@ import pytest
 from code.isosceles import isosceles_area
 
 
-def test_ia_fails():
+def test_ia_fail():
     leg, base = 9, 4
 
     area = isosceles_area(leg, base)
