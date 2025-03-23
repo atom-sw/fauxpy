@@ -203,17 +203,19 @@ class MutationManager:
         Returns:
             List[Mutant]: A list of mutants generated using a combination of traditional mutation operators and gpt-4o-mini.
         """
-        print("line_number_list", line_number_list)
+        print("Lines to generate mutants for:", line_number_list)
         traditional_mutant_list: List[Mutant] = self._get_traditional_module_mutant_list(module_path, line_number_list)
-        covered_line_number_list = [x.get_line_number() for x in traditional_mutant_list]
-        print("covered_line_number_list", covered_line_number_list)
+        covered_line_number_list = list(set([x.get_line_number() for x in traditional_mutant_list]))
+        covered_line_number_list.sort()
+        print("Lines covered by traditional mutation operators:", covered_line_number_list)
         uncovered_line_number_list = list(set(line_number_list) - set(covered_line_number_list))
-        print("uncovered_line_number_list", uncovered_line_number_list)
+        uncovered_line_number_list.sort()
+        print("Lines uncovered by traditional mutation operators:", uncovered_line_number_list)
 
         llm_mutant_list = self._get_gpt_4_o_mini_module_mutant_list(module_path, uncovered_line_number_list)
 
         print("Number of traditional mutants", len(traditional_mutant_list))
-        print("Number of llm mutants", len(llm_mutant_list))
+        print("Number of LLM mutants", len(llm_mutant_list))
         module_mutant_list = traditional_mutant_list + llm_mutant_list
 
         return module_mutant_list
