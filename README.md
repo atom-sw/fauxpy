@@ -43,8 +43,7 @@ FauxPy is based on **dynamic analysis**, and works seamlessly with tests written
 - [Hypothesis](https://hypothesis.works/)
 
 FauxPy can also leverage large language models (LLMs) to 
-enhance the effectiveness of fault localization by 
-improving mutation-based techniques.
+improve fault localization effectiveness.
 
 ## Documentation  
 
