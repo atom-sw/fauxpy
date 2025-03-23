@@ -40,7 +40,7 @@ class PytestOptionManager:
         group.addoption(
             "--family",
             default="sbfl",
-            help="Select the fault localization technique to use. Options are: "
+            help="Select the fault localization family to use. Options are: "
                  "sbfl (Spectrum-Based Fault Localization), "
                  "mbfl (Mutation-Based Fault Localization), "
                  "ps (Predicate Switching), "
