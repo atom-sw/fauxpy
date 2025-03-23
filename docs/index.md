@@ -2,7 +2,6 @@
 
 [![PyPI version](https://badge.fury.io/py/fauxpy.svg)](https://badge.fury.io/py/fauxpy)
 [![Downloads](https://static.pepy.tech/badge/fauxpy)](https://pepy.tech/project/fauxpy)
-[![FauxPy-Test - Repository](https://img.shields.io/badge/FauxPy--Test-Repository-2ea44f)](https://github.com/mohrez86/fauxpy-test)
 ![Research](https://img.shields.io/badge/Research-Driven-lightgrey)
 [![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)](https://github.com/atom-sw/fauxpy)
 [![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)](https://github.com/atom-sw/fauxpy/blob/main/LICENSE)
@@ -10,13 +9,20 @@
 ## What is FauxPy?
 
 FauxPy (pronounced: *foh pie*) is an **automated fault localization tool** for Python programs.  
-It helps developers **locate the root cause of software bugs** using advanced **dynamic analysis techniques**.  
+It helps developers **locate the root cause of software bugs** using advanced **dynamic analysis techniques**.
 
 FauxPy is **open-source** and available on [GitHub](https://github.com/atom-sw/fauxpy).  
-This documentation provides installation steps, usage instructions, and API details.  
+This documentation provides installation steps, usage instructions, and API details.
 
-!!! info  
-    💡 Help improve FauxPy! Share your feedback in our [Discussions](https://github.com/mohrez86/fauxpy/discussions).  
+!!! tip "New in FauxPy: LLM-Driven MBFL 🚀"
+    FauxPy now supports **LLM-Driven Mutation-Based Fault 
+    Localization** using *GPT-4o mini*!  
+    This functionality is the result of 
+    integrating [PyLLMut](https://pyllmut.readthedocs.io)
+    into FauxPy.
+
+!!! Feedback  
+    Help improve FauxPy! Share your feedback in our [Discussions](https://github.com/mohrez86/fauxpy/discussions).
 
 ---
 

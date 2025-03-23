@@ -1,4 +1,4 @@
-# Command Line Options
+# Command-Line Options
 
 FauxPy is implemented as a Pytest plugin, thus using FauxPy boils down
 to passing some custom options to Pytest.
@@ -36,7 +36,8 @@ python -m pytest \
        --granularity $GRANULARITY \
        --top-n $N \
        --failing-list "[$FAIL1, $FAIL2, ...]" \
-       --failing-file $FAIL
+       --failing-file $FAIL \
+       --mutation $MUTATION
 ```
 
 ## Option `--src`: Program Source Code
@@ -126,6 +127,57 @@ file relative to the analyzed project's root directory. In file
 Option `--top-n $N` only reports up to `$N` suspicious program entities
 (statements or functions). `$N` must be a positive integer, or `-1` (the
 default: no limit).
+
+## Option `--mutation`: Mutation Generation Strategy
+
+Option `--mutation $MUTATION` specifies the mutation 
+generation strategy to be used for Mutation-Based Fault 
+Localization (MBFL).
+
+Note that the `--mutation` option is only meaningful when 
+the **MBFL** (Mutation-Based Fault Localization) family 
+is selected with the `--family` option. 
+When using other families, this option will have no effect 
+and will be ignored,
+as other families 
+do not rely on mutant generation.
+
+Currently supported mutation 
+strategies `$MUTATION` are:
+
+- `t` (default): Use Cosmic Ray with traditional mutation operators.
+- `tgpt4ominiapi`: Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o-mini via its API.
+- `gpt4ominiapi`: Use only GPT-4o-mini via its API for mutant generation, without Cosmic Ray.
+
+!!! note
+    If the `--mutation` option is not provided, it is 
+    equivalent to `--mutation t`, which is the 
+    default behavior. 
+    In this case, FauxPy's MBFL techniques behave like previous 
+    versions, using only 
+    traditional mutation operators.
+
+For instance, the following command runs 
+FauxPy using traditional 
+mutation operators (default behavior):
+
+```bash
+python -m pytest --src $SRC --mutation t --family mbfl
+```
+
+The above command is equivalent to the 
+following (note that `--mutation t` is removed):
+
+```bash
+python -m pytest --src $SRC --family mbfl
+```
+
+As another example, the following command runs FauxPy using traditional mutation operators 
+and falls back to GPT-4o-mini when traditional mutation operators fail to generate mutants for a line:
+
+```bash
+python -m pytest --src $SRC --mutation tgpt4ominiapi --family mbfl
+```
 
 ## Positional Argument: Tests
 

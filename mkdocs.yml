@@ -4,10 +4,9 @@ nav:
   - Home: index.md
   - User Guide:
       - Installation: user/install.md
-      - Usage Example: user/start.md
-      - Command Line Options: user/using.md
+      - Quick Start: user/start.md
+      - Command-Line Options: user/using.md
       - Limitations: user/limit.md
-      - Testing FauxPy: user/testing.md
       - How to Cite: user/citation.md
   - API Reference:
       - API Overview: api/intro.md

@@ -1,34 +1,53 @@
-# Usage Example
+# Quick Start
 
-The [examples](https://github.com/atom-sw/fauxpy/tree/main/examples)
-directory in FauxPy's repository includes the `triangle_area` example,
-a tutorial demonstrating how to use FauxPy. Follow the instructions
-below to run FauxPy with this example.
+This page provides two examples demonstrating how to use FauxPy:
 
-## Triangle Area
+- [Example 1](#example-1) shows how to use
+  the four classic fault localization families supported by FauxPy,
+  how to apply different granularity levels,
+  and best practices for using FauxPy and fault localization in general.
+- [Example 2](#example-2) shows
+  how to use FauxPy's **Mutation Strategy** feature to perform
+  Mutation-Based Fault Localization (MBFL) using LLMs.
 
-The following walkthrough starts by discussing [Triangle
-Area](https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area)'s
-project structure and provides instructions on setting up an environment
-and running FauxPy.
+## Example 1
+
+The following walkthrough starts by introducing the project structure of 
+[Example 1](https://github.com/atom-sw/fauxpy/tree/main/examples/example1), 
+and then provides instructions on setting up an environment
+and running FauxPy with this example.
 
 ### Project Structure
 
-The current example has two packages:
-[code](https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area/code)
+Figure 1 shows *Triangle Area*'s project structure.
+This project has two packages:
+[code](https://github.com/atom-sw/fauxpy/tree/main/examples/example1/code)
 and
-[tests](https://github.com/atom-sw/fauxpy/tree/main/examples/triangle_area/tests).
+[tests](https://github.com/atom-sw/fauxpy/tree/main/examples/example1/tests).
 The code package contains the project's source code, which are two
 Python modules:
-[code/equilateral.py](https://github.com/atom-sw/fauxpy/blob/main/examples/triangle_area/code/equilateral.py)
+[code/equilateral.py](https://github.com/atom-sw/fauxpy/blob/main/examples/example1/code/equilateral.py)
 and
-[code/isosceles.py](https://github.com/atom-sw/fauxpy/blob/main/examples/triangle_area/code/isosceles.py),
-demonstrated in Figures 1 and 2, respectively. The function in module
+[code/isosceles.py](https://github.com/atom-sw/fauxpy/blob/main/examples/example1/code/isosceles.py),
+demonstrated in Figures 2 and 3, respectively. The function in module
 `equilateral.py` computes the area of an equilateral triangle and the
 function in module `isosceles.py` computes the area of an isosceles
 triangle.
 
-```python hl_lines="11" linenums="1" title="Figure 1: equilateral.py" 
+
+``` title="Figure 1: Project structure of Example 2."
+example2/
+├── code/
+│   ├── __init__.py
+│   ├── equilateral.py
+│   └── isosceles.py
+└── tests/
+    ├── __init__.py
+    ├── test_equilateral.py
+    └── test_isosceles.py
+```
+
+```python hl_lines="11" linenums="1" title="Figure 2: equilateral.py" 
 import math
 
 
@@ -44,7 +63,7 @@ def equilateral_area(a):
     return area
 ```
 
-```python hl_lines="6" linenums="1" title="Figure 2: isosceles.py" 
+```python hl_lines="6" linenums="1" title="Figure 3: isosceles.py" 
 import math
 
 
@@ -59,21 +78,21 @@ def isosceles_area(leg, base):
 ```
 
 Both functions have a bug. The bug locations are marked with comment
-`bug`, and highlighted, within code in Figures 1 and 2. The patch
+`bug`, and highlighted, within code in Figures 2 and 3. The patch
 for each bug is in the line following the bug location, in the form of a
 comment.
 
 The `tests` package contains the project's test suite, including two
 test modules
-[tests/test_equilateral.py](https://github.com/atom-sw/fauxpy/blob/main/examples/triangle_area/tests/test_equilateral.py)
-(Figure 3) and
-[tests/test_isosceles.py](https://github.com/atom-sw/fauxpy/blob/main/examples/triangle_area/tests/test_isosceles.py)
-(Figure 4) for modules `equilateral.py` and `isosceles.py`,
+[tests/test_equilateral.py](https://github.com/atom-sw/fauxpy/blob/main/examples/example1/tests/test_equilateral.py)
+(Figure 4) and
+[tests/test_isosceles.py](https://github.com/atom-sw/fauxpy/blob/main/examples/example1/tests/test_isosceles.py)
+(Figure 5) for modules `equilateral.py` and `isosceles.py`,
 respectively. Each of these two test modules has two tests, one failing
 (i.e., revealing the bug) and one passing on their corresponding modules
 in package `code`.
 
-```python linenums="1" title="Figure 3: test_equilateral.py"
+```python linenums="1" title="Figure 4: test_equilateral.py"
 import math
 
 import pytest
@@ -93,7 +112,7 @@ def test_ea_pass():
     assert area == pytest.approx(math.sqrt(3) / 4)
 ```
 
-```python linenums="1" title="Figure 4: test_isosceles.py"
+```python linenums="1" title="Figure 5: test_isosceles.py"
 import math
 
 import pytest
@@ -132,21 +151,21 @@ walkthrough:
 
 2.  **Copy the Example Project:**
 
-    The `triangle_area` example is located in the
-    `fauxpy/examples/triangle_area` directory. Copy this directory to a
+    The `example1` example is located in the
+    `fauxpy/examples/example1` directory. Copy this directory to a
     location of your choice (e.g., your home directory):
 
     ``` bash
-    cp -r fauxpy/examples/triangle_area ~/triangle_area
+    cp -r fauxpy/examples/example1 ~/example1
     ```
 
 3.  **Navigate to the Example Directory:**
 
     Change your directory to the location where you copied the
-    `triangle_area` example:
+    `example1` example:
 
     ``` bash
-    cd ~/triangle_area
+    cd ~/example1
     ```
 
 4.  **Set Up a Python Virtual Environment:**
@@ -438,4 +457,242 @@ Tarantula's output list is as follows:
 ('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::isosceles_area::4::11', 0.75625)
 ('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::height::5::8', 0.75625)
 ('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::equilateral_area::4::13', 0.1)
+```
+
+## Example 2
+
+This walkthrough demonstrates how to use FauxPy's new **Mutation Strategy**
+feature, which leverages
+[PyLLMut](https://pyllmut.readthedocs.io/), 
+an LLM-driven mutant 
+generator for Python.
+It starts by introducing the project structure of 
+[Example 2](https://github.com/atom-sw/fauxpy/tree/main/examples/example2),
+and then provides instructions on setting up an environment
+and running FauxPy with this example.
+
+### Project Structure
+
+As shown in Figure 6, *Example 2* consists of two packages:
+[code](https://github.com/atom-sw/fauxpy/tree/main/examples/example2/code) and
+[tests](https://github.com/atom-sw/fauxpy/tree/main/examples/example2/tests).
+The `code` package contains the module 
+[code/isosceles.py](https://github.com/atom-sw/fauxpy/blob/main/examples/example2/code/isosceles.py),
+which includes the project's source code, as shown in
+Figure 7.
+The function in `code/isosceles.py`
+computes the area of an isosceles triangle.
+This function has a bug on line 13, highlighted
+in Figure 7. The bug occurs because the function
+returns `base`
+instead of `area`.
+
+!!!note
+    Unlike Example 1, in this example, we do not specify
+    the bug location and the patch using comments, as
+    they may bias the LLM during mutant generation.
+
+The `tests` package contains the project's test suite.
+This package includes a single test module,
+[tests/test_isosceles.py](https://github.com/atom-sw/fauxpy/blob/main/examples/example2/tests/test_isosceles.py) 
+(Figure 8),
+which consists of one passing test and one
+failing test (i.e., revealing the bug),
+both testing
+the function in `code/isosceles.py`.
+
+``` title="Figure 6: Project structure of Example 2."
+example2/
+├── code/
+│   ├── __init__.py
+│   ├── isosceles.py
+└── tests/
+    ├── __init__.py
+    └── test_isosceles.py
+```
+
+```python hl_lines="13" linenums="1" title="Figure 7: isosceles.py" 
+import math
+
+
+def isosceles_area(leg, base):
+    def height():
+        t1, t2 = math.pow(leg, 2), math.pow(base, 2) / 4
+        return math.sqrt(t1 - t2)
+
+    if leg == 0 or base == 0:
+        return 0
+
+    area = 0.5 * base * height()
+    return base
+```
+
+```python linenums="1" title="Figure 8: test_isosceles.py"
+import math
+
+import pytest
+
+from code.isosceles import isosceles_area
+
+
+def test_ia_fails():
+    leg, base = 9, 4
+
+    area = isosceles_area(leg, base)
+    assert area == pytest.approx(2 * math.sqrt(77))
+
+def test_ia_pass():
+    leg = 4
+    base = 0
+
+    area = isosceles_area(leg, base)
+    assert area == 0
+```
+
+### Preparing the Python Environment
+
+To get started with FauxPy, you'll first need to set up your
+environment. Follow these steps to prepare your machine for the
+walkthrough:
+
+1.  **Clone the FauxPy Repository:**
+
+    Begin by cloning the [FauxPy
+    repository](https://github.com/atom-sw/fauxpy) from GitHub:
+
+    ``` bash
+    git clone git@github.com:atom-sw/fauxpy.git
+    ```
+
+2.  **Copy the Example Project:**
+
+    Example 2 is located in the
+    `fauxpy/examples/example2` directory. Copy this directory to a
+    location of your choice (e.g., your home directory):
+
+    ``` bash
+    cp -r fauxpy/examples/example2 ~/example2
+    ```
+
+3.  **Navigate to the Example Directory:**
+
+    Change your directory to the location where you copied Example 2:
+
+    ``` bash
+    cd ~/example2
+    ```
+
+4.  **Set Up a Python Virtual Environment:**
+
+    Create a Python 3.8 virtual environment named `env`. Later Python
+    versions should also be compatible:
+
+    ``` bash
+    python3.8 -m venv env
+    ```
+
+5.  **Activate the Virtual Environment:**
+
+    Activate the `env` environment. Ensure that this environment remains
+    active for the following commands:
+
+    ``` bash
+    source env/bin/activate
+    ```
+
+6.  **Install FauxPy:**
+
+    With the virtual environment active, install FauxPy using pip:
+
+    ``` bash
+    pip install fauxpy
+    ```
+
+### Running LLM-Driven MBFL
+
+Let's first run MBFL techniques without using LLM-driven mutation strategies.
+
+``` bash
+python -m pytest tests --src code --family mbfl
+```
+
+Note that we could add `--mutation t`to the command above, which simply specifies that
+the mutation strategy should be *Traditional*. However, since this is the
+default mutation strategy, we do not need to provide it.
+
+Additionally, we do not specify the failing test because there is only a single
+failing test in the test suite.
+
+Muse's output list is as follows:
+
+```
+('~/example2/code/isosceles.py::12', 0.0)
+('~/example2/code/isosceles.py::6', 0.0)
+('~/example2/code/isosceles.py::7', 0.0)
+('~/example2/code/isosceles.py::9', 0.0)
+```
+
+Metallaxis's output list is as follows:
+
+```
+('~/example2/code/isosceles.py::12', 1.0)
+('~/example2/code/isosceles.py::6', 1.0)
+('~/example2/code/isosceles.py::7', 1.0)
+('~/example2/code/isosceles.py::9', 1.0)
+```
+
+As you can see, line 13 is not listed by either of the two
+MBFL techniques, Muse and Metallaxis.
+The reason is that the traditional mutation operators were not able
+to generate any mutants for line 13 in Figure 7.
+
+Now, let's run MBFL techniques using LLM-driven mutation strategies,
+starting with the `tgpt4ominiapi` strategy. This mutation strategy
+first attempts to generate mutants using traditional mutation operators.
+Then, it uses an LLM to generate mutants for lines where traditional
+operators failed to do so.
+
+``` bash
+python -m pytest tests --src code --family mbfl --mutation tgpt4ominiapi
+```
+
+Muse's output list is as follows, correctly ranking line
+`isosceles.py::13` in the top suspiciousness position thanks to
+mutants generated by the LLM.
+
+```
+('~/example2/code/isosceles.py::13', 0.14285714285714285)
+('~/example2/code/isosceles.py::12', 0.0)
+('~/example2/code/isosceles.py::6', 0.0)
+('~/example2/code/isosceles.py::7', 0.0)
+('~/example2/code/isosceles.py::9', 0.0)
+```
+
+!!! note
+    Given the nondeterministic nature of LLMs
+    and AI in general, you might get different results on your machine or even
+    in different runs when using LLM-driven mutation strategies.
+    Even your internet speed can affect the results,
+    as mutant generation for some lines might time out if your internet 
+    connection is too slow.
+    However, this is not just a limitation of FauxPy; it is currently a general issue
+    for any application of LLMs.
+
+Now, let's run MBFL techniques using the `gpt4ominiapi` strategy.
+This strategy purely relies on an LLM to generate mutants without using
+traditional mutation operators.
+
+``` bash
+python -m pytest tests --src code --family mbfl --mutation gpt4ominiapi
+```
+
+Muse's output list is as follows, again, correctly ranking line
+`isosceles.py::13` in the top suspiciousness position.
+
+```
+('~/example2/code/isosceles.py::13', 0.14285714285714285)
+('~/example2/code/isosceles.py::12', 0.0)
+('~/example2/code/isosceles.py::6', 0.0)
+('~/example2/code/isosceles.py::7', 0.0)
+('~/example2/code/isosceles.py::9', 0.0)
 ```
