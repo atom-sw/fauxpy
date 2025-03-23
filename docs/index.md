@@ -45,6 +45,9 @@ FauxPy is based on **dynamic analysis**, and works seamlessly with tests written
 - [Unittest](https://docs.python.org/3/library/unittest.html)  
 - [Hypothesis](https://hypothesis.works/)
 
+FauxPy can also leverage large language models (LLMs) to 
+improve fault localization effectiveness.
+
 ---
 
 ## FauxPy in Action  
