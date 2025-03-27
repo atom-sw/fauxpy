@@ -1,5 +1,12 @@
 # FauxPy Changelog
 
+
+## Unreleased
+
+- Implemented two new strategies for the GPT4o model 
+  and updated the documentation accordingly.
+
+
 ## FauxPy 0.3.0
 
 - Add documentation to the Makefile, explaining the purpose of each target for better contributor understanding.
