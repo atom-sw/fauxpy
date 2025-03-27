@@ -1,0 +1,13 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  linux-38:
+    uses: ./.github/workflows/test-linux-38.yml
+  linux-311:
+    uses: ./.github/workflows/test-linux-311.yml
+  macos-38:
+    uses: ./.github/workflows/test-macos-38.yml
+  macos-311:
+    uses: ./.github/workflows/test-macos-311.yml
