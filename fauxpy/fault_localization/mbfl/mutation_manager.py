@@ -2,7 +2,14 @@ import logging
 from pathlib import Path
 from typing import List
 
-from pyllmut import MutantGenerator, MutantInfo, PromptInfo, ResponseInfo, MutationReport
+from pyllmut import (
+    MutantGenerator,
+    MutantInfo,
+    PromptInfo,
+    ResponseInfo,
+    MutationReport,
+    ModelType
+)
 
 from fauxpy.session_lib import naming_lib
 from fauxpy.session_lib.fl_type import MutationStrategy
@@ -99,10 +106,10 @@ class MutationManager:
 
         if self._mutation_strategy == MutationStrategy.Traditional:
             module_mutant_list = self._get_traditional_module_mutant_list(module_path, line_number_list)
-        elif self._mutation_strategy == MutationStrategy.GPT4oMini:
-            module_mutant_list = self._get_gpt_4_o_mini_module_mutant_list(module_path, line_number_list)
-        elif self._mutation_strategy == MutationStrategy.TraditionalWithGPT4oMini:
-            module_mutant_list = self._get_traditional_with_gpt_4_o_mini_module_mutant_list(module_path, line_number_list)
+        elif self._mutation_strategy in [MutationStrategy.GPT4oMini, MutationStrategy.GPT4o]:
+            module_mutant_list = self._get_pyllmut_module_mutant_list(module_path, line_number_list)
+        elif self._mutation_strategy in [MutationStrategy.TraditionalWithGPT4oMini, MutationStrategy.TraditionalWithGPT4o]:
+            module_mutant_list = self._get_traditional_with_pyllmut_module_mutant_list(module_path, line_number_list)
         else:
             raise Exception(f"Mutation strategy {self._mutation_strategy} is not supported.")
 
@@ -133,27 +140,38 @@ class MutationManager:
         )
         return module_mutant_list
 
-    def _get_gpt_4_o_mini_module_mutant_list(
+    def _get_pyllmut_module_mutant_list(
             self,
             module_path: str,
             line_number_list: List[int]
     ) -> List[Mutant]:
         """
-        Generates mutants for a module using gpt-4o-mini.
+        Generates mutants for a module using PyLLMut.
 
         Args:
             module_path (str): The path of the module to generate mutants for.
             line_number_list (List[int]): A list of line numbers within the module to mutate.
 
         Returns:
-            List[Mutant]: A list of mutants generated using gpt-4o-mini.
+            List[Mutant]: A list of mutants generated using PyLLMut.
         """
+
+        assert self._mutation_strategy != MutationStrategy.Traditional
+
+        model_type_map = {
+            MutationStrategy.GPT4oMini: ModelType.GPT4oMini,
+            MutationStrategy.TraditionalWithGPT4oMini: ModelType.GPT4oMini,
+            MutationStrategy.GPT4o: ModelType.GPT4o,
+            MutationStrategy.TraditionalWithGPT4o: ModelType.GPT4o
+        }
+
         module_content = Path(module_path).read_text()
         generator = MutantGenerator(
             module_content=module_content,
             line_number_list=line_number_list,
             mutants_per_line_count=constants.MUTANTS_PER_LINE_COUNT,
-            timeout_seconds=constants.TIMEOUT_SECONDS_PER_LINE
+            timeout_seconds_per_line=constants.TIMEOUT_SECONDS_PER_LINE,
+            model_type=model_type_map[self._mutation_strategy]
         )
         mutation_report = generator.generate()
 
@@ -167,13 +185,13 @@ class MutationManager:
             print(message_for_timeout)
             logging.warning(message_for_timeout)
 
-        valid_mutants = mutation_report.get_valid_mutant_list()
+        valid_mutant_list = mutation_report.get_valid_mutant_list()
 
         module_mutant_list = []
-        for valid_mutant_info in valid_mutants:
+        for valid_mutant_info in valid_mutant_list:
             current_mutant = Mutant(
                 module_path=module_path,
-                operator_name="gpt-4o-mini",
+                operator_name=model_type_map[self._mutation_strategy].name,
                 occurrence=-1,
                 start_pos=(valid_mutant_info.get_line_number(), -1),
                 end_pos=(valid_mutant_info.get_line_number(), -1),
@@ -188,7 +206,7 @@ class MutationManager:
 
         return module_mutant_list
 
-    def _get_traditional_with_gpt_4_o_mini_module_mutant_list(
+    def _get_traditional_with_pyllmut_module_mutant_list(
             self,
             module_path: str,
             line_number_list: List[int]
@@ -203,6 +221,8 @@ class MutationManager:
         Returns:
             List[Mutant]: A list of mutants generated using a combination of traditional mutation operators and gpt-4o-mini.
         """
+        assert self._mutation_strategy != MutationStrategy.Traditional
+
         print("Lines to generate mutants for:", line_number_list)
         traditional_mutant_list: List[Mutant] = self._get_traditional_module_mutant_list(module_path, line_number_list)
         covered_line_number_list = list(set([x.get_line_number() for x in traditional_mutant_list]))
@@ -212,7 +232,7 @@ class MutationManager:
         uncovered_line_number_list.sort()
         print("Lines uncovered by traditional mutation operators:", uncovered_line_number_list)
 
-        llm_mutant_list = self._get_gpt_4_o_mini_module_mutant_list(module_path, uncovered_line_number_list)
+        llm_mutant_list = self._get_pyllmut_module_mutant_list(module_path, uncovered_line_number_list)
 
         print("Number of traditional mutants", len(traditional_mutant_list))
         print("Number of LLM mutants", len(llm_mutant_list))

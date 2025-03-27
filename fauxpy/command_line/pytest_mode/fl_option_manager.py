@@ -29,15 +29,15 @@ class FlOptionManager:
 
     def __init__(
         self,
-        project_working_directory,
-        target_src_opt,
-        exclude_list_opt,
-        fl_family_opt,
-        mutation_strategy_opt,
-        fl_granularity_opt,
-        top_n_opt,
-        failing_file_opt,
-        failing_list_opt,
+        project_working_directory: str,
+        target_src_opt: str,
+        exclude_list_opt: str,
+        fl_family_opt: str,
+        mutation_strategy_opt: str,
+        fl_granularity_opt: str,
+        top_n_opt: str,
+        failing_file_opt: str,
+        failing_list_opt: str,
         file_or_dir,
     ):
         """
@@ -53,7 +53,7 @@ class FlOptionManager:
             top_n_opt (str): Top N results to consider, or -1 for all results.
             failing_file_opt (str): Path to the file containing targeted failing tests.
             failing_list_opt (str): Comma-separated list of targeted failing tests.
-            file_or_dir (str): Additional file or directory option.
+            file_or_dir: Additional file or directory option.
         """
         self._project_working_directory = Path(project_working_directory)
         self._target_src = self._get_validate_target_src(target_src_opt)
@@ -313,10 +313,10 @@ class FlOptionManager:
         """
         error_message = (
             f"{mutation_strategy_opt} is not a valid option. "
-            f"Valid options: t, tgpt4ominiapi, gpt4ominiapi."
+            f"Valid options: t, tgpt4ominiapi, gpt4ominiapi, tgpt4oapi, gpt4oapi."
         )
 
-        if mutation_strategy_opt not in ["t", "tgpt4ominiapi", "gpt4ominiapi"]:
+        if mutation_strategy_opt not in ["t", "tgpt4ominiapi", "gpt4ominiapi", "tgpt4oapi", "gpt4oapi"]:
             raise pytest.UsageError(error_message)
 
         mutation_strategy = MutationStrategy.Traditional
@@ -324,6 +324,10 @@ class FlOptionManager:
             mutation_strategy = MutationStrategy.TraditionalWithGPT4oMini
         elif mutation_strategy_opt == "gpt4ominiapi":
             mutation_strategy = MutationStrategy.GPT4oMini
+        elif mutation_strategy_opt == "tgpt4oapi":
+            mutation_strategy = MutationStrategy.TraditionalWithGPT4o
+        elif mutation_strategy_opt == "gpt4oapi":
+            mutation_strategy = MutationStrategy.GPT4o
 
         return mutation_strategy
 

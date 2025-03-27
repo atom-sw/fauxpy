@@ -20,3 +20,5 @@ class MutationStrategy(Enum):
     Traditional = 1
     TraditionalWithGPT4oMini = 2
     GPT4oMini = 3
+    TraditionalWithGPT4o = 4
+    GPT4o = 5

@@ -52,7 +52,9 @@ class PytestOptionManager:
             help="Specify the mutation generation strategy for Mutation-Based Fault Localization (MBFL). Options: "
                  "t - Use Cosmic Ray with traditional mutation operators (default), "
                  "tgpt4ominiapi - Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o-mini via its API, "
-                 "gpt4ominiapi - Use only GPT-4o-mini via its API for mutant generation, without Cosmic Ray."
+                 "gpt4ominiapi - Use only GPT-4o-mini via its API for mutant generation, without Cosmic Ray, "
+                 "tgpt4oapi - Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o via its API, "
+                 "gpt4oapi - Use only GPT-4o via its API for mutant generation, without Cosmic Ray."
         )
         group.addoption(
             "--granularity",
