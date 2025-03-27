@@ -607,6 +607,11 @@ walkthrough:
     ``` bash
     pip install fauxpy
     ```
+    
+    For this example, since we are using LLM-driven mutation strategies 
+    that rely on LLM models through their APIs, you must also set up 
+    your LLM API key. The information is available on the 
+    [installation page](./install.md).
 
 ### Running LLM-Driven MBFL
 

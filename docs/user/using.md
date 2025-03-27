@@ -148,6 +148,8 @@ strategies `$MUTATION` are:
 - `t` (default): Use Cosmic Ray with traditional mutation operators.
 - `tgpt4ominiapi`: Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o-mini via its API.
 - `gpt4ominiapi`: Use only GPT-4o-mini via its API for mutant generation, without Cosmic Ray.
+- `tgpt4oapi` - Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o via its API.
+- `gpt4oapi` - Use only GPT-4o via its API for mutant generation, without Cosmic Ray.
 
 !!! note
     If the `--mutation` option is not provided, it is 

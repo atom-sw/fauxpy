@@ -16,7 +16,7 @@ This documentation provides installation steps, usage instructions, and API deta
 
 !!! tip "New in FauxPy: LLM-Driven MBFL 🚀"
     FauxPy now supports **LLM-Driven Mutation-Based Fault 
-    Localization** using *GPT-4o mini*!  
+    Localization**!  
     This functionality is the result of 
     integrating [PyLLMut](https://pyllmut.readthedocs.io)
     into FauxPy.
