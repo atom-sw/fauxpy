@@ -6,6 +6,7 @@
 ![Research](https://img.shields.io/badge/Research-Driven-lightgrey)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
 [![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)](LICENSE)
+[![Tests](https://github.com/mohrez86/fauxpy/actions/workflows/test-all.yml/badge.svg)](https://github.com/mohrez86/fauxpy/actions/workflows/test-all.yml)
 
 ## What is FauxPy?
 
