@@ -22,7 +22,7 @@ setup(
     description="A fault localization tool for Python",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/atom-sw/fauxpy",
+    url="https://fauxpy.readthedocs.io",
     packages=setuptools.find_packages(exclude="tests"),
     python_requires=">=3.6",
     install_requires=[
