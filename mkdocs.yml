@@ -19,6 +19,10 @@ repo_name: atom-sw/fauxpy
 
 theme:
   name: material
+  palette:
+    scheme: default
+    primary: green
+    accent: teal
   features:
     - navigation.footer
     - navigation.tabs
