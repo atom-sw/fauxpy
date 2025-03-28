@@ -466,9 +466,9 @@ feature, which leverages
 [PyLLMut](https://pyllmut.readthedocs.io/), 
 an LLM-driven mutant 
 generator for Python.
-The walkthrough starts by introducing the project structure of 
-[Example 2](https://github.com/atom-sw/fauxpy/tree/main/examples/example2),
-and then provides instructions on setting up an environment
+The walkthrough begins by introducing the project structure of 
+[Example 2](https://github.com/atom-sw/fauxpy/tree/main/examples/example2)
+and then provides instructions on setting up the environment
 and running FauxPy with this example.
 
 ### Project Structure
@@ -482,24 +482,23 @@ which includes the project's source code, as shown in
 Figure 7.
 The function in `code/isosceles.py`
 computes the area of an isosceles triangle.
-This function has a bug on line 13, highlighted
-in Figure 7. The bug occurs because the function
+There is a bug in line 13, highlighted
+in Figure 7. The bug arises because the function
 returns `base`
 instead of `area`.
 
 !!!note
     Unlike Example 1, in this example, we do not specify
-    the bug location and the patch using comments, as
+    the bug location and patch using comments, as
     they may bias the LLM during mutant generation.
 
-The `tests` package contains the project's test suite.
-This package includes a single test module,
+The `tests` package contains the project's test suite,
+which includes a single test module,
 [tests/test_isosceles.py](https://github.com/atom-sw/fauxpy/blob/main/examples/example2/tests/test_isosceles.py) 
-(Figure 8),
-which consists of one passing test and one
+(Figure 8).
+The module consists of one passing test and one
 failing test (i.e., revealing the bug),
-both testing
-the function in `code/isosceles.py`.
+both of which test the function in `code/isosceles.py`.
 
 ``` title="Figure 6: Project structure of Example 2."
 example2/
@@ -511,7 +510,7 @@ example2/
     └── test_isosceles.py
 ```
 
-```python hl_lines="13" linenums="1" title="Figure 7: isosceles.py" 
+```python hl_lines="13" linenums="1" title="Figure 7: Implementation of 'isosceles.py', which includes a function that computes the area of an isosceles triangle but contains a bug on line 13." 
 import math
 
 
@@ -527,7 +526,7 @@ def isosceles_area(leg, base):
     return base
 ```
 
-```python linenums="1" title="Figure 8: test_isosceles.py"
+```python linenums="1" title="Figure 8: Test suite in 'test_isosceles.py', which includes one passing test and one failing test that reveals the bug."
 import math
 
 import pytest
@@ -551,13 +550,11 @@ def test_ia_pass():
 
 ### Preparing the Python Environment
 
-To get started with FauxPy, you'll first need to set up your
-environment. Follow these steps to prepare your machine for the
-walkthrough:
+To get started with FauxPy, follow these steps to set up your environment:
 
 1.  **Clone the FauxPy Repository:**
 
-    Begin by cloning the [FauxPy
+    Clone the [FauxPy
     repository](https://github.com/atom-sw/fauxpy) from GitHub:
 
     ``` bash
@@ -571,30 +568,31 @@ walkthrough:
     location of your choice (e.g., your home directory):
 
     ``` bash
-    cp -r fauxpy/examples/example2 ~/example2
+    cp -r fauxpy/examples/example2 ~/fauxpy_example2
     ```
 
 3.  **Navigate to the Example Directory:**
 
-    Change your directory to the location where you copied Example 2:
+    Change your directory to where you copied Example 2:
 
     ``` bash
-    cd ~/example2
+    cd ~/fauxpy_example2
     ```
 
 4.  **Set Up a Python Virtual Environment:**
 
-    Create a Python 3.8 virtual environment named `env`. Later Python
-    versions should also be compatible:
+    Create a Python virtual environment named `env`.
+    On some machines (e.g., MacBooks), 
+    you may need to use `python3` instead of `python`.
 
     ``` bash
-    python3.8 -m venv env
+    python -m venv env
     ```
 
 5.  **Activate the Virtual Environment:**
 
-    Activate the `env` environment. Ensure that this environment remains
-    active for the following commands:
+    Activate the `env` environment.
+    Keep this environment active for the following commands:
 
     ``` bash
     source env/bin/activate
@@ -602,105 +600,108 @@ walkthrough:
 
 6.  **Install FauxPy:**
 
-    With the virtual environment active, install FauxPy using pip:
+    With the virtual environment active, install FauxPy using `pip`:
 
     ``` bash
     pip install fauxpy
     ```
     
     For this example, since we are using LLM-driven mutation strategies 
-    that rely on LLM models through their APIs, you must also set up 
-    your LLM API key. The information is available on the 
-    [installation page](./install.md).
+    that rely on LLMs through their APIs, you must also **set up 
+    your LLM API key**. The setup instructions are available on the
+    [installation page](./install.md#setting-up-your-llm-api-key).
 
 ### Running LLM-Driven MBFL
 
-Let's first run MBFL techniques without using LLM-driven mutation strategies.
+Let's first run MBFL techniques 
+without using LLM-driven mutation strategies:
 
 ``` bash
 python -m pytest tests --src code --family mbfl
 ```
 
-Note that we could add `--mutation t`to the command above, which simply specifies that
-the mutation strategy should be *Traditional*. However, since this is the
-default mutation strategy, we do not need to provide it.
+Note that you could add `--mutation t` to specify 
+that the mutation strategy should be *Traditional*. 
+However, since this is the default mutation strategy, 
+it is not necessary to provide it.
 
-Additionally, we do not specify the failing test because there is only a single
-failing test in the test suite.
+Additionally, we do not specify the failing test using `--failing-list` 
+because there is only a single failing test in the 
+test suite (Figure 8).
 
 Muse's output list is as follows:
 
 ```
-('~/example2/code/isosceles.py::12', 0.0)
-('~/example2/code/isosceles.py::6', 0.0)
-('~/example2/code/isosceles.py::7', 0.0)
-('~/example2/code/isosceles.py::9', 0.0)
+('~/fauxpy_example2/code/isosceles.py::12', 0.0)
+('~/fauxpy_example2/code/isosceles.py::6', 0.0)
+('~/fauxpy_example2/code/isosceles.py::7', 0.0)
+('~/fauxpy_example2/code/isosceles.py::9', 0.0)
 ```
 
 Metallaxis's output list is as follows:
 
 ```
-('~/example2/code/isosceles.py::12', 1.0)
-('~/example2/code/isosceles.py::6', 1.0)
-('~/example2/code/isosceles.py::7', 1.0)
-('~/example2/code/isosceles.py::9', 1.0)
+('~/fauxpy_example2/code/isosceles.py::12', 1.0)
+('~/fauxpy_example2/code/isosceles.py::6', 1.0)
+('~/fauxpy_example2/code/isosceles.py::7', 1.0)
+('~/fauxpy_example2/code/isosceles.py::9', 1.0)
 ```
 
-As you can see, line 13 is not listed by either of the two
+As you can see, line 13 is not even listed by either of the two
 MBFL techniques, Muse and Metallaxis.
-The reason is that the traditional mutation operators were not able
+The reason is that the traditional mutation operators were unable
 to generate any mutants for line 13 in Figure 7.
 
 Now, let's run MBFL techniques using LLM-driven mutation strategies,
-starting with the `tgpt4ominiapi` strategy. This mutation strategy
+starting with the `tgpt4oapi` strategy. This mutation strategy
 first attempts to generate mutants using traditional mutation operators.
-Then, it uses an LLM to generate mutants for lines where traditional
+Then, it uses *GPT-4o* to generate mutants for lines where traditional
 operators failed to do so.
 
 ``` bash
-python -m pytest tests --src code --family mbfl --mutation tgpt4ominiapi
+python -m pytest tests --src code --family mbfl --mutation tgpt4oapi
 ```
 
 Muse's output list is as follows, correctly ranking line
 `isosceles.py::13` in the top suspiciousness position. 
 All other lines have a strictly 
-lower suspiciousness score. 
-Thus, Muse localizes this bug perfectly, thanks to
+lower suspiciousness score, so 
+Muse localizes this bug perfectly, thanks to
 mutants generated by the LLM.
 
 ```
-('~/example2/code/isosceles.py::13', 0.14285714285714285)
-('~/example2/code/isosceles.py::12', 0.0)
-('~/example2/code/isosceles.py::6', 0.0)
-('~/example2/code/isosceles.py::7', 0.0)
-('~/example2/code/isosceles.py::9', 0.0)
+('~/fauxpy_example2/code/isosceles.py::13', 0.14285714285714285)
+('~/fauxpy_example2/code/isosceles.py::12', 0.0)
+('~/fauxpy_example2/code/isosceles.py::6', 0.0)
+('~/fauxpy_example2/code/isosceles.py::7', 0.0)
+('~/fauxpy_example2/code/isosceles.py::9', 0.0)
 ```
 
 !!! note
     Given the nondeterministic nature of LLMs
     and AI in general, you might get different results on your machine or even
-    in different runs when using LLM-driven mutation strategies.
+    in different runs when using FauxPy with LLM-driven mutation strategies.
     Even your internet speed can affect the results,
     as mutant generation for some lines might time out if your internet 
     connection is too slow.
-    However, this is not just a limitation of FauxPy; it is currently a general issue
+    This is a general issue
     for any application of LLMs.
 
-Now, let's run MBFL techniques using the `gpt4ominiapi` strategy.
-This strategy purely relies on an LLM to generate mutants without using
+Now, let's run MBFL techniques using another LLM-driven strategy `gpt4oapi`.
+This strategy purely relies on *GPT-4o* to generate mutants without using
 traditional mutation operators.
 
 ``` bash
-python -m pytest tests --src code --family mbfl --mutation gpt4ominiapi
+python -m pytest tests --src code --family mbfl --mutation gpt4oapi
 ```
 
-Muse's output list is as follows, again, correctly ranking line
+Muse's output list is as follows, again correctly ranking line
 `isosceles.py::13` in the top suspiciousness position.
 
 ```
-('~/example2/code/isosceles.py::13', 0.14285714285714285)
-('~/example2/code/isosceles.py::12', 0.0)
-('~/example2/code/isosceles.py::6', 0.0)
-('~/example2/code/isosceles.py::7', 0.0)
-('~/example2/code/isosceles.py::9', 0.0)
+('~/fauxpy_example2/code/isosceles.py::13', 0.14285714285714285)
+('~/fauxpy_example2/code/isosceles.py::12', 0.0)
+('~/fauxpy_example2/code/isosceles.py::6', 0.0)
+('~/fauxpy_example2/code/isosceles.py::7', 0.0)
+('~/fauxpy_example2/code/isosceles.py::9', 0.0)
 ```
