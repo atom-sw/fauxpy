@@ -1,10 +1,15 @@
 # FauxPy Changelog
 
 
-## Unreleased
+## FauxPy 0.4.0
 
-- Implemented two new strategies for the GPT4o model 
-  and updated the documentation accordingly.
+- Updated the theme color in the documentation.
+- Revise Example 2 in the Quick Start page of the documentation.
+- Add test status badge to the README and documentation.
+- Add GitHub Actions workflow to test FauxPy on Linux 
+  and macOS with multiple Python versions.
+- Implement two new strategies for the `GPT4o` model 
+  and update the documentation accordingly.
 
 
 ## FauxPy 0.3.0
