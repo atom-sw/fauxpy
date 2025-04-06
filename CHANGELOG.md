@@ -1,9 +1,15 @@
 # FauxPy Changelog
 
+## FauxPy 0.5.0
+
+- Update the **Quick Start** guide to reflect the new reporting format.
+- Enhance the `FauxpyPath` class and add corresponding tests.
+- Perform minor refactoring.
+- Improve the fault localization report output in the terminal.
 
 ## FauxPy 0.4.0
 
-- Updated the theme color in the documentation.
+- Update the theme color in the documentation.
 - Revise Example 2 in the Quick Start page of the documentation.
 - Add test status badge to the README and documentation.
 - Add GitHub Actions workflow to test FauxPy on Linux 
