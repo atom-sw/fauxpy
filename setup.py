@@ -24,7 +24,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://fauxpy.readthedocs.io",
     packages=setuptools.find_packages(exclude="tests"),
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     install_requires=[
         "pytest>=3.1.2",
         "coverage>=6.2",
