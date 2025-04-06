@@ -29,7 +29,8 @@ def pytest_configure(config):
 
 def pytest_runtest_call(item):
     """
-    This hook is called by Pytest just before running a test.
+    This hook is called by Pytest just before running a test
+    (before `call.when == "call"` in `pytest_runtest_makereport`).
 
     Args:
         item: The test item (or node) being executed.
