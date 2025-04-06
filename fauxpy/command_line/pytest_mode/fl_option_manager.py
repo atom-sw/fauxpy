@@ -14,7 +14,7 @@ from fauxpy.session_lib.fl_file_manager import FlFileManager
 from fauxpy.session_lib.fl_path_manager import FlPathManager
 from fauxpy.session_lib.fl_session import FlSession
 from fauxpy.session_lib.fl_type import FlFamily, FlGranularity, MutationStrategy
-from fauxpy.session_lib.path_lib import PythonPath
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 from fauxpy.session_lib.ts_lib import TargetedFailingTst
 
 
@@ -55,7 +55,7 @@ class FlOptionManager:
             failing_list_opt (str): Comma-separated list of targeted failing tests.
             file_or_dir: Additional file or directory option.
         """
-        self._project_working_directory = Path(project_working_directory)
+        self._project_working_directory = FauxpyPath.from_relative_path(project_working_directory, ".")
         self._target_src = self._get_validate_target_src(target_src_opt)
         self._exclude_list = self._get_validate_exclude_list(exclude_list_opt)
         self._fl_family = self._get_validate_fl_family(fl_family_opt)
@@ -144,16 +144,17 @@ class FlOptionManager:
                 self._top_n,
                 self._targeted_failing_test_list,
                 report_directory_path,
-                self._project_working_directory,
+                Path(self._project_working_directory.get_absolute()),
             )
         elif self._fl_family == FlFamily.St:
             fauxpy_session = StSession(
                 self._target_src,
                 self._exclude_list,
+                FlGranularity.Function,  # ST operates only at the function level granularity.
                 self._top_n,
                 self._targeted_failing_test_list,
                 report_directory_path,
-                self._project_working_directory,
+                Path(self._project_working_directory.get_absolute()),
             )
         elif self._fl_family == FlFamily.Mbfl:
             fauxpy_session = MbflSession(
@@ -165,7 +166,7 @@ class FlOptionManager:
                 self._targeted_failing_test_list,
                 self._file_or_dir_opt,
                 report_directory_path,
-                self._project_working_directory,
+                Path(self._project_working_directory.get_absolute()),
             )
         elif self._fl_family == FlFamily.Ps:
             fauxpy_session = PsSession(
@@ -175,26 +176,26 @@ class FlOptionManager:
                 self._top_n,
                 self._targeted_failing_test_list,
                 report_directory_path,
-                self._project_working_directory,
+                Path(self._project_working_directory.get_absolute()),
             )
         elif self._fl_family == FlFamily.CollectMbfl:
             fauxpy_session = CollectMbflSession(
-                report_directory_path, self._project_working_directory
+                report_directory_path, Path(self._project_working_directory.get_absolute())
             )
         elif self._fl_family == FlFamily.CollectPsInfo:
             fauxpy_session = CollectPsInfoSession(
-                report_directory_path, self._project_working_directory
+                report_directory_path, Path(self._project_working_directory.get_absolute())
             )
         elif self._fl_family == FlFamily.CollectPsRun:
             fauxpy_session = CollectPsRunSession(
-                report_directory_path, self._project_working_directory
+                report_directory_path, Path(self._project_working_directory.get_absolute())
             )
 
         assert fauxpy_session is not None
 
         return fauxpy_session
 
-    def _get_validate_target_src(self, target_src_opt: str) -> PythonPath:
+    def _get_validate_target_src(self, target_src_opt: str) -> FauxpyPath:
         """
         Validates the target source directory option.
 
@@ -202,13 +203,13 @@ class FlOptionManager:
             target_src_opt (str): The path to validate.
 
         Returns:
-            PythonPath: The validated target source directory.
+            FauxpyPath: The validated target source directory.
 
         Raises:
             pytest.UsageError: If the path does not exist.
         """
-        target_src_path_item = PythonPath(
-            self._project_working_directory, target_src_opt
+        target_src_path_item = FauxpyPath.from_relative_path(
+            self._project_working_directory.get_absolute(), target_src_opt
         )
 
         error_message = (
@@ -221,7 +222,7 @@ class FlOptionManager:
 
         return target_src_path_item
 
-    def _get_validate_exclude_list(self, exclude_list_opt: str) -> List[PythonPath]:
+    def _get_validate_exclude_list(self, exclude_list_opt: str) -> List[FauxpyPath]:
         """
         Validates the exclude list option.
 
@@ -229,7 +230,7 @@ class FlOptionManager:
             exclude_list_opt (str): Comma-separated list of paths to exclude.
 
         Returns:
-            List[PythonPath]: The validated list of excluded paths.
+            List[FauxpyPath]: The validated list of excluded paths.
 
         Raises:
             pytest.UsageError: If any path does not exist.
@@ -238,8 +239,8 @@ class FlOptionManager:
 
         exclude_path_item_list = []
         for exclude_str_item in exclude_str_list:
-            exclude_path_item = PythonPath(
-                self._project_working_directory, exclude_str_item
+            exclude_path_item = FauxpyPath.from_relative_path(
+                self._project_working_directory.get_absolute(), exclude_str_item
             )
             if not exclude_path_item.exists():
                 error_message = (
@@ -467,7 +468,7 @@ class FlOptionManager:
                 failing_list_opt
             )
         elif failing_file_opt is not None:
-            failing_file_path = self._project_working_directory / failing_file_opt
+            failing_file_path = Path(self._project_working_directory.get_absolute()) / failing_file_opt
             if not failing_file_path.exists():
                 error_message = (
                     f"{failing_file_opt} is not a valid option. "
@@ -504,8 +505,8 @@ class FlOptionManager:
         """
         content_parts = targeted_failing_test_string_item.split("::")
         if len(content_parts) == 2:
-            module_path_item = PythonPath(
-                self._project_working_directory, content_parts[0]
+            module_path_item = FauxpyPath.from_relative_path(
+                self._project_working_directory.get_absolute(), content_parts[0]
             )
             if not module_path_item.exists():
                 error_message = (
@@ -518,8 +519,8 @@ class FlOptionManager:
                 module_path_item, None, function_name
             )
         elif len(content_parts) == 3:
-            module_path_item = PythonPath(
-                self._project_working_directory, content_parts[0]
+            module_path_item = FauxpyPath.from_relative_path(
+                self._project_working_directory.get_absolute(), content_parts[0]
             )
             if not module_path_item.exists():
                 error_message = (

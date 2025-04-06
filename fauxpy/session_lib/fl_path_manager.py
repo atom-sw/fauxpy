@@ -6,6 +6,7 @@ from fauxpy import constants
 from fauxpy.command_line.pytest_mode import legacy_input
 
 from .fl_type import FlFamily, FlGranularity, MutationStrategy
+from .fauxpy_path import FauxpyPath
 
 
 class FlPathManager:
@@ -13,7 +14,7 @@ class FlPathManager:
 
     def __init__(
         self,
-        current_working_directory: Path,
+        current_working_directory: FauxpyPath,
         fl_family: FlFamily,
         fl_granularity: FlGranularity,
         mutation_strategy: MutationStrategy
@@ -22,12 +23,12 @@ class FlPathManager:
         Initializes the class instance.
 
         Args:
-            current_working_directory (Path): The directory of the project that is the subject of fault localization.
+            current_working_directory (FauxpyPath): The directory of the project that is the subject of fault localization.
             fl_family (FlFamily): The fault localization family.
             fl_granularity (FlGranularity): The granularity of fault localization.
             mutation_strategy (MutationStrategy): The mutation strategy used for generating mutations (only used by MBFL).
         """
-        self._current_working_directory = current_working_directory
+        self._current_working_directory = Path(current_working_directory.get_absolute())
         self._fl_family = fl_family
         self._fl_granularity = fl_granularity
         self._mutation_strategy = mutation_strategy

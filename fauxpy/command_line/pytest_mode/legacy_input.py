@@ -2,7 +2,7 @@ from typing import List, Optional
 
 from fauxpy.session_lib.fl_file_manager import FlFileManager
 from fauxpy.session_lib.fl_type import FlGranularity, FlFamily
-from fauxpy.session_lib.path_lib import PythonPath
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 from fauxpy.session_lib.target_tsts import TargetFailingTests
 from fauxpy.session_lib.ts_lib import TargetedFailingTst
 
@@ -33,12 +33,12 @@ def get_family_legacy(fl_family: FlFamily) -> str:
     return legacy_family_name
 
 
-def get_src_legacy(target_src: PythonPath) -> str:
-    return target_src.get_relative_path()
+def get_src_legacy(target_src: FauxpyPath) -> str:
+    return target_src.get_relative()
 
 
-def get_exclude_legacy(exclude_list: List[PythonPath]) -> List[str]:
-    legacy_exclude = [x.get_relative_path() for x in exclude_list]
+def get_exclude_legacy(exclude_list: List[FauxpyPath]) -> List[str]:
+    legacy_exclude = [x.get_relative() for x in exclude_list]
 
     return legacy_exclude
 
