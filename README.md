@@ -54,22 +54,22 @@ Full documentation is available at
 ## Installation
 
 To install FauxPy, follow the instructions in the 
-[Installation Guide](https://fauxpy.readthedocs.io/en/latest/user/install).
+[Installation Guide](https://fauxpy.readthedocs.io/en/stable/user/install).
 
 ## Usage
 
 For quick examples of how to use FauxPy, refer to the 
-[Quick Start Guide](https://fauxpy.readthedocs.io/en/latest/user/start).  
+[Quick Start Guide](https://fauxpy.readthedocs.io/en/stable/user/start).  
 
 ## Command-Line Options
 
 For a detailed list of command-line options, refer to the
-[Command-Line Options Guide](https://fauxpy.readthedocs.io/en/latest/user/using).
+[Command-Line Options Guide](https://fauxpy.readthedocs.io/en/stable/user/using).
 
 ## How to Cite
 
 If you use this tool in your research, please cite it as described in our citation guide:
-[How to Cite](https://fauxpy.readthedocs.io/en/latest/user/citation/)
+[How to Cite](https://fauxpy.readthedocs.io/en/stable/user/citation/)
 
 ## Mirrors
 
