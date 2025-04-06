@@ -9,17 +9,19 @@ from fauxpy.fault_localization.granularity.function_level import (
 from fauxpy.fault_localization.st.db_manager import StDbManager
 from fauxpy.fault_localization.st.rank_manager import RankManager
 from fauxpy.fault_localization.st.traceback_parser import TracebackParser
-from fauxpy.session_lib.fl_session import FlSession
-from fauxpy.session_lib.path_lib import PythonPath
-from fauxpy.session_lib.ts_lib import TargetedFailingTst
+from fauxpy.session_lib.fl_family_session import FlFamilySession
+from fauxpy.session_lib.fl_type import FlGranularity, FlFamily
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 from fauxpy.session_lib.pytest_tst_item import PytestTstItem
+from fauxpy.session_lib.ts_lib import TargetedFailingTst
 
 
-class StSession(FlSession):
+class StSession(FlFamilySession):
     def __init__(
         self,
-        target_src: PythonPath,
-        exclude_list: List[PythonPath],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
+        fl_granularity: FlGranularity,
         top_n: int,
         targeted_failing_test_list: List[TargetedFailingTst],
         report_directory_path: Path,
@@ -27,6 +29,7 @@ class StSession(FlSession):
     ):
         self._target_src = target_src
         self._exclude_list = exclude_list
+        self._fl_granularity = fl_granularity
         self._top_n = top_n
         self._targeted_failing_test_list = targeted_failing_test_list
 
@@ -36,20 +39,23 @@ class StSession(FlSession):
         self._function_level_granularity_manager = FunctionLevelGranularity(
             self._function_level_db_manager
         )
+        self._project_working_directory = project_working_directory
         self._traceback_parser = TracebackParser(
             self._function_level_granularity_manager, project_working_directory
         )
         self._rank_manager = RankManager(self._db_manager)
 
-    @staticmethod
-    def __pretty_representation():
-        return "ST family"
-
     def __str__(self):
-        return self.__pretty_representation()
+        return "ST session object"
 
-    def __repr__(self):
-        return self.__pretty_representation()
+    def get_fl_granularity(self) -> FlGranularity:
+        return self._fl_granularity
+
+    def get_fl_family(self) -> FlFamily:
+        return FlFamily.St
+
+    def get_project_working_directory(self) -> FauxpyPath:
+        return FauxpyPath.from_relative_path(str(self._project_working_directory), ".")
 
     def run_test_call(self, item):
         self._current_test_name = PytestTstItem(item).get_test_name()
@@ -100,4 +106,4 @@ class StSession(FlSession):
         self._db_manager.end()
         self._function_level_db_manager.end()
 
-        return {"default": scored_entity_list}
+        return {"ST": scored_entity_list}

@@ -1,9 +1,14 @@
 import logging
+from typing import Optional
 
 from fauxpy.command_line.pytest_mode import legacy_input
 from fauxpy.command_line.pytest_mode.pytest_option_manager import PytestOptionManager
 from fauxpy.session_lib.fauxpy_session_type import FauxpySessionType
+from fauxpy.session_lib.fl_family_session import FlFamilySession
+from fauxpy.session_lib.fl_session import FlSession
+from fauxpy.session_lib.fl_session_report import FlSessionReport
 from fauxpy.session_lib.timer import Timer
+
 
 class FauxpyPytestModeHandler:
     """
@@ -14,7 +19,7 @@ class FauxpyPytestModeHandler:
         self._ex_timer = Timer()
         self._pytest_option_manager = PytestOptionManager()
         self._fauxpy_session_type = FauxpySessionType.FauxpyNotCalled
-        self._session_object = None
+        self._session_object: Optional[FlSession] = None
         self._session_file_manager = None
 
     def add_option(self, pytest_parser):
@@ -105,12 +110,14 @@ class FauxpyPytestModeHandler:
                 terminal_reporter, exitstatus
             )
 
-            for technique, scores in score_entities.items():
-                self._session_file_manager.save_scores_to_file(technique, scores)
-                print(f" ----- Scores for {technique} ----- ")
-                for score in scores:
-                    print(score)
-
             delta_time = self._ex_timer.end_timer()
             self._session_file_manager.save_delta_time_to_file(delta_time)
-            print("DeltaTime: ", delta_time)
+
+            if isinstance(self._session_object, FlFamilySession):
+                fl_session_report = FlSessionReport(
+                    score_entities,
+                    delta_time,
+                    self._session_object.get_fl_granularity(),
+                    self._session_object.get_project_working_directory()
+                )
+                fl_session_report.generate_report()

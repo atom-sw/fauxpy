@@ -15,23 +15,23 @@ from fauxpy.fault_localization.util import timeout
 from fauxpy.fault_localization.util.path_util import PathUtil
 from fauxpy.fault_localization.util.traceback_lib import TracebackParser
 from fauxpy.session_lib import naming_lib
-from fauxpy.session_lib.fl_session import FlSession
-from fauxpy.session_lib.fl_type import FlGranularity, MutationStrategy
-from fauxpy.session_lib.path_lib import PythonPath
+from fauxpy.session_lib.fl_family_session import FlFamilySession
+from fauxpy.session_lib.fl_type import FlGranularity, MutationStrategy, FlFamily
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
+from fauxpy.session_lib.pytest_tst_item import PytestTstItem
 from fauxpy.session_lib.timer import Timer
 from fauxpy.session_lib.ts_lib import TargetedFailingTst
-from fauxpy.session_lib.pytest_tst_item import PytestTstItem
 
 
-class MbflSession(FlSession):
+class MbflSession(FlFamilySession):
 
     # TODO: Program tracer does not work right now.
     _Use_coverage_lib = True
 
     def __init__(
         self,
-        target_src: PythonPath,
-        exclude_list: List[PythonPath],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         mutation_strategy: MutationStrategy,
         fl_granularity: FlGranularity,
         top_n: int,
@@ -53,6 +53,7 @@ class MbflSession(FlSession):
         self._db_manager = MbflDbManager(report_directory_path)
         self._current_test_timer = Timer()
         self._function_level_db_manager = FunctionLevelDbManager(report_directory_path)
+        self._project_working_directory = project_working_directory
         self._run_manager = RunManager(
             self._db_manager, self._function_level_db_manager, project_working_directory
         )
@@ -64,6 +65,15 @@ class MbflSession(FlSession):
 
     def __str__(self):
         return "MBFL session object"
+
+    def get_fl_granularity(self) -> FlGranularity:
+        return self._fl_granularity
+
+    def get_fl_family(self) -> FlFamily:
+        return FlFamily.Mbfl
+
+    def get_project_working_directory(self) -> FauxpyPath:
+        return FauxpyPath.from_relative_path(str(self._project_working_directory), ".")
 
     def run_test_call(self, item):
         self._current_test_timer.start_timer()

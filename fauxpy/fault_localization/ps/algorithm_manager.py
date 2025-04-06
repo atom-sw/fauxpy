@@ -362,7 +362,8 @@ class AlgorithmManager:
             )
 
         if len(all_tests_top_n_scored_entities) == 0:
-            all_tests_top_n_scored_entities = {"fauxpy_no_swapped_instances": []}
+            # all_tests_top_n_scored_entities = {"fauxpy_no_swapped_instances": []}
+            all_tests_top_n_scored_entities = {"PS": []}
 
         return all_tests_top_n_scored_entities
 
@@ -382,7 +383,8 @@ class AlgorithmManager:
         self._predicate_instance_manager.get_candidate_predicates_store_db()
 
         if self._db_manager.number_of_candidate_predicates() == 0:
-            return {"fauxpy_no_candidate_predicates": []}
+            # return {"fauxpy_no_candidate_predicates": []}
+            return {"PS": []}
 
         self._seen_exception_manager.get_seen_exceptions_store_db()
         temp_project_path = self._instrument_project()

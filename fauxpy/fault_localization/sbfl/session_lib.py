@@ -16,18 +16,18 @@ from fauxpy.fault_localization.sbfl.db_manager import SbflDbManager
 from fauxpy.fault_localization.sbfl.ranking_metric_manager import RankingMetricManager
 from fauxpy.fault_localization.util.path_util import PathUtil
 from fauxpy.session_lib import naming_lib
-from fauxpy.session_lib.fl_session import FlSession
-from fauxpy.session_lib.fl_type import FlGranularity
-from fauxpy.session_lib.path_lib import PythonPath
-from fauxpy.session_lib.ts_lib import TargetedFailingTst
+from fauxpy.session_lib.fl_family_session import FlFamilySession
+from fauxpy.session_lib.fl_type import FlGranularity, FlFamily
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 from fauxpy.session_lib.pytest_tst_item import PytestTstItem
+from fauxpy.session_lib.ts_lib import TargetedFailingTst
 
 
-class SbflSession(FlSession):
+class SbflSession(FlFamilySession):
     def __init__(
         self,
-        target_src: PythonPath,
-        exclude_list: List[PythonPath],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         fl_granularity: FlGranularity,
         top_n: int,
         targeted_failing_test_list: List[TargetedFailingTst],
@@ -58,10 +58,20 @@ class SbflSession(FlSession):
         self._covered_function_manager = CoveredFunctionManager(
             self._function_level_granularity_manager
         )
+        self._project_working_directory = project_working_directory
         self._path_util = PathUtil(project_working_directory)
 
     def __str__(self):
         return "SBFL session object"
+
+    def get_fl_granularity(self) -> FlGranularity:
+        return self._fl_granularity
+
+    def get_fl_family(self) -> FlFamily:
+        return FlFamily.Sbfl
+
+    def get_project_working_directory(self) -> FauxpyPath:
+        return FauxpyPath.from_relative_path(str(self._project_working_directory), ".")
 
     def run_test_call(self, item):
         self._current_test_name = PytestTstItem(item).get_test_name()
