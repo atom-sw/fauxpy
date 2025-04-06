@@ -4,11 +4,8 @@
 
 Ensure you have:
 
-- Python **3.6 or later** installed  
-- `pip` (latest version recommended)  
-
-We mainly tested FauxPy with Python 3.6, 3.7, and 3.8, but it should
-also work on later Python versions.
+- Python **3.8 or later** installed  
+- `pip` (latest version recommended)
 
 ## Installing FauxPy
 
@@ -38,6 +35,6 @@ to generate LLM-driven mutants, and PyLLMut requires
 an API key to access LLMs.
 
 To set up your API key, follow the instructions in the 
-[Setting Up Your LLM API Key](https://pyllmut.readthedocs.io/en/latest/user/install/#setting-up-your-llm-api-key) 
+[Setting Up Your LLM API Key](https://pyllmut.readthedocs.io/en/stable/user/install/#setting-up-your-llm-api-key) 
 section of 
 the PyLLMut installation guide.

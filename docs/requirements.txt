@@ -3,4 +3,4 @@ mkdocstrings[python]  # For API pages
 mkdocs-material  # The Material for MkDocs theme
 pymdown-extensions  # A collection of additional Markdown extensions (e.g., for syntax highlighting, inline code, etc.)
 Pygments  # Syntax highlighter used by pymdown-extensions for code block highlighting
-git+https://github.com/mohrez86/fauxpy
+fauxpy

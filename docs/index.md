@@ -20,7 +20,10 @@ This documentation provides installation steps, usage instructions, and API deta
     Localization**!  
     This functionality is the result of 
     integrating [PyLLMut](https://pyllmut.readthedocs.io)
-    into FauxPy.
+    into FauxPy.  
+    Check out 
+    [Example 2 on the Quick Start page](user/start.md#example-2)
+    to see this new feature in action.
 
 !!! Feedback  
     Help improve FauxPy! Share your feedback in our [Discussions](https://github.com/mohrez86/fauxpy/discussions).

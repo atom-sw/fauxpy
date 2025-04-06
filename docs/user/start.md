@@ -156,25 +156,25 @@ walkthrough:
     location of your choice (e.g., your home directory):
 
     ``` bash
-    cp -r fauxpy/examples/example1 ~/example1
+    cp -r fauxpy/examples/example1 ~/fauxpy_example1
     ```
 
 3.  **Navigate to the Example Directory:**
 
-    Change your directory to the location where you copied the
-    `example1` example:
+    Change your directory to the location where you copied Example 1:
 
     ``` bash
-    cd ~/example1
+    cd ~/fauxpy_example1
     ```
 
 4.  **Set Up a Python Virtual Environment:**
 
-    Create a Python 3.8 virtual environment named `env`. Later Python
-    versions should also be compatible:
+    Create a Python virtual environment `env` using the following command. 
+    On some machines (e.g., MacBooks), you may need to use `python3` 
+    instead of `python`.
 
     ``` bash
-    python3.8 -m venv env
+    python -m venv env
     ```
 
 5.  **Activate the Virtual Environment:**
@@ -188,7 +188,7 @@ walkthrough:
 
 6.  **Install FauxPy:**
 
-    With the virtual environment active, install FauxPy using pip:
+    With the virtual environment active, install FauxPy using `pip`:
 
     ``` bash
     pip install fauxpy
@@ -222,29 +222,37 @@ python -m pytest tests --src code
 ```
 
 By default, FauxPy runs SBFL (spectrum-based fault localization). The
-command finishes quickly, printing three lists, one for each SBFL
+command finishes quickly, printing three tables, one for each SBFL
 technique currently supported by FauxPy: Tarantula, Ochiai, and DStar.
 
-The list for Tarantula looks something like the following. Each row in
-this list shows a line number in package `code` and a number (e.g., 1.1)
+The table for Tarantula looks something like the following.
+Each row in
+this table shows a file name and a line number in package `code` 
+and a number (e.g., `1.1000`)
 denoting the line's suspiciousness score according to Tarantula.
 
-The location of the bug in `equilateral.py` is `equilateral.py::11`, and
-the location of the bug in `isosceles.py` is `isosceles.py::6`. Thus,
+The location of the bug in `equilateral.py` is line 11, and
+the location of the bug in `isosceles.py` is line 6. Thus,
 Tarantula detected the locations of both bugs.
 
 ```
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::13', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::11', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::10', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::8', 0.6)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::6', 0.6)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::5', 0.6)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::10', 0.6)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::7', 0.6)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::5', 0.6)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::11', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::8', 0.1)
+----------------------------
+|   Scores for Tarantula   |
+----------------------------
+File                | Line | Score 
+-----------------------------------
+code/equilateral.py |   13 | 1.1000
+code/equilateral.py |   11 | 1.1000
+code/equilateral.py |   10 | 1.1000
+code/isosceles.py   |    8 | 0.6000
+code/isosceles.py   |    6 | 0.6000
+code/isosceles.py   |    5 | 0.6000
+code/isosceles.py   |   10 | 0.6000
+code/equilateral.py |    7 | 0.6000
+code/equilateral.py |    5 | 0.6000
+code/isosceles.py   |   11 | 0.1000
+code/equilateral.py |    8 | 0.1000
+-----------------------------------
 ```
 
 While we just used FauxPy to localize multiple bugs in one go, it is
@@ -265,16 +273,22 @@ localizes that one bug.
 python -m pytest tests/test_equilateral.py --src code
 ```
 
-Tarantula's output list is now as follows, including only lines in
+Tarantula's output is now as follows, including only lines in
 `equilateral.py`.
 
 ``` 
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::13', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::11', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::10', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::7', 0.6)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::5', 0.6)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::8', 0.1)
+----------------------------
+|   Scores for Tarantula   |
+----------------------------
+File                | Line | Score 
+-----------------------------------
+code/equilateral.py |   13 | 1.1000
+code/equilateral.py |   11 | 1.1000
+code/equilateral.py |   10 | 1.1000
+code/equilateral.py |    7 | 0.6000
+code/equilateral.py |    5 | 0.6000
+code/equilateral.py |    8 | 0.1000
+-----------------------------------
 ```
 
 ##### Selecting Failing Tests
@@ -287,22 +301,28 @@ which triggers the bug in `equilateral.py`.
 python -m pytest tests --src code --failing-list "[tests/test_equilateral.py::test_ea_fail]"
 ```
 
-Tarantula's output list is now as follows, including lines from any
-files but correctly ranking line `equilateral.py::11` in the top
+Tarantula's output is now as follows, including lines from any
+files but correctly ranking `equilateral.py`'s line 11 in the top
 suspiciousness position.
 
 ``` 
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::13', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::11', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::10', 1.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::7', 0.75625)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::5', 0.75625)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::8', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::6', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::5', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::11', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::10', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::8', 0.1)
+----------------------------
+|   Scores for Tarantula   |
+----------------------------
+File                | Line | Score 
+-----------------------------------
+code/equilateral.py |   13 | 1.1000
+code/equilateral.py |   11 | 1.1000
+code/equilateral.py |   10 | 1.1000
+code/equilateral.py |    7 | 0.7562
+code/equilateral.py |    5 | 0.7562
+code/isosceles.py   |    8 | 0.1000
+code/isosceles.py   |    6 | 0.1000
+code/isosceles.py   |    5 | 0.1000
+code/isosceles.py   |   11 | 0.1000
+code/isosceles.py   |   10 | 0.1000
+code/equilateral.py |    8 | 0.1000
+-----------------------------------
 ```
 
 As you can see, both approaches report the bug line in `equilateral.py`
@@ -319,19 +339,25 @@ To run MBFL techniques, we pass option `--family mbfl`.
 python -m pytest tests --src code --family mbfl --failing-list "[tests/test_equilateral.py::test_ea_fail]"
 ```
 
-The command prints two lists, one for each MBFL technique currently
+The command prints two tables, one for each MBFL technique currently
 supported by FauxPy: Metallaxis and Muse.
 
-The list for Muse looks something like the following.
+The table for Muse looks something like the following.
 
 ``` 
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::11', 0.09090909090909091)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::10', 0.0)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::7', -0.039660506068057426)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::5', -0.055524708495280385)
+-----------------------
+|   Scores for Muse   |
+-----------------------
+File                | Line | Score  
+------------------------------------
+code/equilateral.py |   11 | +0.0909
+code/equilateral.py |   10 | +0.0000
+code/equilateral.py |    7 | -0.0397
+code/equilateral.py |    5 | -0.0555
+------------------------------------
 ```
 
-Remember that `equilateral.py::11` is the actual bug location in
+Remember that line 11 is the actual bug location in
 `equilateral.py`. This line is ranked top, and all other lines have a
 strictly lower suspiciousness score. Thus, Muse localizes this bug
 perfectly.
@@ -353,7 +379,7 @@ And, to run the PS technique, we pass option `--family ps`:
 python -m pytest tests --src code --family ps --failing-list "[tests/test_equilateral.py::test_ea_fail]"
 ```
 
-Both techniques return an empty output list, which means that they
+Both techniques return an empty output table, which means that they
 failed to localize the bug in `equilateral.py`.
 
 ### Locating the Bug in `isosceles.py`
@@ -367,17 +393,23 @@ Here is how to run SBFL. Note that we changed the argument
 python -m pytest tests --src code --family sbfl --failing-list "[tests/test_isosceles.py::test_ia_crash]"
 ```
 
-Tarantula's output list is as follows:
+Tarantula's output is as follows:
 
 ``` 
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::8', 0.75625)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::6', 0.75625)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::5', 0.75625)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::10', 0.75625)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::11', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::8', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::7', 0.1)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::5', 0.1)
+----------------------------
+|   Scores for Tarantula   |
+----------------------------
+File                | Line | Score 
+-----------------------------------
+code/isosceles.py   |    8 | 0.7562
+code/isosceles.py   |    6 | 0.7562
+code/isosceles.py   |    5 | 0.7562
+code/isosceles.py   |   10 | 0.7562
+code/isosceles.py   |   11 | 0.1000
+code/equilateral.py |    8 | 0.1000
+code/equilateral.py |    7 | 0.1000
+code/equilateral.py |    5 | 0.1000
+-----------------------------------
 ```
 
 Now we run MBFL:
@@ -386,12 +418,18 @@ Now we run MBFL:
 python -m pytest tests --src code --family mbfl --failing-list "[tests/test_isosceles.py::test_ia_crash]"
 ```
 
-Metallaxis's output list is as follows:
+Metallaxis's output is as follows:
 
 ``` 
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::10', 0.5)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::6', 0.5)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::8', 0.5)
+-----------------------------
+|   Scores for Metallaxis   |
+-----------------------------
+File              | Line | Score 
+---------------------------------
+code/isosceles.py |   10 | 0.5000
+code/isosceles.py |    6 | 0.5000
+code/isosceles.py |    8 | 0.5000
+---------------------------------
 ```
 
 We could also run ST and PS by simply replacing `mbfl` with `st` or `ps`
@@ -412,13 +450,20 @@ suite we are using now contains one single failing test.
 ST's output is as follows.
 
 ``` 
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::height::5::8', 1.0)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::isosceles_area::4::11', 0.5)
+---------------------
+|   Scores for ST   |
+---------------------
+File              | Function       | Lines | Score 
+---------------------------------------------------
+code/isosceles.py | height         |  5-8  | 1.0000
+code/isosceles.py | isosceles_area |  4-11 | 0.5000
+---------------------------------------------------
 ```
 
-Each entry specifies a *range* of lines (such as from line `5` to line
+Each row specifies a function name and a range of lines (such as from line `5` to line
 `8` in the top position). This is because ST cannot distinguish between
-statements within the same function, and hence it will always cluster
+statements within the same function (i.e., it only works at the function-level granularity), 
+and hence it will always cluster
 function bodies together.
 
 Similarly, we run PS with only the failing test as follows:
@@ -427,7 +472,7 @@ Similarly, we run PS with only the failing test as follows:
 python -m pytest tests/test_isosceles.py::test_ia_crash --src code --family ps
 ```
 
-PS returns an empty list of lines on this example as well. PS can only
+PS returns an empty table of lines on this example as well. PS can only
 localize bugs that originate in branching predicates (such as
 conditionals and loop exit conditions), and hence it is a poor match for
 these examples.
@@ -451,12 +496,18 @@ For instance, here is how to run SBFL with function-level granularity on `isosce
 python -m pytest tests --src code --family sbfl --granularity function --failing-list "[tests/test_isosceles.py::test_ia_crash]"
 ```
 
-Tarantula's output list is as follows:
+Tarantula's output is as follows:
 
 ``` 
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::isosceles_area::4::11', 0.75625)
-('~/fauxpy-examples-dev/triangle_area/code/isosceles.py::height::5::8', 0.75625)
-('~/fauxpy-examples-dev/triangle_area/code/equilateral.py::equilateral_area::4::13', 0.1)
+----------------------------
+|   Scores for Tarantula   |
+----------------------------
+File                | Function         | Lines | Score 
+-------------------------------------------------------
+code/isosceles.py   | isosceles_area   |  4-11 | 0.7562
+code/isosceles.py   | height           |  5-8  | 0.7562
+code/equilateral.py | equilateral_area |  4-13 | 0.1000
+-------------------------------------------------------
 ```
 
 ## Example 2
@@ -629,22 +680,34 @@ Additionally, we do not specify the failing test using `--failing-list`
 because there is only a single failing test in the 
 test suite (Figure 8).
 
-Muse's output list is as follows:
+Muse's output is as follows:
 
 ```
-('~/fauxpy_example2/code/isosceles.py::12', 0.0)
-('~/fauxpy_example2/code/isosceles.py::6', 0.0)
-('~/fauxpy_example2/code/isosceles.py::7', 0.0)
-('~/fauxpy_example2/code/isosceles.py::9', 0.0)
+-----------------------
+|   Scores for Muse   |
+-----------------------
+File              | Line | Score 
+---------------------------------
+code/isosceles.py |   12 | 0.0000
+code/isosceles.py |    6 | 0.0000
+code/isosceles.py |    7 | 0.0000
+code/isosceles.py |    9 | 0.0000
+---------------------------------
 ```
 
-Metallaxis's output list is as follows:
+Metallaxis's output is as follows:
 
 ```
-('~/fauxpy_example2/code/isosceles.py::12', 1.0)
-('~/fauxpy_example2/code/isosceles.py::6', 1.0)
-('~/fauxpy_example2/code/isosceles.py::7', 1.0)
-('~/fauxpy_example2/code/isosceles.py::9', 1.0)
+-----------------------------
+|   Scores for Metallaxis   |
+-----------------------------
+File              | Line | Score 
+---------------------------------
+code/isosceles.py |   12 | 1.0000
+code/isosceles.py |    6 | 1.0000
+code/isosceles.py |    7 | 1.0000
+code/isosceles.py |    9 | 1.0000
+---------------------------------
 ```
 
 As you can see, line 13 is not even listed by either of the two
@@ -662,19 +725,25 @@ operators failed to do so.
 python -m pytest tests --src code --family mbfl --mutation tgpt4oapi
 ```
 
-Muse's output list is as follows, correctly ranking line
-`isosceles.py::13` in the top suspiciousness position. 
+Muse's output is as follows, correctly ranking line
+13 in the top suspiciousness position. 
 All other lines have a strictly 
 lower suspiciousness score, so 
 Muse localizes this bug perfectly, thanks to
 mutants generated by the LLM.
 
 ```
-('~/fauxpy_example2/code/isosceles.py::13', 0.14285714285714285)
-('~/fauxpy_example2/code/isosceles.py::12', 0.0)
-('~/fauxpy_example2/code/isosceles.py::6', 0.0)
-('~/fauxpy_example2/code/isosceles.py::7', 0.0)
-('~/fauxpy_example2/code/isosceles.py::9', 0.0)
+-----------------------
+|   Scores for Muse   |
+-----------------------
+File              | Line | Score 
+---------------------------------
+code/isosceles.py |   13 | 0.1429
+code/isosceles.py |   12 | 0.0000
+code/isosceles.py |    6 | 0.0000
+code/isosceles.py |    7 | 0.0000
+code/isosceles.py |    9 | 0.0000
+---------------------------------
 ```
 
 !!! note
@@ -695,13 +764,19 @@ traditional mutation operators.
 python -m pytest tests --src code --family mbfl --mutation gpt4oapi
 ```
 
-Muse's output list is as follows, again correctly ranking line
-`isosceles.py::13` in the top suspiciousness position.
+Muse's output is as follows, again correctly ranking line
+13 in the top suspiciousness position.
 
 ```
-('~/fauxpy_example2/code/isosceles.py::13', 0.14285714285714285)
-('~/fauxpy_example2/code/isosceles.py::12', 0.0)
-('~/fauxpy_example2/code/isosceles.py::6', 0.0)
-('~/fauxpy_example2/code/isosceles.py::7', 0.0)
-('~/fauxpy_example2/code/isosceles.py::9', 0.0)
+-----------------------
+|   Scores for Muse   |
+-----------------------
+File              | Line | Score 
+---------------------------------
+code/isosceles.py |   13 | 0.1429
+code/isosceles.py |   12 | 0.0000
+code/isosceles.py |    6 | 0.0000
+code/isosceles.py |    7 | 0.0000
+code/isosceles.py |    9 | 0.0000
+---------------------------------
 ```
