@@ -11,7 +11,7 @@ class FlSessionReport:
     _header_line = "Line"
     _header_score = "Score"
     _header_function = "Function"
-    _header_range = "Lines"
+    _header_range = "Line"
 
     def __init__(
             self,
@@ -37,13 +37,22 @@ class FlSessionReport:
         self._granularity = granularity
         self._project_working_directory = project_working_directory
 
-    def generate_report(self):
+        self._output_lines: List[str] = []
+
+    def _write(self, line: str):
+        self._output_lines.append(line)
+
+    def _get_report_string(self) -> str:
+        """Returns the full report as a single string."""
+        return "\n".join(self._output_lines)
+
+    def generate_report(self) -> str:
         """Generates the fault localization session report."""
         title = " Fault Localization Results "
         border = "=" * len(title)
-        print(f"\n{border}\n{title}\n{border}\n")
-        print(f"=== Performance ===")
-        print(f"Execution Time: {self._execution_time:.{self._rounding_decimal_places}f}\n")
+        self._write(f"\n{border}\n{title}\n{border}\n")
+        self._write(f"=== Performance ===")
+        self._write(f"Execution Time: {self._execution_time:.{self._rounding_decimal_places}f}\n")
 
         if self._granularity == FlGranularity.Statement:
             for technique_name, scored_entity_list in self._scored_entity_dict.items():
@@ -54,6 +63,8 @@ class FlSessionReport:
         else:
             # This should never happen as we have input validation, but let's keep it here.
             raise ValueError(f"Invalid granularity: {self._granularity}")
+
+        return self._get_report_string()
 
     def _get_rounded_score(
             self,
@@ -91,7 +102,7 @@ class FlSessionReport:
 
         title = f" Scores for {technique_name} "
         border = "-" * (len(title) + 6)
-        print(f"{border}\n|  {title}  |\n{border}")
+        self._write(f"{border}\n|  {title}  |\n{border}")
 
         (
             file_pad,
@@ -99,21 +110,26 @@ class FlSessionReport:
             score_pad
         ) = self._get_max_column_widths_statement_level(scored_entity_list)
 
-        print(f"{self._header_file.ljust(file_pad)} | "
+        self._write(f"{self._header_file.ljust(file_pad)} | "
               f"{self._header_line.ljust(line_pad)} | "
               f"{self._header_score.ljust(score_pad)}")
-        print('-' * (file_pad + line_pad + score_pad + 6))
+        self._write('-' * (file_pad + line_pad + score_pad + 6))
 
         for entity, score in scored_entity_list:
-            file_path, line_number = entity.split("::")
+            # To handle PS results
+            if len(entity.split("::")) == 3:
+                file_path, line_begin, line_end = entity.split("::")
+                line_number = f"{line_begin}-{line_end}"
+            else:
+                file_path, line_number = entity.split("::")
             file_path_relative = self._get_relative_path(file_path)
             score_format = (f"{score:+.{self._rounding_decimal_places}f}" if has_negative_score
                             else f"{score:.{self._rounding_decimal_places}f}")
-            print(f"{file_path_relative.ljust(file_pad)} | "
+            self._write(f"{file_path_relative.ljust(file_pad)} | "
                   f"{line_number.rjust(line_pad)} | "
                   f"{score_format.rjust(score_pad)}")
 
-        print('-' * (file_pad + line_pad + score_pad + 6) + "\n")
+        self._write('-' * (file_pad + line_pad + score_pad + 6) + "\n")
 
     def _print_scores_function_level(
             self,
@@ -131,7 +147,7 @@ class FlSessionReport:
 
         title = f" Scores for {technique_name} "
         border = "-" * (len(title) + 6)
-        print(f"{border}\n|  {title}  |\n{border}")
+        self._write(f"{border}\n|  {title}  |\n{border}")
 
         (
             file_pad,
@@ -140,11 +156,11 @@ class FlSessionReport:
             score_pad
         ) = self._get_max_column_widths_function_level(scored_entity_list)
 
-        print(f"{self._header_file.ljust(file_pad)} | "
+        self._write(f"{self._header_file.ljust(file_pad)} | "
               f"{self._header_function.ljust(func_pad)} | "
               f"{self._header_range.ljust(range_pad)} | "
               f"{self._header_score.ljust(score_pad)}")
-        print('-' * (file_pad + func_pad + range_pad + score_pad + 9))
+        self._write('-' * (file_pad + func_pad + range_pad + score_pad + 9))
 
         for entity, score in scored_entity_list:
             file_path, func_name, start_line, end_line = entity.split("::")
@@ -152,12 +168,12 @@ class FlSessionReport:
             func_range = f"{start_line}-{end_line}"
             score_format = (f"{score:+.{self._rounding_decimal_places}f}" if has_negative_score
                             else f"{score:.{self._rounding_decimal_places}f}")
-            print(f"{file_path_relative.ljust(file_pad)} | "
+            self._write(f"{file_path_relative.ljust(file_pad)} | "
                   f"{func_name.ljust(func_pad)} | "
                   f"{func_range.center(range_pad)} | "
                   f"{score_format.rjust(score_pad)}")
 
-        print('-' * (file_pad + func_pad + range_pad + score_pad + 9) + "\n")
+        self._write('-' * (file_pad + func_pad + range_pad + score_pad + 9) + "\n")
 
     def _get_max_column_widths_statement_level(
             self,
@@ -177,10 +193,16 @@ class FlSessionReport:
             max_line_width = 0
             max_score_width = 0
         else:
+            is_ps = len(scored_entity_list[0][0].split("::")) == 3
+
             max_file_width = max(len(self._get_relative_path(score[0].split("::")[0]))
                                  for score in scored_entity_list)
-            max_line_width = max(len(score[0].split("::")[1])
-                                 for score in scored_entity_list)
+            if is_ps:
+                max_line_width = max(len(score[0].split("::")[1]) + len(score[0].split("::")[2]) + len("-")
+                                     for score in scored_entity_list)
+            else:
+                max_line_width = max(len(score[0].split("::")[1])
+                                     for score in scored_entity_list)
             max_score_width = max(len(f"{score[1]:.{self._rounding_decimal_places}f}")
                                   for score in scored_entity_list)
 
