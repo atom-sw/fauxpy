@@ -16,7 +16,9 @@ jobs:
           python-version: "3.8"
 
       - name: Install dependencies
-        run: make dev
+        run: |
+          make dev_docs
+          make dev
           
       - name: Run tests
         run: make tests
