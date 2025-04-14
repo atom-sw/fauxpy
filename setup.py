@@ -19,7 +19,7 @@ setup(
     version=__version__,
     author="Mohammad Rezaalipour",
     author_email="rezaalipour.mohammad@gmail.com",
-    description="A fault localization tool for Python",
+    description="An automated fault localization tool for Python programs.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://fauxpy.readthedocs.io",
