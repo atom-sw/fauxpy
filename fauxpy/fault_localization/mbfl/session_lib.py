@@ -10,7 +10,7 @@ from fauxpy.fault_localization.mbfl.db_manager import MbflDbManager
 from fauxpy.fault_localization.mbfl.entity_score_manager import EntityScoreManager
 from fauxpy.fault_localization.mbfl.mutant_score_manager import MutantScoreManager
 from fauxpy.fault_localization.mbfl.mutation_manager import MutationManager
-from fauxpy.fault_localization.mbfl.run_manager import RunManager
+from fauxpy.fault_localization.mbfl.mbfl_run_manager import MbflRunManager
 from fauxpy.fault_localization.util import timeout
 from fauxpy.fault_localization.util.path_util import PathUtil
 from fauxpy.fault_localization.util.traceback_lib import TracebackParser
@@ -20,7 +20,7 @@ from fauxpy.session_lib.fl_type import FlGranularity, MutationStrategy, FlFamily
 from fauxpy.session_lib.fauxpy_path import FauxpyPath
 from fauxpy.session_lib.pytest_tst_item import PytestTstItem
 from fauxpy.session_lib.timer import Timer
-from fauxpy.session_lib.ts_lib import TargetedFailingTst
+from fauxpy.session_lib.targeted_failing_tst import TargetedFailingTst
 
 
 class MbflSession(FlFamilySession):
@@ -54,7 +54,7 @@ class MbflSession(FlFamilySession):
         self._current_test_timer = Timer()
         self._function_level_db_manager = FunctionLevelDbManager(report_directory_path)
         self._project_working_directory = project_working_directory
-        self._run_manager = RunManager(
+        self._mbfl_run_manager = MbflRunManager(
             self._db_manager, self._function_level_db_manager, project_working_directory
         )
         self._mutant_score_manager = MutantScoreManager(self._db_manager)
@@ -64,7 +64,7 @@ class MbflSession(FlFamilySession):
         self._path_util = PathUtil(project_working_directory)
 
     def __str__(self):
-        return "MBFL session object"
+        return "MBFL session"
 
     def get_fl_granularity(self) -> FlGranularity:
         return self._fl_granularity
@@ -75,8 +75,17 @@ class MbflSession(FlFamilySession):
     def get_project_working_directory(self) -> FauxpyPath:
         return FauxpyPath.from_relative_path(str(self._project_working_directory), ".")
 
+    def get_targeted_failing_test_list(self) -> List[TargetedFailingTst]:
+        """
+        Returns the list of targeted failing tests for fault localization.
+
+        Returns:
+            list: A list of targeted failing tests.
+        """
+        return self._targeted_failing_test_list
+
     def run_test_call(self, item):
-        self._current_test_timer.start_timer()
+        self._current_test_timer.start()
 
         self._current_test_name = PytestTstItem(item).get_test_name()
         if self._Use_coverage_lib:
@@ -84,8 +93,8 @@ class MbflSession(FlFamilySession):
         else:
             program_tracer.start(
                 isWanted=lambda x: self._path_util.path_should_be_localized(
-                    legacy_input.get_src_legacy(self._target_src),
-                    legacy_input.get_exclude_legacy(self._exclude_list),
+                    self._target_src,
+                    self._exclude_list,
                     x,
                 )
             )
@@ -110,8 +119,8 @@ class MbflSession(FlFamilySession):
                 covered_file_list = coverage_data.measured_files()
                 for file in covered_file_list:
                     if self._path_util.path_should_be_localized(
-                        legacy_input.get_src_legacy(self._target_src),
-                        legacy_input.get_exclude_legacy(self._exclude_list),
+                        self._target_src,
+                        self._exclude_list,
                         file,
                     ):
                         lines = coverage_data.lines(file)
@@ -135,7 +144,7 @@ class MbflSession(FlFamilySession):
                 )
 
             # # Let's give more time to mutants by putting these lines after
-            current_test_time = self._current_test_timer.end_timer()
+            current_test_time = self._current_test_timer.end()
             self._db_manager.insert_test_time(test_name, current_test_time)
 
     def terminal_summary(self, terminal_reporter, exit_status):
@@ -209,12 +218,12 @@ class MbflSession(FlFamilySession):
         num_passed, num_failed = self._db_manager.select_number_of_tests()
         num_all_tests = num_passed + num_failed
         process_timeout = timeout.get_process_timeout(num_all_tests, timeout_limit)
-        self._run_manager.run_all_mutants_store_db(
+        self._mbfl_run_manager.run_all_mutants_store_db(
             mutant_list,
             self._file_or_dir,
-            legacy_input.get_granularity_legacy(self._fl_granularity),
-            legacy_input.get_src_legacy(self._target_src),
-            legacy_input.get_exclude_legacy(self._exclude_list),
+            self._fl_granularity,
+            self._target_src,
+            self._exclude_list,
             timeout_limit,
             num_all_tests,
             process_timeout,

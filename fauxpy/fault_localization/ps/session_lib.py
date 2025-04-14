@@ -6,7 +6,7 @@ import coverage
 from fauxpy import program_tracer
 from fauxpy.command_line.pytest_mode import legacy_input
 from fauxpy.fault_localization.granularity.db_manager import FunctionLevelDbManager
-from fauxpy.fault_localization.ps.algorithm_manager import AlgorithmManager
+from fauxpy.fault_localization.ps.ps_run_manager import PsRunManager
 from fauxpy.fault_localization.ps.db_manager import PsDbManager
 from fauxpy.fault_localization.util import timeout
 from fauxpy.fault_localization.util.path_util import PathUtil
@@ -16,7 +16,7 @@ from fauxpy.session_lib.fl_type import FlGranularity, FlFamily
 from fauxpy.session_lib.fauxpy_path import FauxpyPath
 from fauxpy.session_lib.pytest_tst_item import PytestTstItem
 from fauxpy.session_lib.timer import Timer
-from fauxpy.session_lib.ts_lib import TargetedFailingTst
+from fauxpy.session_lib.targeted_failing_tst import TargetedFailingTst
 
 
 class PsSession(FlFamilySession):
@@ -46,14 +46,14 @@ class PsSession(FlFamilySession):
         self._current_test_timer = Timer()
         self._function_level_db_manager = FunctionLevelDbManager(report_directory_path)
         self._project_working_directory = project_working_directory
-        self._algorithm_manager = AlgorithmManager(
+        self._ps_run_manager = PsRunManager(
             self._db_manager, self._function_level_db_manager, project_working_directory
         )
         self._traceback_parser = TracebackParser(project_working_directory)
         self._path_util = PathUtil(project_working_directory)
 
     def __str__(self):
-        return "PS session object"
+        return "PS session"
 
     def get_fl_granularity(self) -> FlGranularity:
         return self._fl_granularity
@@ -64,8 +64,17 @@ class PsSession(FlFamilySession):
     def get_project_working_directory(self) -> FauxpyPath:
         return FauxpyPath.from_relative_path(str(self._project_working_directory), ".")
 
+    def get_targeted_failing_test_list(self) -> List[TargetedFailingTst]:
+        """
+        Returns the list of targeted failing tests for fault localization.
+
+        Returns:
+            list: A list of targeted failing tests.
+        """
+        return self._targeted_failing_test_list
+
     def run_test_call(self, item):
-        self._current_test_timer.start_timer()
+        self._current_test_timer.start()
 
         self._current_test_name = PytestTstItem(item).get_test_name()
 
@@ -74,8 +83,8 @@ class PsSession(FlFamilySession):
         else:
             program_tracer.start(
                 isWanted=lambda x: self._path_util.path_should_be_localized(
-                    legacy_input.get_src_legacy(self._target_src),
-                    legacy_input.get_exclude_legacy(self._exclude_list),
+                    self._target_src,
+                    self._exclude_list,
                     x,
                 )
             )
@@ -97,8 +106,8 @@ class PsSession(FlFamilySession):
                 covered_file_list = coverage_data.measured_files()
                 for file in covered_file_list:
                     if self._path_util.path_should_be_localized(
-                        legacy_input.get_src_legacy(self._target_src),
-                        legacy_input.get_exclude_legacy(self._exclude_list),
+                        self._target_src,
+                        self._exclude_list,
                         file,
                     ):
                         lines = coverage_data.lines(file)
@@ -121,7 +130,7 @@ class PsSession(FlFamilySession):
                     )
 
             # Let's give more time to mutants by putting these lines after
-            current_test_time = self._current_test_timer.end_timer()
+            current_test_time = self._current_test_timer.end()
             self._db_manager.insert_test_time(test_name, current_test_time)
 
     def terminal_summary(self, terminal_reporter, exit_status):
@@ -162,8 +171,8 @@ class PsSession(FlFamilySession):
                             exception_line_number,
                         ) = self._traceback_parser.get_exception_location(
                             repr_traceback,
-                            legacy_input.get_src_legacy(self._target_src),
-                            legacy_input.get_exclude_legacy(self._exclude_list),
+                            self._target_src,
+                            self._exclude_list,
                         )
                     self._db_manager.insert_test_case(
                         test_name=test_name,
@@ -179,10 +188,10 @@ class PsSession(FlFamilySession):
         max_test_time = self._db_manager.select_max_test_time()
 
         timeout_limit = timeout.get_timeout(max_test_time)
-        scored_entity_list = self._algorithm_manager.run_predicate_switching(
-            legacy_input.get_src_legacy(self._target_src),
-            legacy_input.get_exclude_legacy(self._exclude_list),
-            legacy_input.get_granularity_legacy(self._fl_granularity),
+        scored_entity_list = self._ps_run_manager.run_predicate_switching(
+            self._target_src,
+            self._exclude_list,
+            self._fl_granularity,
             timeout_limit,
             self._top_n,
             legacy_input.get_targeted_failing_test_list_legacy(

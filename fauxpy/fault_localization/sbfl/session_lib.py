@@ -20,7 +20,7 @@ from fauxpy.session_lib.fl_family_session import FlFamilySession
 from fauxpy.session_lib.fl_type import FlGranularity, FlFamily
 from fauxpy.session_lib.fauxpy_path import FauxpyPath
 from fauxpy.session_lib.pytest_tst_item import PytestTstItem
-from fauxpy.session_lib.ts_lib import TargetedFailingTst
+from fauxpy.session_lib.targeted_failing_tst import TargetedFailingTst
 
 
 class SbflSession(FlFamilySession):
@@ -62,7 +62,7 @@ class SbflSession(FlFamilySession):
         self._path_util = PathUtil(project_working_directory)
 
     def __str__(self):
-        return "SBFL session object"
+        return "SBFL session"
 
     def get_fl_granularity(self) -> FlGranularity:
         return self._fl_granularity
@@ -72,6 +72,15 @@ class SbflSession(FlFamilySession):
 
     def get_project_working_directory(self) -> FauxpyPath:
         return FauxpyPath.from_relative_path(str(self._project_working_directory), ".")
+
+    def get_targeted_failing_test_list(self) -> List[TargetedFailingTst]:
+        """
+        Returns the list of targeted failing tests for fault localization.
+
+        Returns:
+            list: A list of targeted failing tests.
+        """
+        return self._targeted_failing_test_list
 
     def run_test_call(self, item):
         self._current_test_name = PytestTstItem(item).get_test_name()
@@ -91,8 +100,8 @@ class SbflSession(FlFamilySession):
             covered_statement_list = []
             for file in files_covered:
                 if self._path_util.path_should_be_localized(
-                    legacy_input.get_src_legacy(self._target_src),
-                    legacy_input.get_exclude_legacy(self._exclude_list),
+                    self._target_src,
+                    self._exclude_list,
                     file,
                 ):
                     line_list = coverage_data.lines(file)

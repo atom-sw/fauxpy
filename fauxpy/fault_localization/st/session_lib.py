@@ -13,7 +13,7 @@ from fauxpy.session_lib.fl_family_session import FlFamilySession
 from fauxpy.session_lib.fl_type import FlGranularity, FlFamily
 from fauxpy.session_lib.fauxpy_path import FauxpyPath
 from fauxpy.session_lib.pytest_tst_item import PytestTstItem
-from fauxpy.session_lib.ts_lib import TargetedFailingTst
+from fauxpy.session_lib.targeted_failing_tst import TargetedFailingTst
 
 
 class StSession(FlFamilySession):
@@ -46,7 +46,7 @@ class StSession(FlFamilySession):
         self._rank_manager = RankManager(self._db_manager)
 
     def __str__(self):
-        return "ST session object"
+        return "ST session"
 
     def get_fl_granularity(self) -> FlGranularity:
         return self._fl_granularity
@@ -56,6 +56,15 @@ class StSession(FlFamilySession):
 
     def get_project_working_directory(self) -> FauxpyPath:
         return FauxpyPath.from_relative_path(str(self._project_working_directory), ".")
+
+    def get_targeted_failing_test_list(self) -> List[TargetedFailingTst]:
+        """
+        Returns the list of targeted failing tests for fault localization.
+
+        Returns:
+            list: A list of targeted failing tests.
+        """
+        return self._targeted_failing_test_list
 
     def run_test_call(self, item):
         self._current_test_name = PytestTstItem(item).get_test_name()
@@ -90,8 +99,8 @@ class StSession(FlFamilySession):
                         current_test = test_information.get_test_name()
                         repr_traceback = test_report.longrepr.reprtraceback
                         traceback_function_name_list = self._traceback_parser.get_ordered_traceback_function_name_list(
-                            legacy_input.get_src_legacy(self._target_src),
-                            legacy_input.get_exclude_legacy(self._exclude_list),
+                            self._target_src,
+                            self._exclude_list,
                             repr_traceback,
                         )
                         current_test_score_list = self._rank_manager.compute_score_list(
