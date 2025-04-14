@@ -17,6 +17,7 @@ from .db_manager import MbflDbManager
 from .mutation_lib.cosmic_ray import CosmicRayMutantGenerator
 from .mutation_lib.mutant import Mutant
 from fauxpy import constants
+from ...session_lib.fauxpy_printer import fl_print
 
 
 class MutationManager:
@@ -101,8 +102,8 @@ class MutationManager:
             List[Mutant]: A list of generated mutants for the module.
         """
 
-        print(f"-----> Generating mutants using the mutation strategy {self._mutation_strategy.name} for the following module:")
-        print(module_path)
+        fl_print.normal(f"Generating mutants using the mutation strategy {self._mutation_strategy.name} for the following module:")
+        fl_print.normal(f"  {module_path}")
 
         if self._mutation_strategy == MutationStrategy.Traditional:
             module_mutant_list = self._get_traditional_module_mutant_list(module_path, line_number_list)
@@ -113,7 +114,7 @@ class MutationManager:
         else:
             raise Exception(f"Mutation strategy {self._mutation_strategy} is not supported.")
 
-        print(f"-----> Number of generated mutants: {len(module_mutant_list)}")
+        fl_print.normal(f"Number of generated mutants: {len(module_mutant_list)}")
 
         return module_mutant_list
 
@@ -182,7 +183,7 @@ class MutationManager:
                 f"Consider increasing the timeout duration or reducing the number of mutants requested per line.\n"
                 f"Timeout occurred for lines: {timeout_line_list}"
             )
-            print(message_for_timeout)
+            fl_print.normal(message_for_timeout)
             logging.warning(message_for_timeout)
 
         valid_mutant_list = mutation_report.get_valid_mutant_list()
@@ -223,19 +224,19 @@ class MutationManager:
         """
         assert self._mutation_strategy != MutationStrategy.Traditional
 
-        print("Lines to generate mutants for:", line_number_list)
+        fl_print.normal("Lines to generate mutants for:", line_number_list)
         traditional_mutant_list: List[Mutant] = self._get_traditional_module_mutant_list(module_path, line_number_list)
         covered_line_number_list = list(set([x.get_line_number() for x in traditional_mutant_list]))
         covered_line_number_list.sort()
-        print("Lines covered by traditional mutation operators:", covered_line_number_list)
+        fl_print.normal("Lines covered by traditional mutation operators:", covered_line_number_list)
         uncovered_line_number_list = list(set(line_number_list) - set(covered_line_number_list))
         uncovered_line_number_list.sort()
-        print("Lines uncovered by traditional mutation operators:", uncovered_line_number_list)
+        fl_print.normal("Lines uncovered by traditional mutation operators:", uncovered_line_number_list)
 
         llm_mutant_list = self._get_pyllmut_module_mutant_list(module_path, uncovered_line_number_list)
 
-        print("Number of traditional mutants", len(traditional_mutant_list))
-        print("Number of LLM mutants", len(llm_mutant_list))
+        fl_print.normal("Number of traditional mutants", len(traditional_mutant_list))
+        fl_print.normal("Number of LLM mutants", len(llm_mutant_list))
         module_mutant_list = traditional_mutant_list + llm_mutant_list
 
         return module_mutant_list
