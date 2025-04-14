@@ -19,10 +19,13 @@ from fauxpy.fault_localization.ps.seen_exception_manager import SeenExceptionMan
 from fauxpy.fault_localization.util.path_util import PathUtil
 from fauxpy.fault_localization.util.temp_lib import TempManager
 from fauxpy.session_lib import naming_lib
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
+from fauxpy.session_lib.fauxpy_printer import fl_print
+from fauxpy.session_lib.fl_type import FlGranularity
 from fauxpy.session_lib.target_tsts import TargetFailingTests
 
 
-class AlgorithmManager:
+class PsRunManager:
     def __init__(
         self,
         db_manager: PsDbManager,
@@ -111,7 +114,11 @@ class AlgorithmManager:
         return tmp_project_path
 
     def _get_predicate_sequences(
-        self, project_path: str, src: str, exclude: List[str], failed_test_paths
+            self,
+            project_path: str,
+            target_src: FauxpyPath,
+            exclude_list: List[FauxpyPath],
+            failed_test_paths
     ):
         """
         Runs the project in Collect mode and stores a list of tuples
@@ -124,8 +131,8 @@ class AlgorithmManager:
         predicate_sequences = []
         indexed_predicate_sequences = (
             self._collect_ps_info_api.run_ps_collect_mode_info(
-                src=src,
-                exclude=exclude,
+                target_src=target_src,
+                exclude_list=exclude_list,
                 project_path=project_path,
                 file_or_dir=failed_test_paths,
             )
@@ -167,8 +174,8 @@ class AlgorithmManager:
         test_name: str,
         predicate_name: str,
         instance_number: int,
-        src: str,
-        exclude: List[str],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         timeout_limit: float,
     ) -> Tuple[Optional[str], Optional[List[str]], Optional[float], bool]:
         """
@@ -185,8 +192,8 @@ class AlgorithmManager:
             file_path, function_name
         )
         exe_result_data = self._collect_ps_run_api.run_ps_collect_mode_run(
-            src=src,
-            exclude=exclude,
+            target_src=target_src,
+            exclude_list=exclude_list,
             project_path=project_path,
             file_or_dir=[generalized_test_path],
             predicate_name=predicate_name,
@@ -196,7 +203,7 @@ class AlgorithmManager:
 
         exec_stat_error = exe_result_data.is_test_case_table_empty_or_none()
         if exec_stat_error:
-            print("Bad execution")
+            fl_print.normal("Bad execution")
             return None, None, None, exec_stat_error
 
         test_result, timeout_stat = exe_result_data.get_test_result(test_name)
@@ -204,7 +211,7 @@ class AlgorithmManager:
             # The parametrized tests might be executed with different parameters in the
             # main mode and the collect mode. In this situation, the test name from
             # main cannot be found in the tests executed in collect mode. Found by pandas 141.
-            print("Non-deterministic execution")
+            fl_print.normal("Non-deterministic execution")
             return None, None, None, False
 
         seen_exception_list_str = exe_result_data.get_test_seen_exception_list(
@@ -224,8 +231,8 @@ class AlgorithmManager:
         project_path: str,
         test_name: str,
         indexed_pred_seq_str: str,
-        src: str,
-        exclude: List[str],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         expected_exception_seen_name: str,
         timeout_limit: float,
     ):
@@ -243,10 +250,10 @@ class AlgorithmManager:
         for ind, predInst in enumerate(ind_pred_seq):
             pred_name, inst_num = predInst.split("::")
 
-            print(
-                f"-----RUNNING Predicate Instance "
-                f"{pred_name}::{inst_num} - {ind} / {number_of_predicate_instances_for_test} "
-                f"----- on test {test_name}-----"
+            fl_print.normal(
+                f"Running Predicate Instance "
+                f"'{pred_name}::{inst_num}' ({ind + 1}/{number_of_predicate_instances_for_test}) "
+                f"with test '{test_name}'"
             )
 
             (
@@ -259,8 +266,8 @@ class AlgorithmManager:
                 test_name=test_name,
                 predicate_name=pred_name,
                 instance_number=int(inst_num),
-                src=src,
-                exclude=exclude,
+                target_src=target_src,
+                exclude_list=exclude_list,
                 timeout_limit=timeout_limit,
             )
 
@@ -268,7 +275,7 @@ class AlgorithmManager:
                 self._db_manager.insert_bad_execution_predicate_instance(
                     test_name, pred_name, inst_num
                 )
-                print("Execution error for: ", test_name, pred_name, inst_num)
+                fl_print.normal("Execution error for: ", test_name, pred_name, inst_num)
                 continue
 
             # Not needed. Just to collect info for further analysis.
@@ -276,7 +283,7 @@ class AlgorithmManager:
                 self._db_manager.insert_timeout_predicate_instance(
                     test_name, pred_name, inst_num
                 )
-                print("Timeout for: ", test_name, pred_name, inst_num)
+                fl_print.normal("Timeout for: ", test_name, pred_name, inst_num)
                 continue
 
             if test_result == "passed":
@@ -293,7 +300,7 @@ class AlgorithmManager:
         self,
         test_name: str,
         passing_predicate_instance_sequence: List[str],
-        granularity: str,
+        fl_granularity: FlGranularity,
     ):
         score = 1
         for predicateInstance in passing_predicate_instance_sequence:
@@ -302,9 +309,9 @@ class AlgorithmManager:
                 self._db_manager.select_candidate_predicate(predicate_name)
             )
 
-            if granularity == "statement":
+            if fl_granularity == FlGranularity.Statement:
                 entity = f"{file_path}::{line_start}::{line_end}"
-            elif granularity == "function":
+            elif fl_granularity == FlGranularity.Function:
                 cfi = self._function_level_granularity_manager.get_covered_function(
                     file_path, line_start
                 )
@@ -324,7 +331,8 @@ class AlgorithmManager:
                         function_line_end,
                     )
             else:
-                raise Exception(f"The granularity {granularity} is not supported.")
+                # TODO: Safe to remove (handled by input validation).
+                raise Exception(f"The granularity {fl_granularity.name} is not supported.")
 
             # For function granularity it can happen.
             # In this case, only one should be stored.
@@ -362,6 +370,7 @@ class AlgorithmManager:
             )
 
         if len(all_tests_top_n_scored_entities) == 0:
+            fl_print.normal("There were no swapped instances.")
             # all_tests_top_n_scored_entities = {"fauxpy_no_swapped_instances": []}
             all_tests_top_n_scored_entities = {"PS": []}
 
@@ -369,9 +378,9 @@ class AlgorithmManager:
 
     def run_predicate_switching(
         self,
-        src: str,
-        exclude: List[str],
-        granularity: str,
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
+        fl_granularity: FlGranularity,
         timeout_limit: float,
         top_n: int,
         target_failing_tests: TargetFailingTests,
@@ -383,6 +392,7 @@ class AlgorithmManager:
         self._predicate_instance_manager.get_candidate_predicates_store_db()
 
         if self._db_manager.number_of_candidate_predicates() == 0:
+            fl_print.normal("There were no candidate predicates.")
             # return {"fauxpy_no_candidate_predicates": []}
             return {"PS": []}
 
@@ -395,7 +405,10 @@ class AlgorithmManager:
             failing_tests = target_failing_tests.get_failing_tests()
 
         predicate_sequences = self._get_predicate_sequences(
-            temp_project_path, src, exclude, failing_tests
+            temp_project_path,
+            target_src,
+            exclude_list,
+            failing_tests
         )
 
         for pred_seq_item in predicate_sequences:
@@ -411,14 +424,14 @@ class AlgorithmManager:
                 temp_project_path,
                 test_name,
                 indexed_pred_seq_str,
-                src,
-                exclude,
+                target_src,
+                exclude_list,
                 seen_exception_name,
                 timeout_limit,
             )
 
             self._get_test_scored_entity_store_db(
-                test_name, passing_predicate_instance_sequence, granularity
+                test_name, passing_predicate_instance_sequence, fl_granularity
             )
 
         self._remove_temp_project(temp_project_path)
