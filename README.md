@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/fauxpy.svg)](https://badge.fury.io/py/fauxpy)
 [![Downloads](https://static.pepy.tech/badge/fauxpy)](https://pepy.tech/project/fauxpy)
-[![Documentation Status](https://readthedocs.org/projects/fauxpy/badge/?version=latest)](https://fauxpy.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/fauxpy/badge/?version=stable)](https://fauxpy.readthedocs.io/en/stable/?badge=stable)
 ![Research](https://img.shields.io/badge/Research-Driven-lightgrey)
 ![Open Source](https://img.shields.io/badge/Open%20Source-Yes-brightgreen)
 [![GitHub](https://img.shields.io/github/license/atom-sw/fauxpy)](LICENSE)
