@@ -37,7 +37,8 @@ python -m pytest \
        --top-n $N \
        --failing-list "[$FAIL1, $FAIL2, ...]" \
        --failing-file $FAIL \
-       --mutation $MUTATION
+       --mutation $MUTATION \
+       --fauxpy-verbose
 ```
 
 ## Option `--src`: Program Source Code
@@ -179,6 +180,22 @@ and falls back to GPT-4o-mini when traditional mutation operators fail to genera
 
 ```bash
 python -m pytest --src $SRC --mutation tgpt4ominiapi --family mbfl
+```
+
+## Option `--fauxpy-verbose`: Verbose Output
+
+Option `--fauxpy-verbose` enables more detailed output from FauxPy.
+This includes additional diagnostic and progress information during the fault localization session.
+
+This option is useful for debugging or understanding the internal behavior of FauxPy during execution.
+It does not change the final fault localization results but may help in interpreting or troubleshooting them.
+
+By default, this option is disabled.
+
+Example:
+
+```bash
+python -m pytest --src $SRC --family mbfl --fauxpy-verbose
 ```
 
 ## Positional Argument: Tests

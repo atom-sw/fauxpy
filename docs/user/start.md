@@ -453,11 +453,11 @@ ST's output is as follows.
 ---------------------
 |   Scores for ST   |
 ---------------------
-File              | Function       | Lines | Score 
----------------------------------------------------
-code/isosceles.py | height         |  5-8  | 1.0000
-code/isosceles.py | isosceles_area |  4-11 | 0.5000
----------------------------------------------------
+File              | Function       | Line | Score 
+--------------------------------------------------
+code/isosceles.py | height         | 5-8  | 1.0000
+code/isosceles.py | isosceles_area | 4-11 | 0.5000
+--------------------------------------------------
 ```
 
 Each row specifies a function name and a range of lines (such as from line `5` to line
@@ -502,12 +502,12 @@ Tarantula's output is as follows:
 ----------------------------
 |   Scores for Tarantula   |
 ----------------------------
-File                | Function         | Lines | Score 
--------------------------------------------------------
-code/isosceles.py   | isosceles_area   |  4-11 | 0.7562
-code/isosceles.py   | height           |  5-8  | 0.7562
-code/equilateral.py | equilateral_area |  4-13 | 0.1000
--------------------------------------------------------
+File                | Function         | Line | Score 
+------------------------------------------------------
+code/isosceles.py   | isosceles_area   | 4-11 | 0.7562
+code/isosceles.py   | height           | 5-8  | 0.7562
+code/equilateral.py | equilateral_area | 4-13 | 0.1000
+------------------------------------------------------
 ```
 
 ## Example 2
