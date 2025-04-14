@@ -44,7 +44,7 @@ class FauxpyPath:
         Returns:
             str: The absolute path.
         """
-        return self._absolute_path
+        return self._relative_path
 
     @staticmethod
     def from_absolute_path(
