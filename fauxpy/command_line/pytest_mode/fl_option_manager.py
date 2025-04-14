@@ -10,12 +10,13 @@ from fauxpy.fault_localization.mbfl.session_lib import MbflSession
 from fauxpy.fault_localization.ps.session_lib import PsSession
 from fauxpy.fault_localization.sbfl.session_lib import SbflSession
 from fauxpy.fault_localization.st.session_lib import StSession
+from fauxpy.session_lib.fauxpy_printer import fl_print
 from fauxpy.session_lib.fl_file_manager import FlFileManager
 from fauxpy.session_lib.fl_path_manager import FlPathManager
 from fauxpy.session_lib.fl_session import FlSession
 from fauxpy.session_lib.fl_type import FlFamily, FlGranularity, MutationStrategy
 from fauxpy.session_lib.fauxpy_path import FauxpyPath
-from fauxpy.session_lib.ts_lib import TargetedFailingTst
+from fauxpy.session_lib.targeted_failing_tst import TargetedFailingTst
 
 
 class FlOptionManager:
@@ -38,6 +39,7 @@ class FlOptionManager:
         top_n_opt: str,
         failing_file_opt: str,
         failing_list_opt: str,
+        fauxpy_verbose_opt: bool,
         file_or_dir,
     ):
         """
@@ -53,6 +55,7 @@ class FlOptionManager:
             top_n_opt (str): Top N results to consider, or -1 for all results.
             failing_file_opt (str): Path to the file containing targeted failing tests.
             failing_list_opt (str): Comma-separated list of targeted failing tests.
+            fauxpy_verbose_opt (bool): Enables detailed output during execution when set to True.
             file_or_dir: Additional file or directory option.
         """
         self._project_working_directory = FauxpyPath.from_relative_path(project_working_directory, ".")
@@ -75,6 +78,36 @@ class FlOptionManager:
             self._mutation_strategy
         )
         self._fl_file_manager = None
+
+        self._fauxpy_verbose = fauxpy_verbose_opt
+        fl_print.set_is_detailed(self._fauxpy_verbose)
+
+    def get_target_src(self) -> FauxpyPath:
+        """
+        Returns the target source directory.
+
+        Returns:
+            FauxpyPath: The validated target source directory.
+        """
+        return self._target_src
+
+    def get_exclude_list(self) -> List[FauxpyPath]:
+        """
+        Returns the list of excluded paths.
+
+        Returns:
+            List[FauxpyPath]: The validated list of excluded paths.
+        """
+        return self._exclude_list
+
+    def get_top_n(self) -> int:
+        """
+        Returns the top N results to consider.
+
+        Returns:
+            int: The validated top N value.
+        """
+        return self._top_n
 
     def get_fl_family(self) -> FlFamily:
         """
