@@ -13,6 +13,9 @@ from fauxpy.fault_localization.mbfl.db_manager import MbflDbManager
 from fauxpy.fault_localization.util.path_util import PathUtil
 from fauxpy.fault_localization.util.temp_lib import TempManager
 from fauxpy.session_lib import naming_lib
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
+from fauxpy.session_lib.fauxpy_printer import fl_print
+from fauxpy.session_lib.fl_type import FlGranularity
 
 
 class TestComparisonState(Enum):
@@ -22,7 +25,7 @@ class TestComparisonState(Enum):
     NotTarget = 3
 
 
-class RunManager:
+class MbflRunManager:
     def __init__(
         self,
         db_manager: MbflDbManager,
@@ -189,9 +192,9 @@ class RunManager:
         self,
         mutants: List[Mutant],
         file_or_dir: List[str],
-        granularity: str,
-        src: str,
-        exclude: List[str],
+        fl_granularity: FlGranularity,
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         timeout_limit: float,
         number_all_tests,
         process_timeout,
@@ -200,10 +203,10 @@ class RunManager:
 
         number_of_all_mutants = len(mutants)
 
-        print(f"-------------- Running {number_of_all_mutants} Mutants --------------")
-        for mutant in mutants:
-            print(
-                f"------------ Running Mutant ID ----->>>>> {mutant.get_id()} / {number_of_all_mutants} ------------"
+        fl_print.normal(f"Running {number_of_all_mutants} Mutants")
+        for index, mutant in enumerate(mutants):
+            fl_print.normal(
+                f"Running Mutant {mutant.get_id()} ({index + 1}/{number_of_all_mutants})"
             )
 
             self._mutate_temp_project(
@@ -211,8 +214,8 @@ class RunManager:
             )
             mutant_test_case_run_result_table = (
                 self._collect_mbfl_api.run_mbfl_collect_mode(
-                    src,
-                    exclude,
+                    target_src,
+                    exclude_list,
                     temp_project_path,
                     file_or_dir,
                     timeout=timeout_limit,
@@ -225,7 +228,7 @@ class RunManager:
                 or len(mutant_test_case_run_result_table) == 0
             ):
                 # Timeout happened
-                print("Timeout or bad mutant")
+                fl_print.normal("Timeout or bad mutant")
                 self._db_manager.update_mutant_as_timeout(mutant.get_id())
                 self._un_mutate_temp_project(
                     temp_project_path, mutant.get_module_path()
@@ -236,7 +239,7 @@ class RunManager:
             # number of test cases. For now I remove them.
             # TODO: Find the reason. Found in sonic3. Takes around three hours.
             if number_all_tests != len(mutant_test_case_run_result_table):
-                print("Missing tests mutant")
+                fl_print.normal("Missing tests mutant")
                 self._db_manager.update_mutant_as_having_missing_tests(mutant.get_id())
                 self._un_mutate_temp_project(
                     temp_project_path, mutant.get_module_path()
@@ -256,11 +259,11 @@ class RunManager:
             if timeout_happened:
                 self._db_manager.update_mutant_as_timeout(mutant.get_id())
             else:
-                if granularity == "statement":
+                if fl_granularity == FlGranularity.Statement:
                     entity_name = naming_lib.get_statement_name(
                         mutant.get_module_path(), mutant.get_line_number()
                     )
-                elif granularity == "function":
+                elif fl_granularity == FlGranularity.Function:
                     covered_function = (
                         self._function_level_granularity_manager.get_covered_function(
                             mutant.get_module_path(), mutant.get_line_number()
@@ -273,7 +276,8 @@ class RunManager:
                         covered_function[3],
                     )
                 else:
-                    raise Exception(f"Granularity {granularity} is not supported.")
+                    # TODO: Safe to remove (handled by input validation.)
+                    raise Exception(f"Granularity {fl_granularity.name} is not supported.")
 
                 self._db_manager.insert_mutant_score_terms(
                     mutant.get_id(),
