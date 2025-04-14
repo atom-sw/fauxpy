@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Tuple, List
 
 from fauxpy.fault_localization.util.path_util import PathUtil
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 
 
 class TracebackParser:
@@ -53,7 +54,7 @@ class TracebackParser:
         return path.endswith(".py")
 
     def get_exception_location(
-        self, traceback, src: str, exclude: List[str]
+        self, traceback, target_src: FauxpyPath, exclude_list: List[FauxpyPath]
     ) -> Tuple[str, int]:
         exception_file_path = ""
         exception_line_number = -1
@@ -65,7 +66,7 @@ class TracebackParser:
                 c_line_number = traceback.reprentries[tb_len - i - 1].reprfileloc.lineno
                 c_path_abs = self._path_util.relative_path_to_abs_path(c_path)
                 if self._path_util.path_should_be_localized(
-                    src, exclude, c_path_abs
+                    target_src, exclude_list, c_path_abs
                 ) and self._is_python_module(c_path_abs):
                     exception_file_path = c_path
                     exception_line_number = c_line_number
