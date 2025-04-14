@@ -5,10 +5,10 @@ from fauxpy.session_lib import naming_lib
 
 class TargetFailingTests(object):
     def __init__(self, target_failing_tests_list: List[str]):
-        self._targetFailingTestsList = target_failing_tests_list
+        self._targeted_failing_test_list = target_failing_tests_list
 
     def get_failing_tests(self):
-        return self._targetFailingTestsList
+        return self._targeted_failing_test_list
 
     @classmethod
     def from_file(cls, file_path):
@@ -42,7 +42,7 @@ class TargetFailingTests(object):
         current_test_full_path_generalized = naming_lib.get_generalized_test_name(
             current_test_path, current_test_method_name
         )
-        for targetTest in self._targetFailingTestsList:
+        for targetTest in self._targeted_failing_test_list:
             # reformattedTargetFilePath = _reformatPytestTest(targetTest)
             if current_test_full_path_generalized == targetTest:
                 return True
