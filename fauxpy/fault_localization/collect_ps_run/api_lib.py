@@ -7,6 +7,7 @@ from fauxpy import constants
 from fauxpy.fault_localization.collect_ps_run.api_file import CollectPsRunApiFileManager
 from fauxpy.fault_localization.collect_ps_run.result_type import CollectPsRunResult
 from fauxpy.fault_localization.util.run_lib import CommandRunner
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 
 
 class CollectPsRunApi:
@@ -56,8 +57,8 @@ class CollectPsRunApi:
 
     def _run_project(
         self,
-        src: str,
-        exclude: List[str],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         project_path: str,
         file_or_dir: List[str],
         timeout: Optional[float],
@@ -69,11 +70,11 @@ class CollectPsRunApi:
             + file_or_dir
             + [
                 "--src",
-                src,
+                target_src.get_relative(),
                 "--family",
                 "collectpsrun",
                 "--exclude",
-                self.convert_list_to_string(exclude),
+                self.convert_list_to_string([x.get_relative() for x in exclude_list]),
             ]
         )
         if timeout is not None:
@@ -83,8 +84,8 @@ class CollectPsRunApi:
 
     def run_ps_collect_mode_run(
         self,
-        src: str,
-        exclude: List[str],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         project_path: str,
         file_or_dir: List[str],
         predicate_name: str,
@@ -94,7 +95,7 @@ class CollectPsRunApi:
         self._api_file_manager.save_config_file(
             project_path, predicate_name, instance_number
         )
-        self._run_project(src, exclude, project_path, file_or_dir, timeout)
+        self._run_project(target_src, exclude_list, project_path, file_or_dir, timeout)
 
         test_case_table = self._api_file_manager.load_test_case_table(project_path)
         seen_exception_list = self._api_file_manager.load_seen_exception_sequence_table(

@@ -8,6 +8,7 @@ from fauxpy.fault_localization.collect_ps_info.api_file import (
     CollectPsInfoApiFileManager,
 )
 from fauxpy.fault_localization.util.run_lib import CommandRunner
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 
 
 class CollectPsInfoApi:
@@ -92,8 +93,8 @@ class CollectPsInfoApi:
 
     def _run_project(
         self,
-        src: str,
-        exclude: List[str],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         project_path: str,
         file_or_dir: List[str],
         timeout: Optional[float],
@@ -105,11 +106,11 @@ class CollectPsInfoApi:
             + file_or_dir
             + [
                 "--src",
-                src,
+                target_src.get_relative(),
                 "--family",
                 "collectpsinfo",
                 "--exclude",
-                self.convert_list_to_string(exclude),
+                self.convert_list_to_string([x.get_relative() for x in exclude_list]),
             ]
         )
         if timeout is not None:
@@ -119,13 +120,13 @@ class CollectPsInfoApi:
 
     def run_ps_collect_mode_info(
         self,
-        src: str,
-        exclude: List[str],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         project_path: str,
         file_or_dir: List[str],
         timeout: Optional[float] = None,
     ) -> List[Tuple[str, str, str]]:
-        self._run_project(src, exclude, project_path, file_or_dir, timeout)
+        self._run_project(target_src, exclude_list, project_path, file_or_dir, timeout)
 
         predicate_sequence_table = self._api_file_manager.load_predicate_sequence_table(
             project_path

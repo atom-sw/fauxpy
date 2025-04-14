@@ -4,6 +4,7 @@ from typing import List, Tuple, Optional
 
 from fauxpy.fault_localization.collect_mbfl.api_file import CollectMbflApiFileManager
 from fauxpy.fault_localization.util.run_lib import CommandRunner
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 
 
 class CollectMbflApi:
@@ -34,8 +35,8 @@ class CollectMbflApi:
 
     def _run_project(
         self,
-        src: str,
-        exclude: List[str],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         project_path: str,
         file_or_dir: List[str],
         timeout: Optional[float],
@@ -47,11 +48,11 @@ class CollectMbflApi:
             + file_or_dir
             + [
                 "--src",
-                src,
+                target_src.get_relative(),
                 "--family",
                 "collectmbfl",
                 "--exclude",
-                self.convert_list_to_string(exclude),
+                self.convert_list_to_string([x.get_relative() for x in exclude_list]),
             ]
         )
         if timeout is not None:
@@ -61,15 +62,15 @@ class CollectMbflApi:
 
     def run_mbfl_collect_mode(
         self,
-        src: str,
-        exclude: List[str],
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
         project_path: str,
         file_or_dir: List[str],
         timeout: float,
         process_timeout: float,
     ) -> Optional[List[Tuple[str, str, str]]]:
         self._run_project(
-            src, exclude, project_path, file_or_dir, timeout, process_timeout
+            target_src, exclude_list, project_path, file_or_dir, timeout, process_timeout
         )
         test_case_table = self._api_file_manager.load_test_case_table(project_path)
         return test_case_table
