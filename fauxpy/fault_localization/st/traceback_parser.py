@@ -6,6 +6,7 @@ from fauxpy.fault_localization.granularity.function_level import (
 )
 from fauxpy.fault_localization.util.path_util import PathUtil
 from fauxpy.session_lib import naming_lib
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
 
 
 class TracebackParser:
@@ -23,7 +24,7 @@ class TracebackParser:
 
     # TODO: Move to traceback_utils.py
     def get_ordered_traceback_function_name_list(
-        self, src, exclude, repr_traceback
+        self, target_src: FauxpyPath, exclude_list: List[FauxpyPath], repr_traceback
     ) -> List[str]:
         traceback_name_list = []
 
@@ -35,7 +36,7 @@ class TracebackParser:
             if not self._is_python_module(path):
                 continue
 
-            if self._path_util.path_should_be_localized(src, exclude, absolute_path):
+            if self._path_util.path_should_be_localized(target_src, exclude_list, absolute_path):
                 covered_function = (
                     self._function_level_granularity_manager.get_covered_function(
                         absolute_path, line_number
