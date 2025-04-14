@@ -1,5 +1,20 @@
 # FauxPy Changelog
 
+## FauxPy 0.6.0
+
+- Revise the documentation.
+- Fix a bug in the handler that prevented CSV files from being saved.
+- Revise help messages for command-line options.
+- Update the `setup.py` description.
+- Update the README file.
+- Improve the order and structure of terminal reporting for FauxPy’s analysis.
+- Add tests for the output reporting module.
+- Revise printed messages.
+- Fix a bug in the output reporting module that could cause PS to crash.
+- Perform general refactoring.
+- Added a new command-line option `--fauxpy-verbose`: when not 
+  set, FauxPy displays minimal output.
+
 ## FauxPy 0.5.0
 
 - Update the **Quick Start** guide to reflect the new reporting format.
