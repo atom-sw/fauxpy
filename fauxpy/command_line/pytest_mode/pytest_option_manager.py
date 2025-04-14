@@ -26,7 +26,7 @@ class PytestOptionManager:
         """
         group = pytest_option_parser.getgroup(
             "fauxpy",
-            description="FauxPy " + __version__ + " - A tool for automated fault localization in Python programs"
+            description="FauxPy " + __version__ + " - An automated fault localization tool for Python programs"
         )
         group.addoption(
             "--src",
@@ -40,27 +40,27 @@ class PytestOptionManager:
         group.addoption(
             "--family",
             default="sbfl",
-            help="Select the fault localization family to use. Options are: "
-                 "sbfl (Spectrum-Based Fault Localization), "
-                 "mbfl (Mutation-Based Fault Localization), "
-                 "ps (Predicate Switching), "
+            help="Select the fault localization family to use. Options are: \n"
+                 "sbfl (Spectrum-Based Fault Localization), \n"
+                 "mbfl (Mutation-Based Fault Localization), \n"
+                 "ps (Predicate Switching), \n"
                  "st (Stack-Trace). Default is sbfl."
         )
         group.addoption(
             "--mutation",
             default="t",
-            help="Specify the mutation generation strategy for Mutation-Based Fault Localization (MBFL). Options: "
-                 "t - Use Cosmic Ray with traditional mutation operators (default), "
-                 "tgpt4ominiapi - Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o-mini via its API, "
-                 "gpt4ominiapi - Use only GPT-4o-mini via its API for mutant generation, without Cosmic Ray, "
-                 "tgpt4oapi - Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o via its API, "
+            help="Specify the mutation generation strategy for Mutation-Based Fault Localization (MBFL). Options: \n"
+                 "t - Use Cosmic Ray with traditional mutation operators (default), \n"
+                 "tgpt4ominiapi - Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o-mini via its API, \n"
+                 "gpt4ominiapi - Use only GPT-4o-mini via its API for mutant generation, without Cosmic Ray, \n"
+                 "tgpt4oapi - Use Cosmic Ray, and when it cannot generate a mutant for a statement, fall back to GPT-4o via its API, \n"
                  "gpt4oapi - Use only GPT-4o via its API for mutant generation, without Cosmic Ray."
         )
         group.addoption(
             "--granularity",
             default="statement",
-            help="Set the granularity level for fault localization. Options are: "
-                 "statement (or s) for statement-level analysis, "
+            help="Set the granularity level for fault localization. Options are: \n"
+                 "statement (or s) for statement-level analysis, \n"
                  "function (or f) for function-level analysis. Default is statement."
         )
         group.addoption(
@@ -78,6 +78,12 @@ class PytestOptionManager:
             "--failing-list",
             default=None,
             help="Provide a list of targeted failing tests. Default is None."
+        )
+        group.addoption(
+            "--fauxpy-verbose",
+            action="store_true",
+            default=False,
+            help="Show detailed output from FauxPy plugin.",
         )
 
     def get_fl_option_manager(self, pytest_config) -> FlOptionManager:
@@ -98,6 +104,7 @@ class PytestOptionManager:
         top_n_opt = pytest_config.getoption("--top-n")
         failing_file_opt = pytest_config.getoption("--failing-file")
         failing_list_opt = pytest_config.getoption("--failing-list")
+        fauxpy_verbose_opt = pytest_config.getoption("--fauxpy-verbose")
         file_or_dir = pytest_config.getoption("file_or_dir")
 
         fl_option_manager = FlOptionManager(
@@ -110,6 +117,7 @@ class PytestOptionManager:
             top_n_opt,
             failing_file_opt,
             failing_list_opt,
+            fauxpy_verbose_opt,
             file_or_dir,
         )
 
