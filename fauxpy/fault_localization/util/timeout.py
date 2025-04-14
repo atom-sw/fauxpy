@@ -4,7 +4,7 @@ from fauxpy import constants
 def get_timeout(max_test_time: float) -> float:
     if max_test_time is None:
         max_test_time = 0
-    timeout = constants.testTimeoutFactor * max_test_time + constants.testTimeoutOffset
+    timeout = constants.TEST_TIMEOUT_SCALING_FACTOR * max_test_time + constants.TEST_TIMEOUT_OFFSET
     return timeout
 
 

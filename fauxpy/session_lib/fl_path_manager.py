@@ -3,10 +3,8 @@ import shutil
 from pathlib import Path
 
 from fauxpy import constants
-from fauxpy.command_line.pytest_mode import legacy_input
-
-from .fl_type import FlFamily, FlGranularity, MutationStrategy
 from .fauxpy_path import FauxpyPath
+from .fl_type import FlFamily, FlGranularity, MutationStrategy
 
 
 class FlPathManager:
@@ -59,10 +57,10 @@ class FlPathManager:
         ft = "%Y_%m_%d_%H_%M_%S_%f"
         current_data_time = datetime.datetime.now().strftime(ft)
         report_director_name = (
-            f"{constants.FileNames.ReportDirectoryNamePrefix}_"
+            f"{constants.REPORT_DIRECTORY_NAME_PREFIX_FL_SESSION}_"
             f"{current_working_dir_name}_"
-            f"{legacy_input.get_family_legacy(self._fl_family)}_"
-            f"{legacy_input.get_granularity_legacy(self._fl_granularity)}_"
+            f"{self._fl_family.name.lower()}_"
+            f"{self._fl_granularity.name.lower()}_"
             f"{self._mutation_strategy.name.lower()}_"
             f"{current_data_time}"
         )

@@ -4,6 +4,9 @@ from pathlib import Path
 from typing import List, Tuple
 
 from fauxpy import constants
+from fauxpy.session_lib.fauxpy_path import FauxpyPath
+from fauxpy.session_lib.fl_type import FlFamily, FlGranularity, MutationStrategy
+from fauxpy.session_lib.targeted_failing_tst import TargetedFailingTst
 
 
 class FlFileManager:
@@ -28,42 +31,44 @@ class FlFileManager:
         scores_file_path = self._report_directory_path / f"Scores_{technique}.csv"
         with open(scores_file_path, "w") as csvFile:
             writer = csv.writer(csvFile)
-            writer.writerow(constants.FileNames.ScoresFileNameHeader)
+            writer.writerow(constants.SCORES_CSV_HEADER)
             for score in scores:
                 writer.writerow([score[0], score[1]])
 
     def save_config_to_file(
         self,
-        src: str,
-        exclude: List[str],
-        family: str,
-        granularity: str,
-        top_n: str,
-        targeted_failing_tests: List[str],
-        mutation_strategy: str
+        target_src: FauxpyPath,
+        exclude_list: List[FauxpyPath],
+        fl_family: FlFamily,
+        fl_granularity: FlGranularity,
+        top_n: int,
+        targeted_failing_test_list: List[TargetedFailingTst],
+        mutation_strategy: MutationStrategy,
     ):
         """
         Saves the session configuration to a JSON file.
 
-        Args:
-            src (str): Source code directory to perform fault localization on.
-            exclude (List[str]): List of files or directories to exclude from fault localization.
-            family (str): Family of the fault localization technique.
-            granularity (str): Fault localization granularity level.
-            top_n (str): Number of top-ranked elements to show in the output.
-            targeted_failing_tests (List[str]): List of failing test cases that are the target of current fault localization session.
-            mutation_strategy (str): Strategy used for mutation analysis (only used by the MBFL family).
+    Args:
+        target_src (FauxpyPath): Source code directory to perform fault localization on.
+        exclude_list (List[FauxpyPath]): List of files or directories to exclude from fault localization.
+        fl_family (FlFamily): Family of the fault localization technique.
+        fl_granularity (FlGranularity): Fault localization granularity level.
+        top_n (int): Number of top-ranked elements to show in the output.
+        targeted_failing_test_list (List[TargetedFailingTst]): List of failing test cases that are the target
+            of the current fault localization session.
+        mutation_strategy (MutationStrategy): Strategy used for mutation analysis
+            (only used by the MBFL family).
         """
-        file_path = self._report_directory_path / constants.SESSION_CONFIG_FILE_NAME
+        file_path = self._report_directory_path / constants.CONFIG_FILE_NAME_FL_SESSION
 
         config_dict = {
-            "Src": src,
-            "Exclude": exclude,
-            "Family":  family,
-            "Granularity": granularity,
+            "Src": target_src.get_relative(),
+            "Exclude": [x.get_relative() for x in exclude_list],
+            "Family":  fl_family.name,
+            "Granularity": fl_granularity.name,
             "TopN": top_n,
-            "TargetedFailingTests": targeted_failing_tests,
-            "MutationStrategy": mutation_strategy
+            "TargetedFailingTests": [x.get_relative_test_name() for x in targeted_failing_test_list],
+            "MutationStrategy": mutation_strategy.name
         }
 
         with file_path.open("w", encoding="utf-8") as file:
@@ -76,7 +81,7 @@ class FlFileManager:
         Args:
             delta_time (float): Time taken by the fault localization session.
         """
-        file_path = self._report_directory_path / constants.SESSION_TIME_FILE_NAME
+        file_path = self._report_directory_path / constants.TIME_FILE_NAME_FL_SESSION
         delta_time_dict = {
             "DeltaTime": delta_time
         }
@@ -90,5 +95,5 @@ class FlFileManager:
         Returns:
             str: Absolute path to the log file.
         """
-        file_path = self._report_directory_path / constants.SESSION_LOG_FILE_NAME
+        file_path = self._report_directory_path / constants.LOG_FILE_NAME_FL_SESSION
         return str(file_path.absolute().resolve())
