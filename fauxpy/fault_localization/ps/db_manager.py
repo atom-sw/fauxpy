@@ -383,7 +383,7 @@ class PsDbManager:
         items_found = cur.fetchall()
         return len(items_found) > 0
 
-    def insert_test_time(self, test_name: str, test_time: int):
+    def insert_test_time(self, test_name: str, test_time: float):
         cur = self._connection.cursor()
         cur.execute(
             f"INSERT INTO {self._Test_time_table} VALUES (NULL, ?, ?)",

@@ -615,13 +615,13 @@ class MbflDbManager:
 
         return {"Muse": scores_muse, "Metallaxis": scores_metallaxis}
 
-    def insert_test_time(self, test_name: str, test_time: int):
+    def insert_test_time(self, test_name: str, test_time: float):
         """
         Inserts the execution time for a test case into the test time table.
 
         Args:
             test_name (str): The name of the test case.
-            test_time (int): The execution time of the test case in milliseconds.
+            test_time (int): The execution time of the test case in seconds.
         """
         cur = self._connection.cursor()
         cur.execute(
